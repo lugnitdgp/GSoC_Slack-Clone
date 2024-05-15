@@ -1,9 +1,10 @@
 import './loginbox.css'
 import supabase from '../supabase'
-import { Link } from 'react-router-dom'
+import { Link,useNavigate } from 'react-router-dom'
 import { useState,useRef } from 'react'
 
-function Login(){
+function Login({settoken}){
+    let navigate=useNavigate()
     const [passwordVisible, setPasswordVisible] = useState(false);
     const togglePasswordVisibility = () => setPasswordVisible(!passwordVisible);
 
@@ -26,6 +27,8 @@ function Login(){
 
       if (data) {
         console.log(data)
+        settoken(data)
+        navigate('/')
       } else if (error) {
         alert(error.message || error); 
       }

@@ -3,6 +3,7 @@ import './App.css'
 
 function App() {
  console.log(supabase)
+ 
 
   return (
     <>
