@@ -2,6 +2,9 @@ import './loginbox.css'
 import supabase from '../supabase'
 import { Link,useNavigate } from 'react-router-dom'
 import { useState,useRef } from 'react'
+import { FaRegEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
+import { FaUserAlt } from "react-icons/fa";
 
 function Login({settoken}){
     let navigate=useNavigate()
@@ -23,8 +26,6 @@ function Login({settoken}){
         email: email,
         password: pass,
     });
-  
-
       if (data) {
         console.log(data)
         settoken(data)
@@ -47,13 +48,20 @@ function Login({settoken}){
             <h1>LOGIN</h1>
             <div className="email">
             <input type="text" placeholder='E-Mail I.D' ref={emailRef} />
+            <span>
+            <FaUserAlt />
+            </span>
             </div>
             <div className="pass">
             <input type={passwordVisible ? 'text' : 'password'} placeholder='Password' ref={passRef}  />
+            {passwordVisible ? 
+          <span onClick={togglePasswordVisibility}>
+            <FaRegEye />
+          </span>: <span onClick={togglePasswordVisibility}>
+          <FaEyeSlash />
+          </span>  }
             </div>
             <div className="forsh">
-                <input type="checkbox" onClick={togglePasswordVisibility} name='show'/>
-                <label htmlFor="show">Show Password</label>
                 <a href="">Forgot Password</a>
             </div>
             <div className="enter" >
