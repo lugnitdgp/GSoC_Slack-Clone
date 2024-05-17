@@ -2,11 +2,22 @@
     padding: 0px;
     box-sizing: border-box;
     margin: 0px;
+    
+}
+.page{
+    height: 100vh;
+    width: 100vw;
+    background-image: url(../images/pexels-padrinan-1111368.jpg);
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .box{
-    height: 58vh;
+    height: 500px;
     width: 450px;
-    background-color: aqua;
+    border-radius: 6%;
+    background-color: rgba(97, 7, 100, 0.582);
     position: relative;
     display: flex;
     flex-direction: column;

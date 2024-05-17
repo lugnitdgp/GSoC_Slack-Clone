@@ -1,15 +1,13 @@
-import './register.css'; 
+import './newpass.css'; 
 import supabase from '../supabase.jsx';
 import { useState, useRef } from 'react';
 import { Link,Navigate, useNavigate } from 'react-router-dom';
 import { FaRegEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
-import { FaUserAlt } from "react-icons/fa";
 import { IoMdMail } from "react-icons/io";
-import { FaPhoneAlt } from "react-icons/fa"
 
-function Register({ settoken }) {
-let po=''
+
+function Newpass({ settoken }) {
   let navigate=useNavigate()
   const [passwordVisible, setPasswordVisible] = useState(false);          //for hide and showing the pass we alter the input type to accomplishn this//
   const togglePasswordVisibility = () => setPasswordVisible(!passwordVisible);
@@ -20,10 +18,9 @@ let po=''
   const [splValid, setSpl] = useState(false);   //for checking the strength of the password//
   const [lenValid, setLen] = useState(false);
   const [allValid, setAllValid] = useState(false); 
-  
-  const usernameRef = useRef('');
+   
   const emailRef = useRef(''); //first made sure that the cons of the data being taken into are empty//
-  const phoneRef = useRef('');
+  
   const passRef = useRef(''); 
   const cpassRef = useRef('');
     
@@ -44,26 +41,15 @@ let po=''
     };
     async function signup(e) {
     e.preventDefault();
-    const username = usernameRef.current.value;  //used useRef because spreading and updating the data didn't work using usestate//
     const email = emailRef.current.value;
-    const phone = phoneRef.current.value;
-    const password = passRef.current.value; 
+    const password = passRef.current.value;         //used useRef because spreading and updating the data didn't work using usestate//
     const confirmPassword = cpassRef.current.value;
-    if (username.trim() === '') {
-    alert('Please enter a username.');      //.trim is used to remove the blank spaces before the text is entered//
-    return;
-    }
     if (email.trim() === '') {
     alert('Please enter an email address.');
     return;
     }
 if (!/^\S+@\S+\.\S+$/.test(email)) {                    //here ^checks for a string /S+ for non whitespace characters and $ gives end of the string//
       alert('Please enter a valid email address.');
-      return;
-    }
-
-    if (phone.trim() === '') {
-      alert('Please enter a phone number.');
       return;
     }
 
@@ -82,25 +68,18 @@ if (!/^\S+@\S+\.\S+$/.test(email)) {                    //here ^checks for a str
       alert('Password is not strong enough. Please ensure it meets the following criteria:\n- Minimum 8 characters\n- Lowercase letter\n- Uppercase letter\n- Number\n- Special character');
       return;
     }
-    
-        
+          
     try {
-      let { data, error } = await supabase.auth.signUp({
-        email:email,
-        password:password,
-        options: {
-          data: {
-            username:username,
-            phone:phone,     
-          },
-        },
-      });
-
+      
+    const { data, error } = await supabase.auth.updateUser({
+        email: email,
+        password: password,
+    })
       if (data) {
-        alert('Check your mail for verification!');
+        alert('Successfully Updated the Changes');
         console.log(data);
         settoken(data); 
-        window.location.href = 'https://accounts.google.com/v3/signin/identifier?continue=https%3A%2F%2Fmail.google.com%2Fmail%2F&ifkv=AaSxoQzXt39AdgwuZRVvouoQzi_ykG5XMUOa73c1U0EuqIBQxTRh2yVjthnwIIEInFFfZCaYEa5RQw&rip=1&sacu=1&service=mail&flowName=GlifWebSignIn&flowEntry=ServiceLogin&dsh=S1074277439%3A1715947387450132&ddm=0'; 
+        navigate('/')
       } else if (error) {
         alert(error.message || error);
       }
@@ -114,26 +93,12 @@ if (!/^\S+@\S+\.\S+$/.test(email)) {                    //here ^checks for a str
     <div className="page">
         <form onSubmit={signup}>
       <div className='box'>
-        <h1>Sign up</h1>
-        <div className="username">
-        <span>
-            <FaUserAlt />
-            </span>
-          <input type="text" placeholder='username' ref={usernameRef} />
-          
-        </div>
+        <h1>Update your Account</h1>
         <div className="email">
         <span>
           <IoMdMail />
           </span>
           <input type="text" placeholder='E-Mail I.D' ref={emailRef} />
-          
-        </div>
-        <div className="phone">
-        <span>
-          <FaPhoneAlt />
-          </span>
-          <input type="tel" placeholder='Ph No.' pattern="[0-9]{10}" ref={phoneRef} />
           
         </div>
         <div className="pass">
@@ -153,10 +118,9 @@ if (!/^\S+@\S+\.\S+$/.test(email)) {                    //here ^checks for a str
           <FaEyeSlash />
           </span>  }
           <input type={passwordVisible ? 'text' : 'password'} placeholder='Confirm Password' ref={cpassRef} />
-          
         </div>
         <div className="enter" type='submit'>
-          <button>Signup</button>
+          <button>Update</button>
         </div>
         <div className="other">
           <p>
@@ -169,4 +133,4 @@ if (!/^\S+@\S+\.\S+$/.test(email)) {                    //here ^checks for a str
     
   );
 }
-export default Register
+export default Newpass

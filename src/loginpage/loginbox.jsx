@@ -47,22 +47,22 @@ function Login({settoken}){
             <div className='box'>
             <h1>LOGIN</h1>
             <div className="email">
-            <input type="text" placeholder='E-Mail I.D' ref={emailRef} />
             <span>
             <FaUserAlt />
             </span>
+            <input type="text" placeholder='E-Mail I.D' ref={emailRef} />
             </div>
             <div className="pass">
-            <input type={passwordVisible ? 'text' : 'password'} placeholder='Password' ref={passRef}  />
             {passwordVisible ? 
           <span onClick={togglePasswordVisibility}>
             <FaRegEye />
           </span>: <span onClick={togglePasswordVisibility}>
           <FaEyeSlash />
           </span>  }
+            <input type={passwordVisible ? 'text' : 'password'} placeholder='Password' ref={passRef}  />
             </div>
             <div className="forsh">
-                <a href="">Forgot Password</a>
+                <p><Link to='/fpassuser'>Forgot Password</Link></p>
             </div>
             <div className="enter" >
                 <button type='submit'>Login</button>

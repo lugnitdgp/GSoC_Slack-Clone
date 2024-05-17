@@ -4,6 +4,8 @@ import App from './App.jsx';
 import Login from './loginpage/loginbox.jsx';
 import './index.css';
 import Register from './register/register.jsx';
+import Fpassuser from './forgot password/fpass.jsx';
+import Newpass from './forgot password/newpass.jsx';
 
 const Pages = () => {
   const [token, setToken] = useState(null); // Initialize token to null
@@ -39,6 +41,11 @@ const Pages = () => {
       <Routes>
         <Route path={"/login"} element={<Login settoken={setToken} />} />
         <Route path={"/signup"} element={<Register settoken={setToken}/>} />
+        <Route path={"/fpassuser"} element={<Fpassuser settoken={setToken}/>} />
+        <Route
+          path={'/newpass'}
+          element={token ? <Newpass settoken={setToken} /> : <div>First enter a username to get the password reset mail </div>}
+        />
         <Route
           path={'/'}
           element={token ? <App /> : <div>Please sign in to view this page</div>}
