@@ -25,4 +25,53 @@
     align-items: center;
     padding: 10px;
 }
+.input{
+    height: 38px;
+    width: 90%;
+    border-radius: 40px;
+    margin: 8px;
+    position: relative;
+}
+input{
+    height: 100%;
+    width: 100%;
+    border-radius: 40px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    font-size: 18px;
+    padding: 10px;
+    background-color: whitesmoke;
+    border-width: 1px;
+    border-color: grey;
+}
+span{
+    position: absolute;
+    right: 10px;
+    z-index: 100;
+    top: 8px;
+}
+h1{
+    position: absolute;
+    top: 30px;
+    font-size: 40px;
+
+}
+button{
+    width: 350px;
+    height: 30px;
+    margin-top: 15px;
+    border-radius: 28px;
+    background-color: goldenrod;
+    font-size: 20px;
+    font-weight: lighter;
+
+}
+
+
+
+
+
+
+
 

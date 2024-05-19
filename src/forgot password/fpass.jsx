@@ -32,13 +32,13 @@ function Fpassuser({settoken}){
 
     
     return(
-        
-        <form onSubmit={fpass}>
+        <div className="page">
+          <form onSubmit={fpass}>
             
             <div className='box'>
             <h1>Reset your Password</h1>
             <h3>A mail be sent to the mail to reset your password</h3>
-            <div className="email">
+            <div className="email input">
             <span>
             <FaUserAlt />
             </span>
@@ -54,6 +54,8 @@ function Fpassuser({settoken}){
             </div>          
         </div>
         </form>
+        </div>
+        
     )
 }
 export default Fpassuser

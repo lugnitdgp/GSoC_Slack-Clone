@@ -18,18 +18,36 @@ function Login({settoken}){
         b.preventDefault(); 
     const email = emailRef.current.value;
     const pass = passRef.current.value;
-    console.log(email)
-    console.log(pass)
+    if (email.trim() === '') {
+        alert('Please enter an email address.');
+        return;
+        }
+        if (pass.trim() === '') {
+            alert('Please enter a password.');
+            return;
+            }
+    if (!/^\S+@\S+\.\S+$/.test(email)) {                    //here ^checks for a string /S+ for non whitespace characters and $ gives end of the string//
+          alert('Please enter a valid email address.');
+          return;
+        }
+    
     try {
-      
+    console.log(email,pass)
     let { data, error } = await supabase.auth.signInWithPassword({
         email: email,
         password: pass,
     });
+    console.log(error)
       if (data) {
-        console.log(data)
-        settoken(data)
-        navigate('/')
+        console.log(data)     
+        if(data.user!=null && data.session!=null){
+          navigate('/')
+          settoken(data)
+        }
+        else if(data.user==null && data.session==null){
+          alert('check the details provided')
+        }
+        
       } else if (error) {
         alert(error.message || error); 
       }
@@ -41,18 +59,18 @@ function Login({settoken}){
 
     
     return(
-        
-        <form onSubmit={login}>
+        <div className="page">
+          <form onSubmit={login}>
             
             <div className='box'>
             <h1>LOGIN</h1>
-            <div className="email">
+            <div className="email input">
             <span>
             <FaUserAlt />
             </span>
             <input type="text" placeholder='E-Mail I.D' ref={emailRef} />
             </div>
-            <div className="pass">
+            <div className="pass input">
             {passwordVisible ? 
           <span onClick={togglePasswordVisibility}>
             <FaRegEye />
@@ -74,6 +92,8 @@ function Login({settoken}){
             </div>          
         </div>
         </form>
+        </div>
+        
     )
 }
 export default Login

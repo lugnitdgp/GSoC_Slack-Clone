@@ -94,14 +94,14 @@ if (!/^\S+@\S+\.\S+$/.test(email)) {                    //here ^checks for a str
         <form onSubmit={signup}>
       <div className='box'>
         <h1>Update your Account</h1>
-        <div className="email">
+        <div className="email input">
         <span>
           <IoMdMail />
           </span>
           <input type="text" placeholder='E-Mail I.D' ref={emailRef} />
           
         </div>
-        <div className="pass">
+        <div className="pass input">
         {passwordVisible ? 
           <span onClick={togglePasswordVisibility}>
             <FaRegEye />
@@ -110,7 +110,7 @@ if (!/^\S+@\S+\.\S+$/.test(email)) {                    //here ^checks for a str
           </span>  }
           <input type={passwordVisible ? 'text' : 'password'} placeholder='Password' ref={passRef} onChange={(e) => {passwordChange(e.target.value)}} /> 
         </div>
-        <div className="cpass">
+        <div className="cpass input">
         {passwordVisible ? 
           <span onClick={togglePasswordVisibility}>
             <FaRegEye />

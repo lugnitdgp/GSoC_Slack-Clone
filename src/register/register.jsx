@@ -97,10 +97,17 @@ if (!/^\S+@\S+\.\S+$/.test(email)) {                    //here ^checks for a str
       });
 
       if (data) {
-        alert('Check your mail for verification!');
+        
         console.log(data);
-        settoken(data); 
-        window.location.href = 'https://accounts.google.com/v3/signin/identifier?continue=https%3A%2F%2Fmail.google.com%2Fmail%2F&ifkv=AaSxoQzXt39AdgwuZRVvouoQzi_ykG5XMUOa73c1U0EuqIBQxTRh2yVjthnwIIEInFFfZCaYEa5RQw&rip=1&sacu=1&service=mail&flowName=GlifWebSignIn&flowEntry=ServiceLogin&dsh=S1074277439%3A1715947387450132&ddm=0'; 
+        if(data.user!=null && data.session!=null){
+          alert('Sign up successful');
+          settoken(data)
+          navigate('/')
+          
+        }
+        else if(data.user==null && data.session==null){
+          alert('check the details provided')
+        }
       } else if (error) {
         alert(error.message || error);
       }
@@ -115,28 +122,28 @@ if (!/^\S+@\S+\.\S+$/.test(email)) {                    //here ^checks for a str
         <form onSubmit={signup}>
       <div className='box'>
         <h1>Sign up</h1>
-        <div className="username">
+        <div className="username input">
         <span>
             <FaUserAlt />
             </span>
           <input type="text" placeholder='username' ref={usernameRef} />
           
         </div>
-        <div className="email">
+        <div className="email input">
         <span>
           <IoMdMail />
           </span>
           <input type="text" placeholder='E-Mail I.D' ref={emailRef} />
           
         </div>
-        <div className="phone">
+        <div className="phone input">
         <span>
           <FaPhoneAlt />
           </span>
           <input type="tel" placeholder='Ph No.' pattern="[0-9]{10}" ref={phoneRef} />
           
         </div>
-        <div className="pass">
+        <div className="pass input">
         {passwordVisible ? 
           <span onClick={togglePasswordVisibility}>
             <FaRegEye />
@@ -145,7 +152,7 @@ if (!/^\S+@\S+\.\S+$/.test(email)) {                    //here ^checks for a str
           </span>  }
           <input type={passwordVisible ? 'text' : 'password'} placeholder='Password' ref={passRef} onChange={(e) => {passwordChange(e.target.value)}} /> 
         </div>
-        <div className="cpass">
+        <div className="cpass input">
         {passwordVisible ? 
           <span onClick={togglePasswordVisibility}>
             <FaRegEye />

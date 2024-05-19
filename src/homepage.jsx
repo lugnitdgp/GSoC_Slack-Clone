@@ -1,9 +1,11 @@
 import supabase from './supabase'
 import './App.css'
 
-function App() {
- console.log(supabase)
- 
+function Home(data) {
+  
+  console.log('data:', data);
+
+ console.log(data.data.user.id)
 
   return (
     <>
@@ -12,4 +14,4 @@ function App() {
   )
 }
 
-export default App
+export default Home

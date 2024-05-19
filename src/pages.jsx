@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import App from './App.jsx';
+import Home from './homepage.jsx';
 import Login from './loginpage/loginbox.jsx';
 import './index.css';
 import Register from './register/register.jsx';
@@ -48,7 +48,7 @@ const Pages = () => {
         />
         <Route
           path={'/'}
-          element={token ? <App /> : <div>Please sign in to view this page</div>}
+          element={token ? <Home data={token}/> : <div>Please sign in to view this page</div>}
         />
       </Routes>
     </div>
