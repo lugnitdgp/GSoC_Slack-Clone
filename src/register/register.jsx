@@ -1,7 +1,7 @@
 import './register.css'; 
 import supabase from '../supabase.jsx';
 import { useState, useRef } from 'react';
-import { Link,Navigate, useNavigate } from 'react-router-dom';
+import { Link,Navigate, useNavigate} from 'react-router-dom';
 import { FaRegEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaUserAlt } from "react-icons/fa";
@@ -13,6 +13,8 @@ let po=''
   let navigate=useNavigate()
   const [passwordVisible, setPasswordVisible] = useState(false);          //for hide and showing the pass we alter the input type to accomplishn this//
   const togglePasswordVisibility = () => setPasswordVisible(!passwordVisible);
+  const [passwordVisible2, setPasswordVisible2] = useState(false);
+    const togglePasswordVisibility2 = () => setPasswordVisible2(!passwordVisible2);
 
   const [lowerValid, setLower] = useState(false);
   const [upperValid, setUpper] = useState(false);
@@ -89,9 +91,11 @@ if (!/^\S+@\S+\.\S+$/.test(email)) {                    //here ^checks for a str
         email:email,
         password:password,
         options: {
+          emailRedirectTo:`${origin}/`,
           data: {
             username:username,
-            phone:phone,     
+            phone:phone,
+            avatar_url:null,     
           },
         },
       });
@@ -153,13 +157,13 @@ if (!/^\S+@\S+\.\S+$/.test(email)) {                    //here ^checks for a str
           <input type={passwordVisible ? 'text' : 'password'} placeholder='Password' ref={passRef} onChange={(e) => {passwordChange(e.target.value)}} /> 
         </div>
         <div className="cpass input">
-        {passwordVisible ? 
-          <span onClick={togglePasswordVisibility}>
+        {passwordVisible2 ? 
+          <span onClick={togglePasswordVisibility2}>
             <FaRegEye />
-          </span>: <span onClick={togglePasswordVisibility}>
+          </span>: <span onClick={togglePasswordVisibility2}>
           <FaEyeSlash />
           </span>  }
-          <input type={passwordVisible ? 'text' : 'password'} placeholder='Confirm Password' ref={cpassRef} />
+          <input type={passwordVisible2 ? 'text' : 'password'} placeholder='Confirm Password' ref={cpassRef} />
           
         </div>
         <div className="enter" type='submit'>

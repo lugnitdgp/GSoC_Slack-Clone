@@ -1,7 +1,7 @@
 import './newpass.css'; 
 import supabase from '../supabase.jsx';
 import { useState, useRef } from 'react';
-import { Link,Navigate, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaRegEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { IoMdMail } from "react-icons/io";
@@ -11,6 +11,8 @@ function Newpass({ settoken }) {
   let navigate=useNavigate()
   const [passwordVisible, setPasswordVisible] = useState(false);          //for hide and showing the pass we alter the input type to accomplishn this//
   const togglePasswordVisibility = () => setPasswordVisible(!passwordVisible);
+  const [passwordVisible2, setPasswordVisible2] = useState(false);
+    const togglePasswordVisibility2 = () => setPasswordVisible2(!passwordVisible2);
 
   const [lowerValid, setLower] = useState(false);
   const [upperValid, setUpper] = useState(false);
@@ -19,7 +21,7 @@ function Newpass({ settoken }) {
   const [lenValid, setLen] = useState(false);
   const [allValid, setAllValid] = useState(false); 
    
-  const emailRef = useRef(''); //first made sure that the cons of the data being taken into are empty//
+  //first made sure that the cons of the data being taken into are empty//
   
   const passRef = useRef(''); 
   const cpassRef = useRef('');
@@ -41,17 +43,11 @@ function Newpass({ settoken }) {
     };
     async function signup(e) {
     e.preventDefault();
-    const email = emailRef.current.value;
+    
     const password = passRef.current.value;         //used useRef because spreading and updating the data didn't work using usestate//
     const confirmPassword = cpassRef.current.value;
-    if (email.trim() === '') {
-    alert('Please enter an email address.');
-    return;
-    }
-if (!/^\S+@\S+\.\S+$/.test(email)) {                    //here ^checks for a string /S+ for non whitespace characters and $ gives end of the string//
-      alert('Please enter a valid email address.');
-      return;
-    }
+    
+
 
     if (!password || password.trim() === '') {
       alert('Please enter a password.');            //!password is true and gives alert if the input is empty or password is not defined
@@ -72,14 +68,14 @@ if (!/^\S+@\S+\.\S+$/.test(email)) {                    //here ^checks for a str
     try {
       
     const { data, error } = await supabase.auth.updateUser({
-        email: email,
+        
         password: password,
     })
       if (data) {
-        alert('Successfully Updated the Changes');
-        console.log(data);
-        settoken(data); 
-        navigate('/')
+        console.log(data)     
+          alert('Successfully updated the change')
+          settoken(data)
+          navigate('/')
       } else if (error) {
         alert(error.message || error);
       }
@@ -94,13 +90,6 @@ if (!/^\S+@\S+\.\S+$/.test(email)) {                    //here ^checks for a str
         <form onSubmit={signup}>
       <div className='box'>
         <h1>Update your Account</h1>
-        <div className="email input">
-        <span>
-          <IoMdMail />
-          </span>
-          <input type="text" placeholder='E-Mail I.D' ref={emailRef} />
-          
-        </div>
         <div className="pass input">
         {passwordVisible ? 
           <span onClick={togglePasswordVisibility}>
@@ -111,13 +100,13 @@ if (!/^\S+@\S+\.\S+$/.test(email)) {                    //here ^checks for a str
           <input type={passwordVisible ? 'text' : 'password'} placeholder='Password' ref={passRef} onChange={(e) => {passwordChange(e.target.value)}} /> 
         </div>
         <div className="cpass input">
-        {passwordVisible ? 
-          <span onClick={togglePasswordVisibility}>
+        {passwordVisible2 ? 
+          <span onClick={togglePasswordVisibility2}>
             <FaRegEye />
-          </span>: <span onClick={togglePasswordVisibility}>
+          </span>: <span onClick={togglePasswordVisibility2}>
           <FaEyeSlash />
           </span>  }
-          <input type={passwordVisible ? 'text' : 'password'} placeholder='Confirm Password' ref={cpassRef} />
+          <input type={passwordVisible2 ? 'text' : 'password'} placeholder='Confirm Password' ref={cpassRef} />
         </div>
         <div className="enter" type='submit'>
           <button>Update</button>

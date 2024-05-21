@@ -5,11 +5,14 @@ import { useState,useRef } from 'react'
 import { FaRegEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaUserAlt } from "react-icons/fa";
+import CheckemailExists from '../database.jsx';
 
 function Login({settoken}){
+    console.log(supabase)
     let navigate=useNavigate()
     const [passwordVisible, setPasswordVisible] = useState(false);
     const togglePasswordVisibility = () => setPasswordVisible(!passwordVisible);
+    
 
     const emailRef = useRef('');
     const passRef = useRef('');
@@ -31,30 +34,41 @@ function Login({settoken}){
           return;
         }
     
-    try {
+    
     console.log(email,pass)
-    let { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: pass,
-    });
-    console.log(error)
-      if (data) {
-        console.log(data)     
-        if(data.user!=null && data.session!=null){
-          navigate('/')
-          settoken(data)
+    const doesemailExist = await CheckemailExists(email);
+    console.log(doesemailExist)
+    
+      if (doesemailExist) {
+        try {
+        let { data, error } = await supabase.auth.signInWithPassword({
+          email: email,
+          password: pass,
+      });
+        if (data) {
+          if(data.user!=null && data.session!=null){
+            alert('Successful log in redirecting to Homepage')
+            navigate('/')
+            settoken(data)
+          }
+          else if(data.user==null && data.session==null){
+            alert('wrong password')
+          }
+        } else if (error) {
+          console.log(error)
+          alert(error.message || error); 
         }
-        else if(data.user==null && data.session==null){
-          alert('check the details provided')
-        }
-        
-      } else if (error) {
-        alert(error.message || error); 
+      } catch (error) {
+        console.error('Unexpected error:', error);
+        alert('An unexpected error occurred. Please try again later.');
       }
-    } catch (error) {
-      console.error('Unexpected error:', error);
-      alert('An unexpected error occurred. Please try again later.');
-    }
+        
+      } else {
+        alert('email does not exist.');
+        // Handle the case where the email doesn't exist
+      }
+
+    
   }
 
     
