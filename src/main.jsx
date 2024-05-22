@@ -2,7 +2,6 @@ import React,{useEffect} from 'react'
 import ReactDOM from 'react-dom/client'
 import Pages from './pages.jsx'
 import supabase from './supabase.jsx'
-import './index.css'
 import { BrowserRouter } from 'react-router-dom'
 
 

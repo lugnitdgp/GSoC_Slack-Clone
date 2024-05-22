@@ -5,7 +5,7 @@ import { useState,useRef } from 'react'
 import { FaRegEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaUserAlt } from "react-icons/fa";
-import CheckemailExists from '../database.jsx';
+
 
 function Login({settoken}){
     console.log(supabase)

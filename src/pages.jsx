@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import Home from './homepage.jsx';
+import Home from './homepage/homepage.jsx';
 import Login from './loginpage/loginbox.jsx';
 import Register from './register/register.jsx';
 import Fpassuser from './forgot password/fpass.jsx';

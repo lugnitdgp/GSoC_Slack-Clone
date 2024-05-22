@@ -3,7 +3,7 @@ import supabase from '../supabase'
 import { Link,useNavigate } from 'react-router-dom'
 import { useState,useRef } from 'react'
 import { FaUserAlt } from "react-icons/fa";
-import CheckemailExists from '../database';
+
 
 function Fpassuser({settoken}){
     let navigate=useNavigate()
@@ -25,7 +25,7 @@ function Fpassuser({settoken}){
               console.log(data)
               settoken(data)
               alert('Check your mail for password reset link')
-              navigate('/')
+              navigate('')
             } else if (error) {
               alert(error.message || error); 
             }
