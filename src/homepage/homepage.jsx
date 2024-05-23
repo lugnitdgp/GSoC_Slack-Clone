@@ -1,13 +1,16 @@
-import { Getuserdetails } from '../database';
-import { useState,useEffect } from 'react';
-import supabase from '../supabase';
-import homepaseCSS from './homepage.module.css';
+import { Getuserdetails } from "../database";
+import { useState, useEffect } from "react";
+import supabase from "../supabase";
+import homepaseCSS from "./homepage.module.css";
 import { FaEdit } from "react-icons/fa";
+import Searchuser from "./chatboxnav";
+import { FaPowerOff } from "react-icons/fa6";
 
 function Home(data) {
   const [isLoading, setIsLoading] = useState(true); // Use state to manage loading
-  const [name, setName] = useState('');
-  const [phno, setPhno] = useState('');
+  const [name, setName] = useState("");
+  const [phno, setPhno] = useState("");
+  const [Dm, setDm] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,54 +20,90 @@ function Home(data) {
         setName(specific_user[0].username);
         setPhno(specific_user[0].phone);
       } else {
-        console.log('No user found.');
+        console.log("No user found.");
       }
     };
     fetchData();
   }, [data]); // Run effect only when data changes
+
+  async function signout(){
+    try{
+
+  let { error } = await supabase.auth.signOut()
+  
+      if(error){
+        console.log(error)
+      }
+      else{
+        localStorage.removeItem("token");
+        window.location.reload()
+        alert('successfully logged out')
+      }
+    }
+    catch(error){
+      console.log(error)
+    }
+  
+  }
+
+
   return (
     <>
-    {isLoading ? (
+      {isLoading ? (
         <h1>Loading...</h1> // Display loading message while fetching
       ) : (
-      <div className={homepaseCSS.whole}>
-        <div className={homepaseCSS.box}>
-          <div className={homepaseCSS.top}>
-            <div className={homepaseCSS.search}></div>
-            <div className={homepaseCSS.logo}></div>
-          </div>
-        <div className={homepaseCSS.bottom}>
-        <div className={homepaseCSS.sidebar}>
-          <div className={homepaseCSS.right}>
-          <div className={homepaseCSS.userdetails}>
-            <div className={homepaseCSS.userleft}>            
-            <p>{name}</p> 
+        <div className={homepaseCSS.whole}>
+          <div className={homepaseCSS.box}>
+            <div className={homepaseCSS.top}>
+              <div className={homepaseCSS.search}></div>
+              <div className={homepaseCSS.logo}></div>
             </div>
-            <div className={homepaseCSS.userright}>
-            <FaEdit size={23} color='white'/>
-            </div>
-          </div>
-              <div className={homepaseCSS.community}>
-              <div className={homepaseCSS.contacts}></div>
-                <div className={homepaseCSS.hashes}></div>
-              </div>            
-          </div>
-          <div className={homepaseCSS.left}>
-            <div className={homepaseCSS.allcom}></div>
-          </div>
-          </div>
-        
-
-          <div className={homepaseCSS.chatbox}>
-            <div className={homepaseCSS.presentcontact}></div>
-            <div className={homepaseCSS.chats}>
-            </div>
-            <div className={homepaseCSS.textwork}></div>
-          </div>
-
-        </div>
+            <div className={homepaseCSS.bottom}>
+              <div className={homepaseCSS.sidebar}>
+                <div className={homepaseCSS.right}>
+                  <div className={homepaseCSS.userdetails}>
+                    <div className={homepaseCSS.userleft}>
+                      <p className={homepaseCSS.NaMe}>{name}</p>
+                    </div>
+                    <div className={homepaseCSS.userright}>
+                      <FaEdit className={homepaseCSS.faedit} size={23} color="white" />
+                    </div>
                   </div>
-      </div>)}
+                  <div className={homepaseCSS.community}>
+                    <div className={homepaseCSS.hashes}>
+                      <p>Channels</p>
+                    </div>
+                    <div className={homepaseCSS.contacts}>
+                      <button className={homepaseCSS.dm} onClick={(s) => setDm(true)}>
+                        {console.log(Dm)}
+                        Direct message
+                      </button>
+
+                    </div>
+                  </div>
+                </div>
+                <div className={homepaseCSS.left}>
+                  <div className={homepaseCSS.allcom}>
+                  <FaPowerOff size={30} color="white" className={homepaseCSS.poweroff} onClick={()=>signout()}/>
+                  </div>
+                </div>
+              </div>
+
+              <div className={homepaseCSS.chatbox}>
+                {Dm ? (
+                  <Searchuser />
+                ) : (
+                  <>
+                    <div className={homepaseCSS.presentcontact}></div>
+                    <div className={homepaseCSS.chats}></div>
+                  </>
+                )}
+                <div className={homepaseCSS.textwork}></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

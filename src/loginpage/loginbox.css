@@ -65,6 +65,7 @@ button{
     background-color: goldenrod;
     font-size: 20px;
     font-weight: lighter;
+    cursor: pointer;
 
 }
 
