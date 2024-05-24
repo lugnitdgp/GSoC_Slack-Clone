@@ -1,14 +1,18 @@
 import "./register.css";
 import supabase from "../supabase.jsx";
-import { useState, useRef } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { FaRegEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaUserAlt } from "react-icons/fa";
 import { IoMdMail } from "react-icons/io";
 import { FaPhoneAlt } from "react-icons/fa";
+import bcrypt from "bcryptjs/dist/bcrypt.js";
+import { CheckemailExists } from "../database.jsx";
+import { Allconvers } from "../context api/context.jsx";
 
 function Register({ settoken }) {
+  const { userId } = useContext(Allconvers);
   let po = "";
   let navigate = useNavigate();
   const [passwordVisible, setPasswordVisible] = useState(false); //for hide and showing the pass we alter the input type to accomplishn this//
@@ -89,36 +93,44 @@ function Register({ settoken }) {
       );
       return;
     }
-
-    try {
-      let { data, error } = await supabase.auth.signUp({
-        email: email,
-        password: password,
-        options: {
-          emailRedirectTo: `${origin}/`,
-          data: {
-            username: username,
-            phone: phone,
-            avatar_url: null,
+    const doesemailExist = await CheckemailExists(email);
+    if (!doesemailExist) {
+      try {
+        const salt = await bcrypt.genSalt(10);
+        const hashedpass = await bcrypt.hash(password, salt);
+        console.log(hashedpass);
+        let { data, error } = await supabase.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            emailRedirectTo: `${origin}/`,
+            data: {
+              username: username,
+              phone: phone,
+              avatar_url: null,
+              hash_password: hashedpass,
+            },
           },
-        },
-      });
+        });
 
-      if (data) {
-        console.log(data);
-        if (data.user != null && data.session != null) {
-          alert("Sign up successful");
-          settoken(data);
-          navigate("/");
-        } else if (data.user == null && data.session == null) {
-          alert("check the details provided");
+        if (data) {
+          console.log(data);
+          if (data.user != null && data.session != null) {
+            alert("Sign up successful");
+            settoken(data);
+            navigate("/");
+          } else if (data.user == null && data.session == null) {
+            alert("check the details provided");
+          }
+        } else if (error) {
+          alert(error.message || error);
         }
-      } else if (error) {
-        alert(error.message || error);
+      } catch (error) {
+        console.error("Unexpected error:", error);
+        alert("An unexpected error occurred. Please try again later.");
       }
-    } catch (error) {
-      console.error("Unexpected error:", error);
-      alert("An unexpected error occurred. Please try again later.");
+    } else {
+      alert("the given mail already exists");
     }
   }
 

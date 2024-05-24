@@ -1,4 +1,5 @@
 import supabase from "./supabase.jsx";
+import bcrypt from "bcryptjs";
 
 export async function Getuserdetails(id) {
   let { data: specific_user_data, error } = await supabase
@@ -23,4 +24,38 @@ export async function CheckemailExists(email) {
   }
 
   return user_data?.length > 0; // Return true if data exists
+}
+export async function PasswordCheck(email, pass) {
+  let { data: specific_user_data, error } = await supabase
+    .from("user_data")
+    .select("*") //selecting all coloumns
+    .eq("email", email);
+  console.log(specific_user_data[0].hashed_password);
+  const Passwordmatch = await bcrypt.compare(
+    pass,
+    specific_user_data[0].hashed_password
+  );
+  if (Passwordmatch) {
+    return true;
+  } else {
+    return false;
+  }
+}
+export async function idm(id) {
+  try {
+    const { data, error } = await supabase
+      .from("direct_messages")
+      .insert([{ id: id }])
+      .select();
+    if (data) {
+      console.log("idm");
+      return true;
+    } else {
+      console.log("idm", error);
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+    return "false1";
+  }
 }

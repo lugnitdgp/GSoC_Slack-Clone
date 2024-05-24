@@ -5,7 +5,7 @@ import { useState, useRef } from "react";
 import { FaRegEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaUserAlt } from "react-icons/fa";
-import { CheckemailExists } from "../database";
+import { CheckemailExists, PasswordCheck } from "../database";
 
 function Login({ settoken }) {
   console.log(supabase);
@@ -37,28 +37,34 @@ function Login({ settoken }) {
     console.log(email, pass);
     const doesemailExist = await CheckemailExists(email);
     console.log(doesemailExist);
+    const passcorrect = await PasswordCheck(email, pass);
+    console.log(passcorrect);
 
     if (doesemailExist) {
-      try {
-        let { data, error } = await supabase.auth.signInWithPassword({
-          email: email,
-          password: pass,
-        });
-        if (data) {
-          if (data.user != null && data.session != null) {
-            alert("Successful log in redirecting to Homepage");
-            navigate("/");
-            settoken(data);
-          } else if (data.user == null && data.session == null) {
-            alert("wrong password");
+      if (passcorrect) {
+        try {
+          let { data, error } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: pass,
+          });
+          if (data) {
+            if (data.user != null && data.session != null) {
+              alert("Successful log in redirecting to Homepage");
+              navigate("/");
+              settoken(data);
+            } else if (data.user == null && data.session == null) {
+              alert("wrong password");
+            }
+          } else if (error) {
+            console.log(error);
+            alert(error.message || error);
           }
-        } else if (error) {
-          console.log(error);
-          alert(error.message || error);
+        } catch (error) {
+          console.error("Unexpected error:", error);
+          alert("An unexpected error occurred. Please try again later.");
         }
-      } catch (error) {
-        console.error("Unexpected error:", error);
-        alert("An unexpected error occurred. Please try again later.");
+      } else {
+        alert("wrong password");
       }
     } else {
       alert("email does not exist.");

@@ -1,12 +1,14 @@
-import { Getuserdetails } from "../database";
-import { useState, useEffect } from "react";
+import { Getuserdetails, idm } from "../database";
+import { useState, useEffect, useContext } from "react";
 import supabase from "../supabase";
 import homepaseCSS from "./homepage.module.css";
 import { FaEdit } from "react-icons/fa";
 import Searchuser from "./chatboxnav";
 import { FaPowerOff } from "react-icons/fa6";
+import { Allconvers } from "../context api/context";
 
 function Home(data) {
+  const { setUserId, currentUser, userId } = useContext(Allconvers);
   const [isLoading, setIsLoading] = useState(true); // Use state to manage loading
   const [name, setName] = useState("");
   const [phno, setPhno] = useState("");
@@ -19,33 +21,36 @@ function Home(data) {
       if (specific_user) {
         setName(specific_user[0].username);
         setPhno(specific_user[0].phone);
+        setUserId(specific_user[0].id);
       } else {
         console.log("No user found.");
       }
     };
     fetchData();
-  }, [data]); // Run effect only when data changes
+  }, [data]);
+  useEffect(() => {
+    const insertdm = async () => {
+      const idm0 = await idm(userId);
+      console.log(idm0);
+    };
+    insertdm();
+  }, [userId]); // Run effect only when data changes
 
-  async function signout(){
-    try{
+  async function signout() {
+    try {
+      let { error } = await supabase.auth.signOut();
 
-  let { error } = await supabase.auth.signOut()
-  
-      if(error){
-        console.log(error)
-      }
-      else{
+      if (error) {
+        console.log(error);
+      } else {
         localStorage.removeItem("token");
-        window.location.reload()
-        alert('successfully logged out')
+        window.location.reload();
+        alert("successfully logged out");
       }
+    } catch (error) {
+      console.log(error);
     }
-    catch(error){
-      console.log(error)
-    }
-  
   }
-
 
   return (
     <>
@@ -66,7 +71,11 @@ function Home(data) {
                       <p className={homepaseCSS.NaMe}>{name}</p>
                     </div>
                     <div className={homepaseCSS.userright}>
-                      <FaEdit className={homepaseCSS.faedit} size={23} color="white" />
+                      <FaEdit
+                        className={homepaseCSS.faedit}
+                        size={23}
+                        color="white"
+                      />
                     </div>
                   </div>
                   <div className={homepaseCSS.community}>
@@ -74,17 +83,24 @@ function Home(data) {
                       <p>Channels</p>
                     </div>
                     <div className={homepaseCSS.contacts}>
-                      <button className={homepaseCSS.dm} onClick={(s) => setDm(true)}>
+                      <button
+                        className={homepaseCSS.dm}
+                        onClick={(s) => setDm(true)}
+                      >
                         {console.log(Dm)}
                         Direct message
                       </button>
-
                     </div>
                   </div>
                 </div>
                 <div className={homepaseCSS.left}>
                   <div className={homepaseCSS.allcom}>
-                  <FaPowerOff size={30} color="white" className={homepaseCSS.poweroff} onClick={()=>signout()}/>
+                    <FaPowerOff
+                      size={30}
+                      color="white"
+                      className={homepaseCSS.poweroff}
+                      onClick={() => signout()}
+                    />
                   </div>
                 </div>
               </div>
