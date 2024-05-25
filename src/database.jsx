@@ -59,3 +59,14 @@ export async function idm(id) {
     return "false1";
   }
 }
+export async function UserdetailsbyName(username) {
+  let { data: specific_user_data, error } = await supabase
+    .from("user_data")
+    .select("*") //selecting all coloumns
+    .eq("username", username); //gets the row where the id matches
+  if (error) {
+    console.error("Error fetching user data:", error);
+    return false;
+  }
+  return specific_user_data;
+}

@@ -4,22 +4,37 @@ import { Getuserdetails } from "../database"; // Assuming Getuserdetails fetches
 export const Allconvers = createContext({});
 
 export const AllconversProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null); // Initialize with null
-  const [userId, setUserId] = useState({}); // Initialize with null
+  const [currentUser, setCurrentUser] = useState([]); // Initialize with an empty string
+  const [userId, setUserId] = useState(null); // Initialize with null
+
+  const [isLoading, setIsLoading] = useState(true); // Added loading state
 
   // Fetch user data once on component mount
   useEffect(() => {
     const fetchUserData = async () => {
+      setIsLoading(true); // Set loading to true
       if (userId) {
-        // Check if userId is valid before fetching
-        const user = await Getuserdetails(userId);
-        console.log(user[0]);
-        setCurrentUser(user); // Update currentUser only if successful
+        try {
+          const user = await Getuserdetails(userId);
+          if (user && user.length > 0) {
+            console.log("Fetched User ID:", user[0].id);
+            setCurrentUser(user);
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+          // Handle errors here (optional)
+        }
       }
+      setIsLoading(false); // Set loading to false
     };
 
     fetchUserData();
   }, [userId]); // Run effect only when userId changes
+
+  // Log currentUser whenever it changes
+  useEffect(() => {
+    console.log("Current User State Updated:", currentUser);
+  }, [currentUser]);
 
   // Expose values to child components
   const contextValues = {
@@ -27,6 +42,7 @@ export const AllconversProvider = ({ children }) => {
     setCurrentUser,
     userId,
     setUserId,
+    isLoading, // Expose loading state
   };
 
   return (

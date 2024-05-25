@@ -22,6 +22,7 @@ function Home(data) {
         setName(specific_user[0].username);
         setPhno(specific_user[0].phone);
         setUserId(specific_user[0].id);
+        console.log(currentUser);
       } else {
         console.log("No user found.");
       }
@@ -107,7 +108,7 @@ function Home(data) {
 
               <div className={homepaseCSS.chatbox}>
                 {Dm ? (
-                  <Searchuser />
+                  <Searchuser currentUser={currentUser[0]} />
                 ) : (
                   <>
                     <div className={homepaseCSS.presentcontact}></div>
