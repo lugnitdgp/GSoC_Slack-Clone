@@ -5,11 +5,29 @@ import Login from "./loginpage/loginbox.jsx";
 import Register from "./register/register.jsx";
 import Fpassuser from "./forgot password/fpass.jsx";
 import Newpass from "./forgot password/newpass.jsx";
+import Update from "./update details/updatedetails.jsx";
+import supabase from "./supabase.jsx";
 
 const Pages = () => {
   const [token, setToken] = useState(null);
 
-  // Retrieve token from localStorage only once on component mount
+  const [updload, setUpdload] = useState(false);
+
+  useEffect(() => {
+    async function getudetails() {
+      await supabase.auth.getUser().then((val) => {
+        if (val.data?.user) {
+          console.log(val.data.user);
+          localStorage.setItem("data2", JSON.stringify(val.data.user));
+          setToken(val.data.user);
+          setUpdload("true");
+        }
+      });
+    }
+    console.log(updload)
+    getudetails();
+  }, [updload]);
+
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     if (storedToken) {
@@ -18,13 +36,11 @@ const Pages = () => {
         setToken(parsedToken); // Update state only if parsing is successful
       } catch (error) {
         console.error("Error parsing stored token:", error);
-
         localStorage.removeItem("token");
       }
     }
   }, []);
 
-  // Update localStorage only when token changes and is valid
   useEffect(() => {
     if (token) {
       try {
@@ -39,13 +55,17 @@ const Pages = () => {
     <div>
       <Routes>
         <Route
-          path={"/login"}
+          path="/login"
           element={
-            token ? <Navigate to="/" replace /> : <Login settoken={setToken} />
+            token ? (
+              <Navigate to="/" replace />
+            ) : (
+              <Login settoken={setToken} setupdload={setUpdload} />
+            )
           }
         />
         <Route
-          path={"/signup"}
+          path="/signup"
           element={
             token ? (
               <Navigate to="/" replace />
@@ -55,7 +75,7 @@ const Pages = () => {
           }
         />
         <Route
-          path={"/fpassuser"}
+          path="/fpassuser"
           element={
             token ? (
               <Navigate to="/" replace />
@@ -65,7 +85,7 @@ const Pages = () => {
           }
         />
         <Route
-          path={"/newpass"}
+          path="/newpass"
           element={
             token ? (
               <Newpass settoken={setToken} />
@@ -75,8 +95,14 @@ const Pages = () => {
           }
         />
         <Route
-          path={"/"}
+          path="/update-details"
+          element={updload ? <Update /> : <p>not yet logged</p>}
+        />
+
+        <Route
+          path="/"
           element={
+            //<Home data={token} />
             token ? <Home data={token} /> : <Navigate to="/login" replace />
           }
         />
