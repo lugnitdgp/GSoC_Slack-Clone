@@ -1,15 +1,13 @@
-import "./register.css";
+import registerCSS from "./register.module.css";
 import supabase from "../supabase.jsx";
-import { useState, useRef, useContext, useEffect } from "react";
+import { useState, useRef, useContext} from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { FaRegEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa";
-import { FaUserAlt } from "react-icons/fa";
+import { FaUserAlt,FaGithub,FaRegEye,FaEyeSlash, FaGoogle,FaPhoneAlt  } from "react-icons/fa";
 import { IoMdMail } from "react-icons/io";
-import { FaPhoneAlt } from "react-icons/fa";
 import bcrypt from "bcryptjs/dist/bcrypt.js";
 import { CheckemailExists } from "../database.jsx";
 import { Allconvers } from "../context api/context.jsx";
+
 
 function Register({ settoken }) {
   const { userId } = useContext(Allconvers);
@@ -135,79 +133,86 @@ function Register({ settoken }) {
   }
 
   return (
-    <div className="page">
-      <form onSubmit={signup}>
-        <div className="box">
-          <h1>Sign up</h1>
-          <div className="username input">
-            <span>
-              <FaUserAlt />
-            </span>
-            <input type="text" placeholder="username" ref={usernameRef} />
+    
+      <form onSubmit={signup} className={registerCSS.form}>
+        <h1 className={registerCSS.h1}>Sign up</h1>
+        <div className={registerCSS.social}>
+          <div
+            className={registerCSS.media}
+            onClick={() => handleOAuth("google")}
+          >
+            <FaGoogle />
           </div>
-          <div className="email input">
-            <span>
-              <IoMdMail />
-            </span>
-            <input type="text" placeholder="E-Mail I.D" ref={emailRef} />
-          </div>
-          <div className="phone input">
-            <span>
-              <FaPhoneAlt />
-            </span>
-            <input
-              type="tel"
-              placeholder="Ph No."
-              pattern="[0-9]{10}"
-              ref={phoneRef}
-            />
-          </div>
-          <div className="pass input">
-            {passwordVisible ? (
-              <span onClick={togglePasswordVisibility}>
-                <FaRegEye />
-              </span>
-            ) : (
-              <span onClick={togglePasswordVisibility}>
-                <FaEyeSlash />
-              </span>
-            )}
-            <input
-              type={passwordVisible ? "text" : "password"}
-              placeholder="Password"
-              ref={passRef}
-              onChange={(e) => {
-                passwordChange(e.target.value);
-              }}
-            />
-          </div>
-          <div className="cpass input">
-            {passwordVisible2 ? (
-              <span onClick={togglePasswordVisibility2}>
-                <FaRegEye />
-              </span>
-            ) : (
-              <span onClick={togglePasswordVisibility2}>
-                <FaEyeSlash />
-              </span>
-            )}
-            <input
-              type={passwordVisible2 ? "text" : "password"}
-              placeholder="Confirm Password"
-              ref={cpassRef}
-            />
-          </div>
-          <div className="enter" type="submit">
-            <button>Signup</button>
-          </div>
-          <div className="other">
-            <p>
-              Already have an account? <Link to="/login">Login</Link>
-            </p>
+          <div
+            className={registerCSS.media}
+            onClick={() => handleOAuth("github")}
+          >
+            <FaGithub />
           </div>
         </div>
+        <p className={registerCSS.p}>Or use your E-Mail</p>
+        <div className={registerCSS.inputout}>
+          <span>
+            <FaUserAlt />
+          </span>
+          <input type="text" placeholder="username" ref={usernameRef} className={registerCSS.input}/>
+        </div>
+        <div className={registerCSS.inputout}>
+          <span>
+            <IoMdMail />
+          </span>
+          <input type="text" placeholder="E-Mail I.D" ref={emailRef} className={registerCSS.input}/>
+        </div>
+        <div className={registerCSS.inputout}>
+          <span>
+            <FaPhoneAlt />
+          </span>
+          <input
+            type="tel"
+            placeholder="Ph No."
+            pattern="[0-9]{10}"
+            ref={phoneRef} className={registerCSS.input}
+          />
+        </div>
+        <div className={registerCSS.inputout}>
+          {passwordVisible ? (
+            <span onClick={togglePasswordVisibility}>
+              <FaRegEye />
+            </span>
+          ) : (
+            <span onClick={togglePasswordVisibility}>
+              <FaEyeSlash />
+            </span>
+          )}
+          <input
+            type={passwordVisible ? "text" : "password"}
+            placeholder="Password"
+            ref={passRef} className={registerCSS.input}
+            onChange={(e) => {
+              passwordChange(e.target.value);
+            }}
+          />
+        </div>
+        <div className={registerCSS.inputout}>
+          {passwordVisible2 ? (
+            <span onClick={togglePasswordVisibility2}>
+              <FaRegEye />
+            </span>
+          ) : (
+            <span onClick={togglePasswordVisibility2}>
+              <FaEyeSlash />
+            </span>
+          )}
+          <input
+            type={passwordVisible2 ? "text" : "password"}
+            placeholder="Confirm Password"
+            ref={cpassRef} className={registerCSS.input}
+          />
+        </div>
+          <button className={registerCSS.enter} type="submit">Signup</button>
+        
       </form>
-    </div>
+   
   );
 }
 export default Register;

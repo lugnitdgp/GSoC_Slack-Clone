@@ -1,8 +1,11 @@
-import "./loginbox.css";
+import loginboxCSS from "./loginbox.module.css";
 import supabase from "../supabase";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { FaRegEye, FaEyeSlash, FaUserAlt } from "react-icons/fa";
+import { FaGoogle } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
+import { CheckemailExists, PasswordCheck } from "../database";
 // Assuming CheckemailExists and PasswordCheck functions are defined elsewhere
 
 function Login({ settoken, setUpdload }) {
@@ -13,24 +16,19 @@ function Login({ settoken, setUpdload }) {
   const emailRef = useRef("");
   const passRef = useRef("");
 
-  
-
-  async function google() {
+  async function handleOAuth(provider) {
     try {
       let { data, error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
+        provider: provider,
         options: {
           redirectTo: window.location.origin + "/update-details", // Redirect to update-details after login
         },
-      })
+      });
       if (data) {
-          setUpdload(true);
-          alert('done')
-        } else{
-          console.log(error)
-        }
-
-     
+        console.log(data);
+      } else {
+        console.log(error);
+      }
     } catch (error) {
       console.error("Error in Google sign-in:", error);
     }
@@ -40,11 +38,13 @@ function Login({ settoken, setUpdload }) {
     b.preventDefault();
     const email = emailRef.current.value;
     const pass = passRef.current.value;
-
+    console.log(email, pass);
     const doesemailExist = await CheckemailExists(email);
-    const passcorrect = await PasswordCheck(email, pass);
+    console.log(doesemailExist);
 
     if (doesemailExist) {
+      const passcorrect = await PasswordCheck(email, pass);
+      console.log(passcorrect);
       if (passcorrect) {
         try {
           let { data, error } = await supabase.auth.signInWithPassword({
@@ -54,11 +54,8 @@ function Login({ settoken, setUpdload }) {
           if (data) {
             if (data.user != null && data.session != null) {
               alert("Successful log in redirecting to Homepage");
-              settoken(data.user);
-              localStorage.setItem('token', JSON.stringify(data.user));
-              setLoginMethod('email'); // Store the login method
-              setUpdload('true');
               navigate("/");
+              settoken(data);
             } else if (data.user == null && data.session == null) {
               alert("Wrong password");
             }
@@ -68,7 +65,6 @@ function Login({ settoken, setUpdload }) {
           }
         } catch (error) {
           console.error("Unexpected error:", error);
-          alert("An unexpected error occurred. Please try again later.");
         }
       } else {
         alert("Wrong password");
@@ -80,51 +76,60 @@ function Login({ settoken, setUpdload }) {
   }
 
   return (
-    <div className="page">
-      <form onSubmit={login}>
-        <div className="box">
-          <h1>LOGIN</h1>
-          <div className="email input">
-            <span>
-              <FaUserAlt />
-            </span>
-            <input type="text" placeholder="E-Mail I.D" ref={emailRef} />
-          </div>
-          <div className="pass input">
-            {passwordVisible ? (
-              <span onClick={togglePasswordVisibility}>
-                <FaRegEye />
-              </span>
-            ) : (
-              <span onClick={togglePasswordVisibility}>
-                <FaEyeSlash />
-              </span>
-            )}
-            <input
-              type={passwordVisible ? "text" : "password"}
-              placeholder="Password"
-              ref={passRef}
-            />
-          </div>
-          <div className="forsh">
-            <p>
-              <Link to="/fpassuser">Forgot Password</Link>
-            </p>
-          </div>
-          <div className="enter">
-            <button type="submit">Login</button>
-          </div>
-          <div className="other">
-            <div className="enter">
-              <button type="button" onClick={google}>Google</button>
-            </div>
-            <p>
-              Don't have an account yet? <Link to="/signup">Sign up</Link>
-            </p>
-          </div>
+    <form onSubmit={login} className={loginboxCSS.form}>
+      <h1 className={loginboxCSS.h1}>LOGIN</h1>
+      <div className={loginboxCSS.social}>
+        <div
+          className={loginboxCSS.media}
+          onClick={() => handleOAuth("google")}
+        >
+          <FaGoogle />
         </div>
-      </form>
-    </div>
+        <div
+          className={loginboxCSS.media}
+          onClick={() => handleOAuth("github")}
+        >
+          <FaGithub />
+        </div>
+      </div>
+      <p className={loginboxCSS.p}>Or use your E-Mail</p>
+      <div className={loginboxCSS.inputout}>
+        <span>
+          <FaUserAlt />
+        </span>
+        <input
+          type="text"
+          placeholder="E-Mail I.D"
+          ref={emailRef}
+          className={loginboxCSS.input}
+        />
+      </div>
+      <div className={loginboxCSS.inputout}>
+        {passwordVisible ? (
+          <span onClick={togglePasswordVisibility}>
+            <FaRegEye />
+          </span>
+        ) : (
+          <span onClick={togglePasswordVisibility}>
+            <FaEyeSlash />
+          </span>
+        )}
+        <input
+          type={passwordVisible ? "text" : "password"}
+          placeholder="Password"
+          ref={passRef}
+          className={loginboxCSS.input}
+        />
+      </div>
+      <div className={loginboxCSS.forgot}>
+        <p>
+          <Link to="/fpassuser">Forgot Password</Link>
+        </p>
+      </div>
+      <button type="submit" className={loginboxCSS.enter}>
+        Login
+      </button>
+    </form>
   );
 }
 export default Login;
