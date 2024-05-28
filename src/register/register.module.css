@@ -55,13 +55,13 @@
   outline: none;
 }
 .enter {
-  color: #fff;
-  background: #ff4b2b;
+  color: #2b2929;
+  background: #fc9917;
   font-size: 12px;
   font-weight: bold;
   padding: 12px 55px;
   margin: 14px;
-  border: 1px solid #ff4b2b;
+  border: 1px solid #fc9917;
   outline: none;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -72,5 +72,5 @@
   transform: scale(0.9);
 }
 .enter:hover {
-  background: #f34324;
+    background: #ff9101;
 }

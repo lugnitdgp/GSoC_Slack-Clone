@@ -4,13 +4,14 @@ import chatboxnavCSS from "./chatboxnav.module.css";
 import { Allconvers } from "../context api/context";
 import supabase from "../supabase";
 
-export default function Searchuser(currentUser) {
+export default function Searchuser({currentUser}) {
+    const{Dm,setDm}=useContext(Allconvers)
   const [Username, setUsername] = useState("");
   const [user, setUser] = useState(null); // Initialize with null
-
+const[dmopen,setDmopen]=useState(false)
   // Log current user ID
-
-  console.log(currentUser.currentUser.id);
+    
+  console.log(currentUser.id);
 
   // Log user state updates
   useEffect(() => {
@@ -21,6 +22,7 @@ export default function Searchuser(currentUser) {
 
   // Handle search input and fetch user details
   const handleSearch = async () => {
+    
     const fetchedUser = await UserdetailsbyName(Username);
     console.log(fetchedUser);
     if (fetchedUser && fetchedUser.length > 0) {
@@ -41,11 +43,13 @@ export default function Searchuser(currentUser) {
   const handleUser = async () => {
     if (user && user.length > 0) {
       const combinedId =
-        user[0].id > currentUser.currentUser.id
-          ? user[0].id + currentUser.currentUser.id
-          : currentUser.currentUser.id + user[0].id;
+        user[0].id > currentUser.id
+          ? user[0].id + currentUser.id
+          : currentUser.id + user[0].id;
       console.log(combinedId);
-
+      setDmopen(true)
+      setDm(false)
+      
       try {
         const { data, error } = await supabase
           .from("chats_dm")
@@ -79,7 +83,7 @@ export default function Searchuser(currentUser) {
               },
             ],
           })
-          .eq("id", currentUser.currentUser.id) // Filter by current user's ID
+          .eq("id", currentUser.id) // Filter by current user's ID
           .select(); // Get the updated row (optional)
 
         if (error) {
@@ -87,6 +91,7 @@ export default function Searchuser(currentUser) {
           // Handle error (e.g., display error message to user)
         } else {
           console.log("Message updated successfully:", data);
+          
           // Handle successful update (e.g., update UI)
         }
       } catch (error) {
@@ -102,9 +107,9 @@ export default function Searchuser(currentUser) {
               {
                 combinedId: {
                   userinfo: {
-                    uid: currentUser.currentUser.id, //update the intiaziation of chat between current user and the user they
-                    uusername: currentUser.currentUser.username, //searched for to the the user the current user searched
-                    uphoto: currentUser.currentUser.avatar_url,
+                    uid: currentUser.id, //update the intiaziation of chat between current user and the user they
+                    uusername: currentUser.username, //searched for to the the user the current user searched
+                    uphoto: currentUser.avatar_url,
                   },
                   date: new Date().toISOString(), // Store date in ISO format
                 },
@@ -127,10 +132,12 @@ export default function Searchuser(currentUser) {
       }
     }
   };
-
+console.log(dmopen,Dm)
   return (
     <>
-      <div className={chatboxnavCSS.searchbar}>
+      {dmopen&&(!Dm) ?(<p>Hiiiii</p>):(
+        <>
+        <div className={chatboxnavCSS.searchbar}>
         <div className={chatboxnavCSS.heading}>
           <p>New Message</p>
         </div>
@@ -170,7 +177,8 @@ export default function Searchuser(currentUser) {
             </div>
           </div>
         )}
-      </div>
+      </div></>
+      )}
     </>
   );
 }

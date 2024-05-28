@@ -8,12 +8,12 @@ import { FaPowerOff } from "react-icons/fa6";
 import { Allconvers } from "../context api/context";
 
 function Home(data) {
-  
-  const { setUserId, currentUser, userId } = useContext(Allconvers);
+  const { setUserId, currentUser, userId,Dm, setDm } = useContext(Allconvers);
   const [isLoading, setIsLoading] = useState(true); // Use state to manage loading
   const [name, setName] = useState("");
   const [phno, setPhno] = useState("");
-  const [Dm, setDm] = useState(false);
+  const[confirmdm,setConformdm]=useState(false)
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,7 +87,10 @@ function Home(data) {
                     <div className={homepaseCSS.contacts}>
                       <button
                         className={homepaseCSS.dm}
-                        onClick={(s) => setDm(true)}
+                        onClick={(s) => {
+                          setDm(true);
+                          setConformdm(true)
+                        }}
                       >
                         {console.log(Dm)}
                         Direct message
@@ -108,8 +111,10 @@ function Home(data) {
               </div>
 
               <div className={homepaseCSS.chatbox}>
-                {Dm ? (
-                  <Searchuser currentUser={currentUser[0]} />
+                {Dm ||confirmdm ? (
+                  <Searchuser
+                    currentUser={currentUser[0]} 
+                  />
                 ) : (
                   <>
                     <div className={homepaseCSS.presentcontact}></div>

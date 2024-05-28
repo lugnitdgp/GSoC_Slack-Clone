@@ -56,12 +56,12 @@
 }
 .enter {
   color: #fff;
-  background: #ff4b2b;
+  background: #4d0ff8;
   font-size: 12px;
   font-weight: bold;
   padding: 12px 55px;
   margin: 20px;
-  border: 1px solid #ff4b2b;
+  border: 1px solid #4d0ff8;
   outline: none;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -70,4 +70,7 @@
 }
 .enter:active {
   transform: scale(0.9);
+}
+.enter:hover{
+    background: #4509e9;
 }

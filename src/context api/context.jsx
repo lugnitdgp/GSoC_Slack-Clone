@@ -6,7 +6,7 @@ export const Allconvers = createContext({});
 export const AllconversProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState([]); // Initialize with an empty string
   const [userId, setUserId] = useState(null); // Initialize with null
-
+  const [Dm, setDm] = useState(false);  // for the direct-messages page management
   const [isLoading, setIsLoading] = useState(true); // Added loading state
 
   // Fetch user data once on component mount
@@ -42,7 +42,7 @@ export const AllconversProvider = ({ children }) => {
     setCurrentUser,
     userId,
     setUserId,
-    isLoading, // Expose loading state
+    isLoading, Dm,setDm,
   };
 
   return (

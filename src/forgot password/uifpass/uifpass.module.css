@@ -8,7 +8,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(to right, #ffd61dd3, #4f28ffcb);
+  background: url("/home/sravan/Desktop/web/slack clone/slack-clone/src/images/pexels-photonova-2872856.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
   font-family: "montserrat", sans-serif;
 }
 .container {
@@ -77,11 +79,10 @@
 .overlay {
   position: relative;
   color: #fff;
-  background: #ff416c;
   left: -100%;
   height: 100%;
   width: 200%;
-  background: linear-gradient(to right, #3cfd15, #22b9ff);
+  background: linear-gradient(to right, #183bfd, #ae00ff);
   transform: translateX(0);
   transition: transform 0.6s ease-in-out;
 }
@@ -101,19 +102,11 @@
   top: 0px;
   height: 100%;
   width: 50%;
-  transform: translateX(0);
   transition: transform 0.6s ease-in-out;
 }
 .overlay_left {
-  transform: translateX(-20%);
+  left: 0px;
 }
 .overlay_right {
   right: 0px;
-  transform: translateX(0);
-}
-.container.right_panel_active .overlay_left {
-  transform: translateX(0);
-}
-.container.right_panel_active .overlay_right {
-  transform: translateX(20%);
 }
