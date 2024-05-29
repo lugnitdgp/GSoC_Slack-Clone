@@ -92,7 +92,7 @@ function Home(data) {
                           setConformdm(true)
                         }}
                       >
-                        {console.log(Dm)}
+                       
                         Direct message
                       </button>
                     </div>
