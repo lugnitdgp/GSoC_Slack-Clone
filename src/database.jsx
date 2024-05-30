@@ -70,3 +70,15 @@ export async function UserdetailsbyName(username) {
   }
   return specific_user_data;
 }
+export async function fetchUserDmChats(user) {
+  let { data: dmstored, error } = await supabase
+    .from("direct_messages")
+    .select("dm_chats")
+    .eq("id", user.id);
+
+  if (error) {
+    console.error("Error fetching user data:", error);
+  } else {
+    return(dmstored[0]?.dm_chats || []);
+  }
+}

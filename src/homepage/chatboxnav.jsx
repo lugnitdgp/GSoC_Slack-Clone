@@ -3,6 +3,7 @@ import { UserdetailsbyName } from "../database";
 import chatboxnavCSS from "./chatboxnav.module.css";
 import { Allconvers } from "../context api/context";
 import supabase from "../supabase";
+import { fetchUserDmChats } from "../database";
 
 export default function Searchuser({ currentUser }) {
   const { Dm, setDm } = useContext(Allconvers);
@@ -11,10 +12,9 @@ export default function Searchuser({ currentUser }) {
   const [dmopen, setDmopen] = useState(false);
   const [currentuserdm_chats, setcurrentuserdm_chats] = useState([]);
   const [userdm_chats, setuserdm_chats] = useState([]);
-  const [combinedIdExists, setcombinedidExists] = useState(false);
-  const [combinedIdExists2, setcombinedidExists2] = useState(false);
-  const [clickeduser, setClickeduser] = useState(null);
+  const [clickeduser,setClickeduser]=useState("")
   const [combinedId, setcombinedId] = useState("");
+  const [isUpdating, setIsUpdating] = useState(false); // Flag to track update process
 
   useEffect(() => {
     console.log("dm stored current", currentuserdm_chats);
@@ -41,23 +41,6 @@ export default function Searchuser({ currentUser }) {
   };
 
   useEffect(() => {
-    async function fetchCurrentUserDmChats() {
-      let { data: dmstored, error } = await supabase
-        .from("direct_messages")
-        .select("dm_chats")
-        .eq("id", currentUser.id);
-
-      if (error) {
-        console.error("Error fetching user data:", error);
-      } else {
-        setcurrentuserdm_chats(dmstored[0]?.dm_chats || []);
-      }
-    }
-
-    fetchCurrentUserDmChats();
-  }, [clickeduser]);
-
-  useEffect(() => {
     if (clickeduser) {
       const combinedid =
         clickeduser.id > currentUser.id
@@ -65,127 +48,116 @@ export default function Searchuser({ currentUser }) {
           : currentUser.id + clickeduser.id;
       setcombinedId(combinedid);
 
-      async function fetchUserDmChats(user) {
-        let { data: dmstored2, error } = await supabase
-          .from("direct_messages")
-          .select("dm_chats")
-          .eq("id", user.id);
-
-        if (error) {
-          console.error("Error fetching user data:", error);
-        } else {
-          setuserdm_chats(dmstored2[0]?.dm_chats || []);
+      (async () => {
+        setIsUpdating(true); // Set update flag to true
+        try {
+          const currdmchat = await fetchUserDmChats(currentUser);
+          const usdmchat = await fetchUserDmChats(clickeduser);
+          setcurrentuserdm_chats(currdmchat);
+          setuserdm_chats(usdmchat);
+        } catch (error) {
+          console.error("Error fetching dm chats:", error);
+        } finally {
+          setIsUpdating(false); // Set update flag to false after fetching
         }
-      }
-
-      fetchUserDmChats(clickeduser);
+      })();
     }
-  }, [clickeduser, currentUser.id]);
-
-  useEffect(() => {
-    if (combinedId) {
-      const checkCombinedIdExists = (chats) =>
-        chats.some((chat) => chat.combinedId === combinedId);
-
-      const currentUserCombinedIdExists = checkCombinedIdExists(currentuserdm_chats);
-      const selectedUserCombinedIdExists = checkCombinedIdExists(userdm_chats);
-
-      setcombinedidExists(currentUserCombinedIdExists);
-      setcombinedidExists2(selectedUserCombinedIdExists);
-
-      if (!currentUserCombinedIdExists || !selectedUserCombinedIdExists) {
-        (async () => {
-          try {
-            const { data, error } = await supabase
-              .from("chats_dm")
-              .insert([{ id: combinedId, messages: [] }])
-              .select();
-      
-            if (data) {
-              console.log(data);
-            } else {
-              console.log("Error inserting chat:", error);
-            }
-          } catch (error) {
-            console.log("Error in new chat creation:", error);
-          }
-          if (!currentUserCombinedIdExists) {
-            try {
-              const { data, error } = await supabase
-                .from("direct_messages")
-                .update({
-                  dm_chats: [
-                    ...currentuserdm_chats,
-                    {
-                      combinedId: combinedId,
-                      userinfo: {
-                        uid: clickeduser.id,
-                        uusername: clickeduser.username,
-                        uemail: clickeduser.email,
-                        uphoto: clickeduser.avatar_url,
-                      },
-                      date: new Date().toISOString(),
-                    },
-                  ],
-                })
-                .eq("id", currentUser.id)
-                .select();
-
-              if (error) {
-                console.error("Error updating direct message:", error);
-              } else {
-                console.log("Message updated successfully current:", data);
-              }
-            } catch (error) {
-              console.error("Unexpected error:", error);
-            }
-          }
-
-          if (!selectedUserCombinedIdExists) {
-            try {
-              const { data, error } = await supabase
-                .from("direct_messages")
-                .update({
-                  dm_chats: [
-                    ...userdm_chats,
-                    {
-                      combinedId: combinedId,
-                      userinfo: {
-                        uid: currentUser.id,
-                        uusername: currentUser.username,
-                        uemail: currentUser.email,
-                        uphoto: currentUser.avatar_url,
-                      },
-                      date: new Date().toISOString(),
-                    },
-                  ],
-                })
-                .eq("id", clickeduser.id)
-                .select();
-
-              if (error) {
-                console.error("Error updating direct message2:", error);
-              } else {
-                console.log("Message updated successfully2 user:", data);
-              }
-            } catch (error) {
-              console.error("Unexpected error2:", error);
-            }
-          }
-        })();
-      } else {
-        console.log("Combined ID already exists for both users");
-      }
-    }
-  }, [combinedId, currentuserdm_chats, userdm_chats, clickeduser, currentUser.id]);
+  }, [clickeduser]);
 
   const handleUser = async (user) => {
     setClickeduser(user);
     setDmopen(true);
     setDm(false);
-
-    
   };
+
+  useEffect(() => {
+    if (combinedId && !isUpdating) {
+      const checkCombinedIdExists = (chats) =>
+        chats.some((chat) => chat.combinedId === combinedId);
+
+      const currentUserCombinedIdExists =
+        checkCombinedIdExists(currentuserdm_chats);
+      const selectedUserCombinedIdExists = checkCombinedIdExists(userdm_chats);
+
+      (async () => {
+        try {
+          // Insert new chat if combined ID doesn't exist in either user's chats
+          if (!currentUserCombinedIdExists && !selectedUserCombinedIdExists) {
+            const { data, error } = await supabase
+              .from("chats_dm")
+              .insert([{ id: combinedId, messages: [] }])
+              .select();
+
+            if (error) {
+              console.error("Error inserting chat:", error);
+            } else {
+              console.log(data);
+            }
+          }
+
+          // Update direct messages for current user if combined ID doesn't exist
+          if (!currentUserCombinedIdExists) {
+            const { data, error } = await supabase
+              .from("direct_messages")
+              .update({
+                dm_chats: [
+                  ...currentuserdm_chats,
+                  {
+                    combinedId: combinedId,
+                    userinfo: {
+                      uid: clickeduser.id,
+                      uusername: clickeduser.username,
+                      uemail: clickeduser.email,
+                      uphoto: clickeduser.avatar_url,
+                    },
+                    date: new Date().toISOString(),
+                  },
+                ],
+              })
+              .eq("id", currentUser.id)
+              .select();
+
+            if (error) {
+              console.error("Error updating direct message:", error);
+            } else {
+              console.log("Message updated successfully current:", data);
+            }
+          }
+
+          // Update direct messages for selected user if combined ID doesn't exist
+          if (!selectedUserCombinedIdExists) {
+            const { data, error } = await supabase
+              .from("direct_messages")
+              .update({
+                dm_chats: [
+                  ...userdm_chats,
+                  {
+                    combinedId: combinedId,
+                    userinfo: {
+                      uid: currentUser.id,
+                      uusername: currentUser.username,
+                      uemail: currentUser.email,
+                      uphoto: currentUser.avatar_url,
+                    },
+                    date: new Date().toISOString(),
+                  },
+                ],
+              })
+              .eq("id", clickeduser.id)
+              .select();
+
+            if (error) {
+              console.error("Error updating direct message2:", error);
+            } else {
+              console.log("Message updated successfully2 user:", data);
+            }
+          }
+        } catch (error) {
+          console.error("Unexpected error:", error);
+        }
+      })();
+    }
+  }, [combinedId, isUpdating]);
 
   return (
     <>
@@ -217,7 +189,9 @@ export default function Searchuser({ currentUser }) {
                 <div
                   key={u.id}
                   className={chatboxnavCSS.Suserbox}
-                  onClick={() => handleUser(u)}
+                  onClick={() =>{handleUser(u) 
+                    setClickeduser(u)
+                  } }
                 >
                   <div className={chatboxnavCSS.Suserphoto}>
                     <img
