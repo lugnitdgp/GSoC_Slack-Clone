@@ -12,7 +12,7 @@ export default function Searchuser({ currentUser }) {
   const [dmopen, setDmopen] = useState(false);
   const [currentuserdm_chats, setcurrentuserdm_chats] = useState([]);
   const [userdm_chats, setuserdm_chats] = useState([]);
-  const [clickeduser,setClickeduser]=useState("")
+  const [clickeduser, setClickeduser] = useState("");
   const [combinedId, setcombinedId] = useState("");
   const [isUpdating, setIsUpdating] = useState(false); // Flag to track update process
 
@@ -66,6 +66,8 @@ export default function Searchuser({ currentUser }) {
 
   const handleUser = async (user) => {
     setClickeduser(user);
+    setUsername("");
+    setUser(null);
     setDmopen(true);
     setDm(false);
   };
@@ -189,9 +191,10 @@ export default function Searchuser({ currentUser }) {
                 <div
                   key={u.id}
                   className={chatboxnavCSS.Suserbox}
-                  onClick={() =>{handleUser(u) 
-                    setClickeduser(u)
-                  } }
+                  onClick={() => {
+                    handleUser(u);
+                    setClickeduser(u);
+                  }}
                 >
                   <div className={chatboxnavCSS.Suserphoto}>
                     <img
@@ -214,6 +217,7 @@ export default function Searchuser({ currentUser }) {
                 </div>
               </div>
             )}
+            <div className={chatboxnavCSS.textwork}></div>
           </div>
         </>
       )}

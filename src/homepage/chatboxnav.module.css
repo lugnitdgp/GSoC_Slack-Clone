@@ -37,7 +37,12 @@
     background-color: transparent;
 }
 .chats{
-    height: 77%;
+    height: 92%;
+    width: 100%;
+    background-color: rgb(229, 229, 231);
+}
+.textwork{
+    height: 15%;
     width: 100%;
     background-color: rgb(229, 229, 231);
 }

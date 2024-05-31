@@ -1,4 +1,4 @@
-import { Getuserdetails, idm } from "../database";
+import { Getuserdetails, idm, fetchUserDmChats } from "../database";
 import { useState, useEffect, useContext } from "react";
 import supabase from "../supabase";
 import homepaseCSS from "./homepage.module.css";
@@ -8,12 +8,13 @@ import { FaPowerOff } from "react-icons/fa6";
 import { Allconvers } from "../context api/context";
 
 function Home(data) {
-  const { setUserId, currentUser, userId,Dm, setDm } = useContext(Allconvers);
+  const { setUserId, currentUser, userId, Dm, setDm } = useContext(Allconvers);
   const [isLoading, setIsLoading] = useState(true); // Use state to manage loading
   const [name, setName] = useState("");
   const [phno, setPhno] = useState("");
-  const[confirmdm,setConformdm]=useState(false)
-
+  const [confirmdm, setConformdm] = useState(false);
+  const [dmcontacts, setDmcontacts] = useState([]);
+  const [conupdate, setConupdate] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,7 +29,17 @@ function Home(data) {
         console.log("No user found.");
       }
     };
+    const fetchdmdata = async () => {
+      const dmcontactinfo = await fetchUserDmChats(data.data.user);
+      if (dmcontactinfo) {
+        console.log("dmchatinfo:", dmcontactinfo);
+        setDmcontacts(dmcontactinfo);
+        console.log("dmchatinfo2:", dmcontacts);
+      }
+    };
+
     fetchData();
+    fetchdmdata();
   }, [data]);
   useEffect(() => {
     const insertdm = async () => {
@@ -37,7 +48,13 @@ function Home(data) {
     };
     insertdm();
   }, [userId]); // Run effect only when data changes
-
+  useEffect(() => {
+    console.log("newdminfochange2", dmcontacts);
+    setConupdate(false);
+  }, [dmcontacts]);
+  useEffect(() => {
+    console.log("dmload", conupdate);
+  }, [conupdate]);
   async function signout() {
     try {
       let { error } = await supabase.auth.signOut();
@@ -53,7 +70,39 @@ function Home(data) {
       console.log(error);
     }
   }
+  useEffect(() => {
+    const dmchats = (e) => {
+      
+      const channel = supabase
+        .channel("currentdmchats-channel")
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "direct_messages",
+            select: "dm_chats",
+            filter: `id=eq.${data.data.user.id}`,
+          },
+          (payload) => {
+            setDmcontacts((prevdmcontacts) => [...prevdmcontacts, payload.new]);
+            setConupdate(true)
+            console.log("newdminfochange", dmcontacts); // Update state with new data
+            console.log("Change received!", payload);
+            
+          }
+        )
+        .subscribe();
 
+      // Cleanup function to unsubscribe from the channel
+      return () => {
+        supabase.removeChannel(channel);
+        console.log("newdminfochange", dmcontacts);
+      };
+    };
+    data.data.user.id && dmchats();
+  }, [data.data.user.id]);
+  console.log(Object.entries(dmcontacts));
   return (
     <>
       {isLoading ? (
@@ -89,12 +138,32 @@ function Home(data) {
                         className={homepaseCSS.dm}
                         onClick={(s) => {
                           setDm(true);
-                          setConformdm(true)
+                          setConformdm(true);
                         }}
                       >
-                       
                         Direct message
                       </button>
+
+                     {!conupdate?(
+                       Object.entries(dmcontacts)?.map((contact) => (
+                        <div
+                          className={homepaseCSS.sdmcontact}
+                          key={contact[1].combinedId}
+                        >
+                          <img src="" alt="" className={homepaseCSS.sdmimg} />
+                          <div className={homepaseCSS.sdmcontactinfo}>
+                            <>
+                              <span className={homepaseCSS.sdmcontactname}>
+                                {contact[1].userinfo.uusername}
+                              </span>
+                              <span className={homepaseCSS.sdmcontactmail}>
+                                {contact[1].userinfo.uemail}
+                              </span>
+                            </>
+                          </div>
+                        </div>
+                      ))
+                     ):(<p>Loading</p>)}
                     </div>
                   </div>
                 </div>
@@ -111,17 +180,14 @@ function Home(data) {
               </div>
 
               <div className={homepaseCSS.chatbox}>
-                {Dm ||confirmdm ? (
-                  <Searchuser
-                    currentUser={currentUser[0]} 
-                  />
+                {Dm || confirmdm ? (
+                  <Searchuser currentUser={currentUser[0]} />
                 ) : (
                   <>
                     <div className={homepaseCSS.presentcontact}></div>
                     <div className={homepaseCSS.chats}></div>
                   </>
                 )}
-                <div className={homepaseCSS.textwork}></div>
               </div>
             </div>
           </div>

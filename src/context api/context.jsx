@@ -34,6 +34,7 @@ export const AllconversProvider = ({ children }) => {
   // Log currentUser whenever it changes
   useEffect(() => {
     console.log("Current User State Updated:", currentUser);
+    
   }, [currentUser]);
 
   // Expose values to child components
