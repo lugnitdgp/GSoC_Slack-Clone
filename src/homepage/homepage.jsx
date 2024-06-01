@@ -6,15 +6,19 @@ import { FaEdit } from "react-icons/fa";
 import Searchuser from "./chatboxnav";
 import { FaPowerOff } from "react-icons/fa6";
 import { Allconvers } from "../context api/context";
+import { Chatcontext } from "../context api/chatcontext";
+import { Chats } from "./chats";
 
 function Home(data) {
   const { setUserId, currentUser, userId, Dm, setDm } = useContext(Allconvers);
+  const {dispatch}=useContext(Chatcontext)
   const [isLoading, setIsLoading] = useState(true); // Use state to manage loading
   const [name, setName] = useState("");
   const [phno, setPhno] = useState("");
   const [confirmdm, setConformdm] = useState(false);
   const [dmcontacts, setDmcontacts] = useState([]);
   const [conupdate, setConupdate] = useState(false);
+  const[chat,setchat]=useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,10 +54,12 @@ function Home(data) {
   }, [userId]); // Run effect only when data changes
   useEffect(() => {
     console.log("newdminfochange2", dmcontacts);
-    setConupdate(false);
+    setConupdate(false)
+  
   }, [dmcontacts]);
   useEffect(() => {
     console.log("dmload", conupdate);
+
   }, [conupdate]);
   async function signout() {
     try {
@@ -71,7 +77,7 @@ function Home(data) {
     }
   }
   useEffect(() => {
-    const dmchats = (e) => {
+    const dmchats = () => {
       
       const channel = supabase
         .channel("currentdmchats-channel")
@@ -85,11 +91,11 @@ function Home(data) {
             filter: `id=eq.${data.data.user.id}`,
           },
           (payload) => {
-            setDmcontacts((prevdmcontacts) => [...prevdmcontacts, payload.new]);
             setConupdate(true)
-            console.log("newdminfochange", dmcontacts); // Update state with new data
+            setDmcontacts((prevdmcontacts) => [...prevdmcontacts, payload.new]); // Update state with new data
             console.log("Change received!", payload);
             
+
           }
         )
         .subscribe();
@@ -97,11 +103,14 @@ function Home(data) {
       // Cleanup function to unsubscribe from the channel
       return () => {
         supabase.removeChannel(channel);
-        console.log("newdminfochange", dmcontacts);
+        
       };
     };
     data.data.user.id && dmchats();
   }, [data.data.user.id]);
+  const handlechatselect=(u)=>{
+    dispatch({type:"Change_user" ,payload:u})
+  }
   console.log(Object.entries(dmcontacts));
   return (
     <>
@@ -148,7 +157,9 @@ function Home(data) {
                        Object.entries(dmcontacts)?.map((contact) => (
                         <div
                           className={homepaseCSS.sdmcontact}
-                          key={contact[1].combinedId}
+                          key={contact[1].combinedId} onClick={()=>{handlechatselect(contact[1].userinfo)
+                            setchat(true)
+                          }}
                         >
                           <img src="" alt="" className={homepaseCSS.sdmimg} />
                           <div className={homepaseCSS.sdmcontactinfo}>
@@ -181,12 +192,12 @@ function Home(data) {
 
               <div className={homepaseCSS.chatbox}>
                 {Dm || confirmdm ? (
-                  <Searchuser currentUser={currentUser[0]} />
+                  <Searchuser currentUser={currentUser[0]} setconupdate={setConupdate} setdmcontacts={setDmcontacts}/>
                 ) : (
-                  <>
+                  chat?(<Chats />):(<>
                     <div className={homepaseCSS.presentcontact}></div>
                     <div className={homepaseCSS.chats}></div>
-                  </>
+                  </>)
                 )}
               </div>
             </div>

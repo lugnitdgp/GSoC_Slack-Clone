@@ -1,0 +1,25 @@
+*{
+    box-sizing: border-box;
+}
+.chat{
+    height: 100%;
+    width: 100%;
+    background-color: antiquewhite;
+    display: flex;
+    flex-direction: column;
+}
+.chatinfo{
+    height: 8%;
+    width: 100%;
+    background-color: aqua;
+}
+.messages{
+    height: 77%;
+    width: 100%;
+    background-color: aquamarine;
+}
+.textinput{
+    height: 15%;
+    width: 100%;
+    background-color: blueviolet;
+}

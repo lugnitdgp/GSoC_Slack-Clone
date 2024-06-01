@@ -5,7 +5,7 @@ import { Allconvers } from "../context api/context";
 import supabase from "../supabase";
 import { fetchUserDmChats } from "../database";
 
-export default function Searchuser({ currentUser }) {
+export default function Searchuser({ currentUser, setconupdate }) {
   const { Dm, setDm } = useContext(Allconvers);
   const [Username, setUsername] = useState("");
   const [user, setUser] = useState(null); // Initialize with null
@@ -123,6 +123,7 @@ export default function Searchuser({ currentUser }) {
               console.error("Error updating direct message:", error);
             } else {
               console.log("Message updated successfully current:", data);
+              setconupdate(false);
             }
           }
 
@@ -152,6 +153,7 @@ export default function Searchuser({ currentUser }) {
               console.error("Error updating direct message2:", error);
             } else {
               console.log("Message updated successfully2 user:", data);
+              setconupdate(false);
             }
           }
         } catch (error) {
