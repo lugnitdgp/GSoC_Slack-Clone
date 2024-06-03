@@ -7,6 +7,7 @@
     background-color: antiquewhite;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 .chatinfo{
     height: 8%;
@@ -17,6 +18,9 @@
     height: 77%;
     width: 100%;
     background-color: aquamarine;
+    overflow: scroll;
+    overflow-x: hidden;
+    position: relative;
 }
 .textinput{
     height: 15%;

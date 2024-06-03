@@ -82,3 +82,15 @@ export async function fetchUserDmChats(user) {
     return(dmstored[0]?.dm_chats || []);
   }
 }
+export async function fetchUsermessages(id) {
+  let { data: messagesstored, error } = await supabase
+    .from("chats_dm")
+    .select("messages")
+    .eq("id", id);
+
+  if (error) {
+    console.error("Error fetching user data:", error);
+  } else {
+    return(messagesstored[0].messages|| []);
+  }
+}

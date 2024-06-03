@@ -11,6 +11,7 @@ export const Chatcontext = createContext();
 
 export const ChatcontextProvider = ({ children }) => {
   const { currentUser } = useContext(Allconvers);
+  console.log(currentUser)
   const INTIAL_STATE = {
     chatId: "null",
     user: {},
@@ -21,9 +22,9 @@ export const ChatcontextProvider = ({ children }) => {
         return {
           user: action.payload,
           chatId:
-            action.payload.uid > currentUser.id
-              ? action.payload.uid + currentUser.id
-              : currentUser.id + action.payload.uid,
+            action.payload.uid > currentUser[0].id
+              ? action.payload.uid + currentUser[0].id
+              : currentUser[0].id + action.payload.uid,
         };
       default:
         return { state };

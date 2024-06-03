@@ -92,7 +92,12 @@ function Home(data) {
           },
           (payload) => {
             setConupdate(true)
-            setDmcontacts((prevdmcontacts) => [...prevdmcontacts, payload.new]); // Update state with new data
+            setDmcontacts((prevdmcontacts) => {
+              const updatedContacts = [...prevdmcontacts, payload.new];
+              setConupdate(true); 
+              return updatedContacts;
+            });
+            
             console.log("Change received!", payload);
             
 
@@ -148,6 +153,7 @@ function Home(data) {
                         onClick={(s) => {
                           setDm(true);
                           setConformdm(true);
+                          
                         }}
                       >
                         Direct message
@@ -159,16 +165,18 @@ function Home(data) {
                           className={homepaseCSS.sdmcontact}
                           key={contact[1].combinedId} onClick={()=>{handlechatselect(contact[1].userinfo)
                             setchat(true)
+                            setConformdm(false)
+                            setDm(false)
                           }}
                         >
                           <img src="" alt="" className={homepaseCSS.sdmimg} />
                           <div className={homepaseCSS.sdmcontactinfo}>
                             <>
                               <span className={homepaseCSS.sdmcontactname}>
-                                {contact[1].userinfo.uusername}
+                                {contact[1]?.userinfo?.uusername}
                               </span>
                               <span className={homepaseCSS.sdmcontactmail}>
-                                {contact[1].userinfo.uemail}
+                                {contact[1]?.userinfo?.uemail}
                               </span>
                             </>
                           </div>
@@ -198,7 +206,9 @@ function Home(data) {
                     <div className={homepaseCSS.presentcontact}></div>
                     <div className={homepaseCSS.chats}></div>
                   </>)
-                )}
+                )
+                }
+                
               </div>
             </div>
           </div>
