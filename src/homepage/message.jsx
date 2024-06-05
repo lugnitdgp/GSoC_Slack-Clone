@@ -3,7 +3,7 @@ import { Allconvers } from "../context api/context"
 import { Chatcontext } from "../context api/chatcontext"
 import { useContext } from "react"
 export const Message=({message})=>{
-    console.log(message)
+    
     const {currentUser}=useContext(Allconvers)
     const {data}=useContext(Chatcontext)
     return(
