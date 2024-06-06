@@ -9,11 +9,11 @@ export const Message=({message})=>{
     return(
         <div className={messageCSS.message}>
             <div className={messageCSS.messageinfo}>
-                <img src="" alt="" className={messageCSS.img}/>
-                <span className={messageCSS.name}>Just Now</span>
+                <img src={message?.image} alt="" className={messageCSS.img}/>
+                <span className={messageCSS.date}>{message?.date}</span>
             </div>
             <div className={messageCSS.messagecontent}>
-                <p className={messageCSS.content}>Helloo</p>
+                <p className={messageCSS.content}>{message?.text}</p>
             </div>
         </div>
     )

@@ -1,29 +1,63 @@
-*{
-    box-sizing: border-box;
+* {
+  box-sizing: border-box;
 }
-.chat{
-    height: 100%;
-    width: 100%;
-    background-color: antiquewhite;
+.chat {
+  height: 100%;
+  width: 100%;
+  background-color: rgb(252, 251, 250);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.chatinfo {
     display: flex;
-    flex-direction: column;
-    position: relative;
+    justify-content: left;
+    padding: 10px;
+    align-items: center;
+    font-size: 30px;
+    font-weight: bolder;
+  height: 5%;
+  width: 100%;
+  background-color: rgb(252, 251, 250);
+  border-bottom: 1px rgb(145, 141, 141) solid;
 }
-.chatinfo{
-    height: 8%;
-    width: 100%;
-    background-color: aqua;
+.messages {
+  height: 85%;
+  width: 100%;
+  background-color: rgb(252, 251, 250);
+  overflow: scroll;
+  overflow-x: hidden;
+  position: relative;
+  
 }
-.messages{
-    height: 77%;
-    width: 100%;
-    background-color: aquamarine;
-    overflow: scroll;
-    overflow-x: hidden;
-    position: relative;
+.chatinput {
+  height: 10%;
+  width: 100%;
+  background-color: rgb(252, 251, 250);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+  position: relative;
 }
-.textinput{
-    height: 15%;
-    width: 100%;
-    background-color: blueviolet;
+.textinput {
+  height: 90%;
+  width: 90%;
+  border-radius: 5px;
+  font-size: 20px;
+  padding: 5px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+.attachIcon{
+    cursor: pointer;
+}
+.sendbutton{
+    height: 45px;
+    width: 55px;
+    background-color: antiquewhite;
+    border: thin black solid;
+    border-radius: 10px;
+    cursor: pointer;
 }
