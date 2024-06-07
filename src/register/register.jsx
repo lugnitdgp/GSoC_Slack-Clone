@@ -11,10 +11,9 @@ import { Allconvers } from "../context api/context.jsx";
 
 function Register({ settoken }) {
   const { userId } = useContext(Allconvers);
-  let po = "";
   let navigate = useNavigate();
   const [passwordVisible, setPasswordVisible] = useState(false); //for hide and showing the pass we alter the input type to accomplishn this//
-  const togglePasswordVisibility = () => setPasswordVisible(!passwordVisible);
+  const togglePasswordVisibility = () => setPasswordVisible(!passwordVisible);//by this toggle paasword funcyion we change the state to the oppasite of the prev one
   const [passwordVisible2, setPasswordVisible2] = useState(false);
   const togglePasswordVisibility2 = () =>
     setPasswordVisible2(!passwordVisible2);
@@ -27,10 +26,29 @@ function Register({ settoken }) {
   const [allValid, setAllValid] = useState(false);
 
   const usernameRef = useRef("");
-  const emailRef = useRef(""); //first made sure that the cons of the data being taken into are empty//
+  const emailRef = useRef(""); //first made sure that the content of the data being taken into are empty//
   const phoneRef = useRef("");
   const passRef = useRef("");
   const cpassRef = useRef("");
+
+  async function handleOAuth(provider) {
+    try {
+      let { data, error } = await supabase.auth.signInWithOAuth({
+        provider: provider,
+        options: {
+          redirectTo: window.location.origin + "/update-details", // Redirect to update-details after login
+        },
+      });
+      if (data) {
+        console.log(data);
+      } else {
+        console.log(error);
+      }
+    } catch (error) {
+      console.error("Error in Google sign-in:", error);
+    }
+  }
+
 
   const passwordChange = (value) => {
     console.log(passRef); //regexp searches for the specific pattern in strings and here we use to check our

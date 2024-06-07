@@ -4,6 +4,8 @@ import chatboxnavCSS from "./chatboxnav.module.css";
 import { Allconvers } from "../context api/context";
 import supabase from "../supabase";
 import { fetchUserDmChats } from "../database";
+import { Chatcontext } from "../context api/chatcontext";
+import { Chats } from "./chats.jsx";
 
 export default function Searchuser({ currentUser, setconupdate }) {
   const { Dm, setDm } = useContext(Allconvers);
@@ -15,6 +17,7 @@ export default function Searchuser({ currentUser, setconupdate }) {
   const [clickeduser, setClickeduser] = useState("");
   const [combinedId, setcombinedId] = useState("");
   const [isUpdating, setIsUpdating] = useState(false); // Flag to track update process
+  const {dispatch}=useContext(Chatcontext)
 
   useEffect(() => {
     console.log("dm stored current", currentuserdm_chats);
@@ -63,7 +66,9 @@ export default function Searchuser({ currentUser, setconupdate }) {
       })();
     }
   }, [clickeduser]);
-
+  const handlechatselect=(u)=>{
+    dispatch({type:"Change_user" ,payload:u})
+  }
   const handleUser = async (user) => {
     setClickeduser(user);
     setUsername("");
@@ -153,6 +158,16 @@ export default function Searchuser({ currentUser, setconupdate }) {
               console.error("Error updating direct message2:", error);
             } else {
               console.log("Message updated successfully2 user:", data);
+              handlechatselect({
+                combinedId: combinedId,
+                userinfo: {
+                  uid: currentUser.id,
+                  uusername: currentUser.username,
+                  uemail: currentUser.email,
+                  uphoto: currentUser.avatar_url,
+                },
+                date: new Date().toISOString(),
+              },)
               setconupdate(false);
             }
           }
@@ -162,11 +177,12 @@ export default function Searchuser({ currentUser, setconupdate }) {
       })();
     }
   }, [combinedId, isUpdating]);
-
+  
+  
   return (
     <>
       {dmopen && !Dm ? (
-        <p>Hiiiii</p>
+        <Chats />
       ) : (
         <>
           <div className={chatboxnavCSS.searchbar}>

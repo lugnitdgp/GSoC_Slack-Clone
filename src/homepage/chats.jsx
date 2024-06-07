@@ -15,9 +15,14 @@ export const Chats = () => {
   const { currentUser } = useContext(Allconvers);
   const [messages, setMessages] = useState([]);
   const [picurl, setPicurl] = useState("");
+  const messagesEndRef = useRef(null); 
 
   console.log(currentUser[0].id);
   console.log(data.chatId);
+  useEffect(() => {
+    // Scroll to bottom whenever messages change
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
   useEffect(() => {
     const fetchmessages = async () => {
       const messagesuptained = await fetchUsermessages(data.chatId);
@@ -134,6 +139,7 @@ export const Chats = () => {
           console.log(m)// Log the entire message object
           return <Message key={m.id} message={m} />;
         })}
+         <div ref={messagesEndRef} />
       </div>
       <div className={ChatsCSS.chatinput}>
         <textarea placeholder="Type something...." ref={textRef} className={ChatsCSS.textinput}/>

@@ -20,56 +20,6 @@ function Home(data) {
   const [conupdate, setConupdate] = useState(false);
   const[chat,setchat]=useState(false)
 
-  const UserMessages = ({ contact, fetchUsermessages }) => {
-    const [messages, setMessages] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [isError, setIsError] = useState(false);
-  
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const fetchedMessages = await fetchUsermessages(contact[1].combinedId);
-          setMessages(fetchedMessages);
-        } catch (error) {
-          setIsError(true);
-          console.error(error); // Log the error for debugging
-        } finally {
-          setIsLoading(false);
-        }
-      };
-  
-      fetchData();
-    }, [contact]);
-  
-    return (
-      <div className={homepaseCSS.sdmcontact} key={contact[1].combinedId} onClick={() => {
-        handlechatselect(contact[1].userinfo);
-        setchat(true);
-        setConformdm(false);
-        setDm(false);
-      }}>
-        {isLoading ? (
-          <p>Loading messages...</p>
-        ) : isError ? (
-          <p>Error fetching messages</p>
-        ) : messages.length === 0 ? (
-          <></> // Don't show user data if there are no messages
-        ) : (
-          <>
-            <img src="" alt="" className={homepaseCSS.sdmimg} />
-            <div className={homepaseCSS.sdmcontactinfo}>
-              <span className={homepaseCSS.sdmcontactname}>
-                {contact[1]?.userinfo?.uusername}
-              </span>
-              <span className={homepaseCSS.sdmcontactmail}>
-                {contact[1]?.userinfo?.uemail}
-              </span>
-            </div>
-          </>
-        )}
-      </div>
-    );
-  };
   useEffect(() => {
     const fetchData = async () => {
       const specific_user = await Getuserdetails(data.data.user.id);
@@ -220,7 +170,7 @@ function Home(data) {
                             setDm(false)
                           }}
                         >
-                          <img src="" alt="" className={homepaseCSS.sdmimg} />
+                          <img src={contact[1]?.userinfo?.uphoto} alt="" className={homepaseCSS.sdmimg} />
                           <div className={homepaseCSS.sdmcontactinfo}>
                             <>
                               <span className={homepaseCSS.sdmcontactname}>

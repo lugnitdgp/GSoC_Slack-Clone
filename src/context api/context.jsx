@@ -22,7 +22,7 @@ export const AllconversProvider = ({ children }) => {
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
-          // Handle errors here (optional)
+          // Handle errors here 
         }
       }
       setIsLoading(false); // Set loading to false
@@ -34,10 +34,10 @@ export const AllconversProvider = ({ children }) => {
   // Log currentUser whenever it changes
   useEffect(() => {
     console.log("Current User State Updated:", currentUser);
-    
+
   }, [currentUser]);
 
-  // Expose values to child components
+  // All values to child components
   const contextValues = {
     currentUser,
     setCurrentUser,

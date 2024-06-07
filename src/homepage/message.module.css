@@ -41,3 +41,17 @@
     margin-top: 2px;
     margin-left: 5px;
 }
+.sender{
+    display: flex;
+    margin: 2px;
+    align-items: center;
+}
+.senderimg{
+    height: 25px;
+    width: 25px;
+    border-radius:50% ;
+}
+.sendername{
+    font-size: 18px;
+    font-weight: 700;
+}

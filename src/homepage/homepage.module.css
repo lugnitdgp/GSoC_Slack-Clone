@@ -129,6 +129,7 @@
     margin-bottom: 2px;
     display: flex;
     align-items: center;
+    overflow: hidden;
 }
 .sdmcontact:hover{
     background-color: rgb(77, 5, 88);
@@ -151,4 +152,5 @@
 }
 .sdmcontactmail{
     font-size: 15px;
+    
 }
