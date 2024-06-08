@@ -19,8 +19,6 @@ export const Message = ({ message }) => {
       console.log("No data or invalid format");
     }
   });
-
-  console.log(sender.Promise);
   return (
     <div className={messageCSS.message}>
       <div className={messageCSS.sender}>

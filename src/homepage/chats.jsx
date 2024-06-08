@@ -15,7 +15,8 @@ export const Chats = () => {
   const { currentUser } = useContext(Allconvers);
   const [messages, setMessages] = useState([]);
   const [picurl, setPicurl] = useState("");
-  const messagesEndRef = useRef(null); 
+  const messagesEndRef = useRef(null);
+  const [msgupdate, setMsgupdate] = useState(false);
 
   console.log(currentUser[0].id);
   console.log(data.chatId);
@@ -32,35 +33,47 @@ export const Chats = () => {
     };
     fetchmessages();
   }, [data.chatId]);
-  useEffect(() => {}, [messages]);
+  useEffect(() => {
+    const fetchmessages = async () => {
+      if (msgupdate) {
+        const messagesuptained = await fetchUsermessages(data.chatId);
+        if (messagesuptained) {
+          setMessages(messagesuptained);
+          setMsgupdate(false)
+        }
+      }
+    };
+    fetchmessages();
+  }, [msgupdate]);
+  
   useEffect(() => {
     const message = () => {
-      const chatsDm = supabase
-        .channel("custom-filter-channel")
-        .on(
-          "postgres_changes",
-          {
-            event: "*", //channels are used to listen to real time changes
-            schema: "public", //here we listen to the changes in realtime and update the postgres changes here
-            table: "chats_dm",
-            select: "messages",
-            filter: `id=eq.${data.chatId}`,
-          },
-          (payload) => {
-            console.log("Change received!", payload);
-            setMessages((prevmessages) => {
-              const updatedmessages = [...prevmessages, payload.new];
+      console.log(msgupdate);
+     
+        const chatsDm = supabase
+          .channel("custom-filter-channel")
+          .on(
+            "postgres_changes",
+            {
+              event: "*", //channels are used to listen to real time changes
+              schema: "public", //here we listen to the changes in realtime and update the postgres changes here
+              table: "chats_dm",
+              select: "messages",
+              filter: `id=eq.${data.chatId}`,
+            },
+            (payload) => {
+                console.log("Change received!", payload);
+                setMsgupdate(true);
+             
+            }
+          )
+          .subscribe();
 
-              return updatedmessages;
-            });
-          }
-        )
-        .subscribe();
-
-      // Cleanup function to unsubscribe from the channel to avoid data leakage
-      return () => {
-        supabase.removeChannel(chatsDm);
-      };
+        // Cleanup function to unsubscribe from the channel to avoid data leakage
+        return () => {
+          supabase.removeChannel(chatsDm);
+        };
+      
     };
     message();
   }, [data.chatId]);
@@ -89,17 +102,19 @@ export const Chats = () => {
             messages: [
               ...messages,
               {
-                id: uuid,
+                id: uuid(),
                 text: text,
                 senderId: currentUser[0].id,
                 date: new Date().toISOString(),
-                image: picurl,
+                image: puburl,
               },
             ],
           })
           .eq("id", data.chatId)
           .select();
         if (data2) {
+          setMsgupdate(true);
+          console.log(msgupdate);
           textRef.current.value = "";
           imgRef.current.value = null;
         } else if (error2) {
@@ -113,7 +128,7 @@ export const Chats = () => {
           messages: [
             ...messages,
             {
-              id: uuid,
+              id: uuid(),
               text: text,
               senderId: currentUser[0].id,
               date: new Date().toISOString(),
@@ -123,6 +138,8 @@ export const Chats = () => {
         .eq("id", data.chatId)
         .select();
       if (data3) {
+        setMsgupdate(true);
+        console.log(msgupdate);
         textRef.current.value = "";
         imgRef.current.value = null;
       }
@@ -136,25 +153,31 @@ export const Chats = () => {
       </div>
       <div className={ChatsCSS.messages}>
         {messages.map((m) => {
-          console.log(m)// Log the entire message object
+          console.log(m); // Log the entire message object
           return <Message key={m.id} message={m} />;
         })}
-         <div ref={messagesEndRef} />
+        <div ref={messagesEndRef} />
       </div>
       <div className={ChatsCSS.chatinput}>
-        <textarea placeholder="Type something...." ref={textRef} className={ChatsCSS.textinput}/>
-        <div className={ChatsCSS.send}>
-        <label htmlFor="file">
-          <IoMdAttach className={ChatsCSS.attachIcon} size={45}/>
-        </label>
-        <input
-          type="file"
-          id="file"
-          ref={imgRef}
-          style={{ display: "none" }} // hide the file input
+        <textarea
+          placeholder="Type something...."
+          ref={textRef}
+          className={ChatsCSS.textinput}
         />
+        <div className={ChatsCSS.send}>
+          <label htmlFor="file">
+            <IoMdAttach className={ChatsCSS.attachIcon} size={45} />
+          </label>
+          <input
+            type="file"
+            id="file"
+            ref={imgRef}
+            style={{ display: "none" }} // hide the file input
+          />
         </div>
-          <button className={ChatsCSS.sendbutton} onClick={handlesend}>Send</button>
+        <button className={ChatsCSS.sendbutton} onClick={handlesend}>
+          Send
+        </button>
       </div>
     </div>
   );
