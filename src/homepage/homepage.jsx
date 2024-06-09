@@ -174,6 +174,7 @@ function Home(data) {
                             className={homepaseCSS.sdmcontact}
                             key={contact[1].combinedId}
                             onClick={() => {
+                              console.log(contact[1].userinfo)
                               handlechatselect(contact[1].userinfo);
                               setchat(true);
                               setConformdm(false);
@@ -217,7 +218,6 @@ function Home(data) {
                 {Dm || confirmdm ? (
                   <Searchuser
                     currentUser={currentUser[0]}
-                    setconupdate={setConupdate}
                     setdmcontacts={setDmcontacts}
                   />
                 ) : chat ? (

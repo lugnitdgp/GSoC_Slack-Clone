@@ -18,8 +18,6 @@ export const Chats = () => {
   const messagesEndRef = useRef(null);
   const [msgupdate, setMsgupdate] = useState(false);
 
-  console.log(currentUser[0].id);
-  console.log(data.chatId);
   useEffect(() => {
     // Scroll to bottom whenever messages change
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -39,41 +37,38 @@ export const Chats = () => {
         const messagesuptained = await fetchUsermessages(data.chatId);
         if (messagesuptained) {
           setMessages(messagesuptained);
-          setMsgupdate(false)
+          setMsgupdate(false);
         }
       }
     };
     fetchmessages();
   }, [msgupdate]);
-  
+
   useEffect(() => {
     const message = () => {
       console.log(msgupdate);
-     
-        const chatsDm = supabase
-          .channel("custom-filter-channel")
-          .on(
-            "postgres_changes",
-            {
-              event: "*", //channels are used to listen to real time changes
-              schema: "public", //here we listen to the changes in realtime and update the postgres changes here
-              table: "chats_dm",
-              select: "messages",
-              filter: `id=eq.${data.chatId}`,
-            },
-            (payload) => {
-                console.log("Change received!", payload);
-                setMsgupdate(true);
-             
-            }
-          )
-          .subscribe();
 
-        // Cleanup function to unsubscribe from the channel to avoid data leakage
-        return () => {
-          supabase.removeChannel(chatsDm);
-        };
-      
+      const chatsDm = supabase
+        .channel("custom-filter-channel")
+        .on(
+          "postgres_changes",
+          {
+            event: "*", //channels are used to listen to real time changes
+            schema: "public", //here we listen to the changes in realtime and update the postgres changes here
+            table: "chats_dm",
+            select: "messages",
+            filter: `id=eq.${data.chatId}`,
+          },
+          (payload) => {
+            setMsgupdate(true);
+          }
+        )
+        .subscribe();
+
+      // Cleanup function to unsubscribe from the channel to avoid data leakage
+      return () => {
+        supabase.removeChannel(chatsDm);
+      };
     };
     message();
   }, [data.chatId]);
@@ -82,7 +77,6 @@ export const Chats = () => {
     const img = imgRef.current.files[0];
     const text = textRef.current.value;
     if (img) {
-      console.log(img);
       const path = data.chatId + "/" + uuid();
       const { data: data1, error: error1 } = await supabase.storage
         .from("photos")
@@ -91,11 +85,11 @@ export const Chats = () => {
         console.log(error1);
       } else if (data1) {
         let url = supabase.storage.from("photos").getPublicUrl(data1.path); //here in the url we habe data in which publicUrl is present
-        console.log(url.data.publicUrl);
+
+        //first gave that value to a const and then setPicurl
         const puburl = url.data.publicUrl;
-        console.log(puburl); //first gave that value to a const and then setPicurl
         setPicurl(puburl);
-        console.log(picurl);
+
         const { data: data2, error: error2 } = await supabase
           .from("chats_dm")
           .update({
@@ -114,7 +108,7 @@ export const Chats = () => {
           .select();
         if (data2) {
           setMsgupdate(true);
-          console.log(msgupdate);
+
           textRef.current.value = "";
           imgRef.current.value = null;
         } else if (error2) {
@@ -139,13 +133,13 @@ export const Chats = () => {
         .select();
       if (data3) {
         setMsgupdate(true);
-        console.log(msgupdate);
+
         textRef.current.value = "";
         imgRef.current.value = null;
       }
     }
   };
-  console.log(messages);
+
   return (
     <div className={ChatsCSS.chat}>
       <div className={ChatsCSS.chatinfo}>
@@ -153,7 +147,6 @@ export const Chats = () => {
       </div>
       <div className={ChatsCSS.messages}>
         {messages.map((m) => {
-          console.log(m); // Log the entire message object
           return <Message key={m.id} message={m} />;
         })}
         <div ref={messagesEndRef} />

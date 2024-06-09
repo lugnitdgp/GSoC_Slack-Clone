@@ -7,7 +7,7 @@ import { fetchUserDmChats } from "../database";
 import { Chatcontext } from "../context api/chatcontext";
 import { Chats } from "./chats.jsx";
 
-export default function Searchuser({ currentUser, setconupdate }) {
+export default function Searchuser({ currentUser }) {
   const { Dm, setDm } = useContext(Allconvers);
   const [Username, setUsername] = useState("");
   const [user, setUser] = useState(null); // Initialize with null
@@ -17,13 +17,18 @@ export default function Searchuser({ currentUser, setconupdate }) {
   const [clickeduser, setClickeduser] = useState("");
   const [combinedId, setcombinedId] = useState("");
   const [isUpdating, setIsUpdating] = useState(false); // Flag to track update process
-  const {dispatch}=useContext(Chatcontext)
+  const { dispatch } = useContext(Chatcontext);
+  const [dmcontacts, setDmcontacts] = useState([]);
 
   useEffect(() => {
-    console.log("dm stored current", currentuserdm_chats);
-    console.log("dm stored user", userdm_chats);
-    console.log(combinedId);
-  }, [combinedId, currentuserdm_chats, userdm_chats]);
+    const fetchdmdata = async () => {
+      const dmcontactinfo = await fetchUserDmChats(currentUser);
+      if (dmcontactinfo) {
+        setDmcontacts(dmcontactinfo);
+      }
+    };
+    fetchdmdata();
+  }, [combinedId]);
 
   // Handle search input and fetch user details
   const handleSearch = async () => {
@@ -66,9 +71,7 @@ export default function Searchuser({ currentUser, setconupdate }) {
       })();
     }
   }, [clickeduser]);
-  const handlechatselect=(u)=>{
-    dispatch({type:"Change_user" ,payload:u})
-  }
+
   const handleUser = async (user) => {
     setClickeduser(user);
     setUsername("");
@@ -85,6 +88,13 @@ export default function Searchuser({ currentUser, setconupdate }) {
       const currentUserCombinedIdExists =
         checkCombinedIdExists(currentuserdm_chats);
       const selectedUserCombinedIdExists = checkCombinedIdExists(userdm_chats);
+      if (currentUserCombinedIdExists) {
+        Object.entries(dmcontacts)?.map((contact) => {
+          if (contact[1].combinedId == combinedId) {
+            dispatch({ type: "Change_user", payload: contact[1].userinfo });
+          }
+        });
+      }
 
       (async () => {
         try {
@@ -128,7 +138,15 @@ export default function Searchuser({ currentUser, setconupdate }) {
               console.error("Error updating direct message:", error);
             } else {
               console.log("Message updated successfully current:", data);
-              setconupdate(false);
+              dispatch({
+                type: "Change_user",
+                payload: {
+                  uid: clickeduser.id,
+                  uusername: clickeduser.username,
+                  uemail: clickeduser.email,
+                  uphoto: clickeduser.avatar_url,
+                },
+              });
             }
           }
 
@@ -155,20 +173,9 @@ export default function Searchuser({ currentUser, setconupdate }) {
               .select();
 
             if (error) {
-              console.error("Error updating direct message2:", error);
+              console.log("Error updating direct message2:", error);
             } else {
               console.log("Message updated successfully2 user:", data);
-              handlechatselect({
-                combinedId: combinedId,
-                userinfo: {
-                  uid: currentUser.id,
-                  uusername: currentUser.username,
-                  uemail: currentUser.email,
-                  uphoto: currentUser.avatar_url,
-                },
-                date: new Date().toISOString(),
-              },)
-              setconupdate(false);
             }
           }
         } catch (error) {
@@ -177,8 +184,7 @@ export default function Searchuser({ currentUser, setconupdate }) {
       })();
     }
   }, [combinedId, isUpdating]);
-  
-  
+
   return (
     <>
       {dmopen && !Dm ? (
