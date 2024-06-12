@@ -24,6 +24,7 @@ function Home(data) {
   const [dmcontacts, setDmcontacts] = useState([]);
   const [chat, setchat] = useState(false);
   const [fetchdmupdate, setFetchdmupdate] = useState(false);
+  const [condisplay, setCondisplay] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -124,7 +125,7 @@ function Home(data) {
   const handlechatselect = (u) => {
     dispatch({ type: "Change_user", payload: u }); //we change the reducer state
   };
-  console.log(Object.entries(dmcontacts));
+
   return (
     <>
       {isLoading ? (
@@ -166,39 +167,39 @@ function Home(data) {
                         Direct message
                       </button>
 
-                      {Object.entries(dmcontacts)?.map((contact) =>
-                        fetchUsermessages(contact[1].combinedId) == [] ? (
-                          <></>
-                        ) : (
-                          <div
-                            className={homepaseCSS.sdmcontact}
-                            key={contact[1].combinedId}
-                            onClick={() => {
-                              console.log(contact[1].userinfo)
-                              handlechatselect(contact[1].userinfo);
-                              setchat(true);
-                              setConformdm(false);
-                              setDm(false);
-                            }}
-                          >
-                            <img
-                              src={contact[1]?.userinfo?.uphoto}
-                              alt=""
-                              className={homepaseCSS.sdmimg}
-                            />
-                            <div className={homepaseCSS.sdmcontactinfo}>
-                              <>
-                                <span className={homepaseCSS.sdmcontactname}>
-                                  {contact[1]?.userinfo?.uusername}
-                                </span>
-                                <span className={homepaseCSS.sdmcontactmail}>
-                                  {contact[1]?.userinfo?.uemail}
-                                </span>
-                              </>
-                            </div>
+                      {Object.entries(dmcontacts)?.map((contact) => (
+                        <div
+                          className={homepaseCSS.sdmcontact}
+                          key={contact[1].combinedId}
+                          onClick={() => {
+                            console.log(contact[1].userinfo);
+                            handlechatselect(contact[1].userinfo);
+                            setchat(true);
+                            setConformdm(false);
+                            setDm(false);
+                          }}
+                          style={{
+                            display:
+                              contact[1].showstatus === true ? "flex" : "none",
+                          }}
+                        >
+                          <img
+                            src={contact[1]?.userinfo?.uphoto}
+                            alt=""
+                            className={homepaseCSS.sdmimg}
+                          />
+                          <div className={homepaseCSS.sdmcontactinfo}>
+                            <>
+                              <span className={homepaseCSS.sdmcontactname}>
+                                {contact[1]?.userinfo?.uusername}
+                              </span>
+                              <span className={homepaseCSS.sdmcontactmail}>
+                                {contact[1]?.userinfo?.uemail}
+                              </span>
+                            </>
                           </div>
-                        )
-                      )}
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>

@@ -128,6 +128,7 @@ export default function Searchuser({ currentUser }) {
                       uphoto: clickeduser.avatar_url,
                     },
                     date: new Date().toISOString(),
+                    showstatus:false,
                   },
                 ],
               })
@@ -166,6 +167,7 @@ export default function Searchuser({ currentUser }) {
                       uphoto: currentUser.avatar_url,
                     },
                     date: new Date().toISOString(),
+                    showstatus:false,
                   },
                 ],
               })

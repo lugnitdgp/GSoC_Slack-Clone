@@ -6,7 +6,7 @@ import { IoMdAttach } from "react-icons/io";
 import { Message } from "./message.jsx";
 import { Allconvers } from "../context api/context.jsx";
 import { v4 as uuid } from "uuid";
-import { fetchUsermessages } from "../database.jsx";
+import { fetchUsermessages, fetchUserDmChatsid } from "../database.jsx";
 
 export const Chats = () => {
   const textRef = useRef(""); //usestate didnot work but useref worked to make the input clear after updation
@@ -17,6 +17,60 @@ export const Chats = () => {
   const [picurl, setPicurl] = useState("");
   const messagesEndRef = useRef(null);
   const [msgupdate, setMsgupdate] = useState(false);
+  const [chatshow, setchatshow] = useState(false);
+  const [chatshow2, setchatshow2] = useState(false);
+
+  useEffect(() => {
+    const fetchchat = async () => {
+      const chat = await fetchUserDmChatsid(data?.user.uid);
+
+      if (chatshow2 && chat) {
+        const updatedchat = chat.map((obj) =>
+          obj.combinedId === data.chatId ? { ...obj, showstatus: true } : obj
+        );
+        const { data: update2, error: er2 } = await supabase
+          .from("direct_messages")
+          .update({
+            dm_chats: updatedchat,
+          })
+          .eq("id", data?.user.uid)
+          .select();
+        if (update2) {
+          console.log("UPDATED2");
+          setchatshow2(false);
+        } else {
+          console.log(er2);
+        }
+      }
+    };
+    fetchchat();
+  }, [data, chatshow2]);
+  useEffect(() => {
+    const fetchchat = async () => {
+      const chat = await fetchUserDmChatsid(currentUser[0].id);
+      console.log(chat);
+      if (chatshow && chat) {
+        const updatedchat = chat.map((obj) =>
+          obj.combinedId === data.chatId ? { ...obj, showstatus: true } : obj
+        );
+        console.log(updatedchat);
+        const { data: update, error: er } = await supabase
+          .from("direct_messages")
+          .update({
+            dm_chats: updatedchat,
+          })
+          .eq("id", currentUser[0].id)
+          .select();
+        if (update) {
+          console.log("UPDATED");
+          setchatshow(false);
+        } else {
+          console.log(er);
+        }
+      }
+    };
+    fetchchat();
+  }, [currentUser, chatshow]);
 
   useEffect(() => {
     // Scroll to bottom whenever messages change
@@ -108,7 +162,8 @@ export const Chats = () => {
           .select();
         if (data2) {
           setMsgupdate(true);
-
+          setchatshow(true);
+          setchatshow2(true);
           textRef.current.value = "";
           imgRef.current.value = null;
         } else if (error2) {
@@ -133,7 +188,8 @@ export const Chats = () => {
         .select();
       if (data3) {
         setMsgupdate(true);
-
+        setchatshow(true);
+        setchatshow2(true);
         textRef.current.value = "";
         imgRef.current.value = null;
       }

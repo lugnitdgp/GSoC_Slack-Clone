@@ -82,6 +82,18 @@ export async function fetchUserDmChats(user) {
     return(dmstored[0]?.dm_chats || []);
   }
 }
+export async function fetchUserDmChatsid(id) {
+  let { data: dmstored, error } = await supabase      //to fetch the dm contacts of a user from the direct_messages table
+    .from("direct_messages")
+    .select("dm_chats")
+    .eq("id", id);
+
+  if (error) {
+    console.error("Error fetching user data:", error);
+  } else {
+    return(dmstored[0]?.dm_chats || []);
+  }
+}
 export async function fetchUsermessages(id) {
   let { data: messagesstored, error } = await supabase    //to fetch the messages in the dm_chats table via the combined id
     .from("chats_dm")
@@ -91,6 +103,12 @@ export async function fetchUsermessages(id) {
   if (error) {
     console.error("Error fetching user data:", error);
   } else {
-    return(messagesstored[0].messages|| []);
+    if(messagesstored[0].messages==null){
+      return([])
+    }
+    else{
+      return(messagesstored[0].messages);
+    }
+    
   }
 }
