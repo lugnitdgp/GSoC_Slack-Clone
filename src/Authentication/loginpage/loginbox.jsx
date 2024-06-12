@@ -1,11 +1,11 @@
 import loginboxCSS from "./loginbox.module.css";
-import supabase from "../supabase";
+import supabase from "../../supabase";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { FaRegEye, FaEyeSlash, FaUserAlt } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
-import { CheckemailExists, PasswordCheck } from "../database";
+import { CheckemailExists, PasswordCheck } from  "../../database";
 // Assuming CheckemailExists and PasswordCheck functions are defined elsewhere
 
 function Login({ settoken, setUpdload }) {

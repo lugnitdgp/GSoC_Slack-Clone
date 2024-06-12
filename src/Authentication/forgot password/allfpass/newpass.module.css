@@ -8,6 +8,8 @@
   background: url("/home/sravan/Desktop/web/slack clone/slack-clone/src/images/pexels-photonova-2872856.jpg");
   display: flex;
   justify-content: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   align-items: center;
   font-family: "montserrat", sans-serif;
 }

@@ -96,6 +96,14 @@
   width: 50%;
   background-color: transparent;
   cursor: pointer;
+  margin: 3px;
+}
+.addchannel {
+  height: 25px;
+  width: 50%;
+  background-color: transparent;
+  cursor: pointer;
+  margin: 3px;
 }
 .userright {
   width: 25%;
@@ -112,45 +120,44 @@
   cursor: pointer;
 }
 .dmcontacts {
-    height: 400px;
+  height: 400px;
   width: 90%;
   position: relative;
   color: black;
   background-color: blanchedalmond;
 }
-.sdmcontact{
-    height: 40px;
-    width: 90%;
-    background-color: rgb(96, 15, 109);
-    display: flex;
-    cursor: pointer;
-    border-bottom: solid thin black;
-    border-radius: 10px;
-    margin-bottom: 2px;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
+.sdmcontact {
+  height: 40px;
+  width: 90%;
+  background-color: rgb(96, 15, 109);
+  display: flex;
+  cursor: pointer;
+  border-bottom: solid thin black;
+  border-radius: 10px;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
 }
-.sdmcontact:hover{
-    background-color: rgb(77, 5, 88);
+.sdmcontact:hover {
+  background-color: rgb(77, 5, 88);
 }
-.sdmimg{
-    height: 25px;
-    width: 25px;
-    border-radius: 50%;
-    background-color: azure;
+.sdmimg {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  background-color: azure;
 }
-.sdmcontactinfo{
-    color: rgb(222, 225, 228);
-    display: flex;
-    flex-direction: column;
-    margin-left: 8px;
+.sdmcontactinfo {
+  color: rgb(222, 225, 228);
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px;
 }
-.sdmcontactname{
-    font-size: 20px;
-    font-weight: 500;
+.sdmcontactname {
+  font-size: 20px;
+  font-weight: 500;
 }
-.sdmcontactmail{
-    font-size: 15px;
-    
+.sdmcontactmail {
+  font-size: 15px;
 }

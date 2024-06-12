@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from "react";
-import { UserdetailsbyName } from "../database";
+import { UserdetailsbyName } from "../../database.jsx";
 import chatboxnavCSS from "./chatboxnav.module.css";
-import { Allconvers } from "../context api/context";
-import supabase from "../supabase";
-import { fetchUserDmChats } from "../database";
-import { Chatcontext } from "../context api/chatcontext";
+import { Allconvers } from "../../context api/context.jsx";
+import supabase from "../../supabase.jsx";
+import { fetchUserDmChats } from "../../database.jsx";
+import { Chatcontext } from "../../context api/chatcontext.jsx";
 import { Chats } from "./chats.jsx";
 
 export default function Searchuser({ currentUser }) {

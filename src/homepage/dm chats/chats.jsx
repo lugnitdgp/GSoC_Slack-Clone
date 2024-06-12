@@ -1,12 +1,12 @@
 import ChatsCSS from "./chats.module.css";
 import { useContext, useEffect, useRef, useState } from "react";
-import { Chatcontext } from "../context api/chatcontext";
-import supabase from "../supabase.jsx";
+import { Chatcontext } from "../../context api/chatcontext.jsx";
+import supabase from "../../supabase.jsx";
 import { IoMdAttach } from "react-icons/io";
 import { Message } from "./message.jsx";
-import { Allconvers } from "../context api/context.jsx";
+import { Allconvers } from "../../context api/context.jsx";
 import { v4 as uuid } from "uuid";
-import { fetchUsermessages, fetchUserDmChatsid } from "../database.jsx";
+import { fetchUsermessages, fetchUserDmChatsid } from "../../database.jsx";
 
 export const Chats = () => {
   const textRef = useRef(""); //usestate didnot work but useref worked to make the input clear after updation

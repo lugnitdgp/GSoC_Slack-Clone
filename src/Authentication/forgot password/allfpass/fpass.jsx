@@ -1,10 +1,11 @@
-import supabase from "../../supabase";
+import supabase from "../../../supabase";
 import { Link, useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import { FaUserAlt } from "react-icons/fa";
 import fpassCSS from "./fpass.module.css";
+import { CheckemailExists } from "../../../database.jsx";
 
-function Fpassuser({ settoken }) {
+function Fpassuser({ setmail }) {
   let navigate = useNavigate();
 
   const emailRef = useRef("");
@@ -22,9 +23,9 @@ function Fpassuser({ settoken }) {
 
         if (data) {
           console.log(data);
-          settoken(data);
+          setmail(true);
           alert("Check your mail for password reset link");
-          navigate("");
+          navigate("/");
         } else if (error) {
           alert(error.message || error);
         }

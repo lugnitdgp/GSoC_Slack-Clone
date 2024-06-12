@@ -1,11 +1,12 @@
-import supabase from "../../supabase.jsx";
+import supabase from "../../../supabase.jsx";
 import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaRegEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import newpassCSS from "./newpass.module.css";
+import bcrypt from "bcryptjs/dist/bcrypt.js";
 
-function Newpass({ settoken }) {
+function Newpass({ settoken, setmail }) {
   let navigate = useNavigate();
   const [passwordVisible, setPasswordVisible] = useState(false); //for hide and showing the pass we alter the input type to accomplishn this//
   const togglePasswordVisibility = () => setPasswordVisible(!passwordVisible);
@@ -66,20 +67,39 @@ function Newpass({ settoken }) {
     }
 
     try {
+      const salt = await bcrypt.genSalt(10);
+      const hashedpass = await bcrypt.hash(password, salt);
       const { data, error } = await supabase.auth.updateUser({
         password: password,
       });
       if (data) {
-        console.log(data);
-        alert("Successfully updated the change");
-        settoken(data);
-        navigate("/");
+        console.log(data.user.id);
+        const da = data.user.id;
+        try {
+          const { data: passupdate, error: err } = await supabase
+            .from("user_data")
+            .update({ hashed_password: hashedpass })
+            .eq("id", da)
+            .select();
+          if (passupdate) {
+            console.log("data");
+            alert("Successfully updated the change");
+            setmail(false);
+            settoken(data);
+            navigate("/");
+          } else {
+            //insert new row with a new users uuid into channels_list where all dm contacts data be stored
+            console.log("insert id for channel", err);
+          }
+        } catch (error) {
+          console.log(error);
+        }
       } else if (error) {
-        alert(error.message || error);
+        console.log(error);
       }
     } catch (error) {
       console.error("Unexpected error:", error);
-      alert("An unexpected error occurred. Please try again later.");
+      alert("Password Already exists");
     }
   }
 

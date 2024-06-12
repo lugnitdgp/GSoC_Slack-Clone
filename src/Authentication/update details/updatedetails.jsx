@@ -1,4 +1,4 @@
-import supabase from "../supabase.jsx";
+import supabase from "../../supabase.jsx";
 import { useRef } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { FaUserAlt } from "react-icons/fa";

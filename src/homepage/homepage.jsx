@@ -3,16 +3,17 @@ import {
   idm,
   fetchUserDmChats,
   fetchUsermessages,
+  insertidforchannel,
 } from "../database";
 import { useState, useEffect, useContext } from "react";
 import supabase from "../supabase";
 import homepaseCSS from "./homepage.module.css";
 import { FaEdit } from "react-icons/fa";
-import Searchuser from "./chatboxnav";
+import Searchuser from "./dm chats/chatboxnav";
 import { FaPowerOff } from "react-icons/fa6";
 import { Allconvers } from "../context api/context";
 import { Chatcontext } from "../context api/chatcontext";
-import { Chats } from "./chats";
+import { Chats } from "./dm chats/chats";
 
 function Home(data) {
   const { setUserId, currentUser, userId, Dm, setDm } = useContext(Allconvers);
@@ -71,7 +72,9 @@ function Home(data) {
   useEffect(() => {
     const insertdm = async () => {
       const idm0 = await idm(userId);
+      const idforchanneldata = await insertidforchannel(userId);
       console.log(idm0);
+      console.log(idforchanneldata);
     };
     insertdm();
   }, [userId]);
@@ -84,6 +87,7 @@ function Home(data) {
         console.log(error);
       } else {
         localStorage.removeItem("token");
+        localStorage.removeItem("mailcheck");
         window.location.reload();
         alert("successfully logged out");
       }
@@ -154,7 +158,12 @@ function Home(data) {
                   </div>
                   <div className={homepaseCSS.community}>
                     <div className={homepaseCSS.hashes}>
-                      <p>Channels</p>
+                      <button
+                        className={homepaseCSS.addchannel}
+                        onClick={(s) => {}}
+                      >
+                        Add Channels
+                      </button>
                     </div>
                     <div className={homepaseCSS.contacts}>
                       <button

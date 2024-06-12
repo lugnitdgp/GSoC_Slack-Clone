@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Home from "./homepage/homepage.jsx";
-import Newpass from "./forgot password/allfpass/newpass.jsx";
-import Update from "./update details/updatedetails.jsx";
+import Newpass from "./Authentication/forgot password/allfpass/newpass.jsx";
+import Update from "./Authentication/update details/updatedetails.jsx";
 import supabase from "./supabase.jsx";
-import Signingpages from "./signingpages/signningpages.jsx";
-import Uifpass from "./forgot password/uifpass/uifpass.jsx";
+import Signingpages from "./Authentication/signingpages/signningpages.jsx";
+import Uconfpass from "./Authentication/forgot password/uifpasscon/passresetconfirm.jsx";
 
 const Pages = () => {
   const [token, setToken] = useState(null);
-
   const [updload, setUpdload] = useState(false);
+  const [mailcheck, setMailcheck] = useState(
+    JSON.parse(localStorage.getItem("mailcheck")) || false // Ensure boolean value is correctly retrieved
+  );
 
   useEffect(() => {
     async function getudetails() {
       await supabase.auth.getUser().then((val) => {
         if (val.data?.user) {
           console.log(val.data.user);
-          localStorage.setItem("data2", JSON.stringify(val.data));
           setToken(val.data);
           setUpdload("true");
         }
@@ -32,7 +33,7 @@ const Pages = () => {
     if (storedToken) {
       try {
         const parsedToken = JSON.parse(storedToken);
-        setToken(parsedToken); // Update state only if parsing is successful
+        setToken(parsedToken);
       } catch (error) {
         console.error("Error parsing stored token:", error);
         localStorage.removeItem("token");
@@ -50,6 +51,11 @@ const Pages = () => {
     }
   }, [token]);
 
+  useEffect(() => {
+    localStorage.setItem("mailcheck", JSON.stringify(mailcheck)); // Update local storage on state change
+  }, [mailcheck]);
+
+
   return (
     <div>
       <Routes>
@@ -59,15 +65,15 @@ const Pages = () => {
             token ? (
               <Navigate to="/" replace />
             ) : (
-              <Uifpass settoken={setToken} />
+              <Uconfpass setmail={setMailcheck} settoken={setToken} />
             )
           }
         />
         <Route
           path="/newpass"
           element={
-            token ? (
-              <Newpass settoken={setToken} />
+            mailcheck ? (
+              <Newpass settoken={setToken} setmail={setMailcheck} />
             ) : (
               <Navigate to="/" replace />
             )
@@ -76,8 +82,7 @@ const Pages = () => {
         <Route
           path="/update-details"
           element={
-            
-             updload ? (
+            updload ? (
               <Update data={token} settoken={setToken} />
             ) : (
               <p>not yet logged</p>
@@ -99,7 +104,7 @@ const Pages = () => {
           path="/"
           element={
             //<Home data={token} />
-            token ? (
+            token && !mailcheck ? (
               <Home data={token} />
             ) : (
               <Navigate to="/signing-pages" replace />

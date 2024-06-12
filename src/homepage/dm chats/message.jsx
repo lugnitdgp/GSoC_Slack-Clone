@@ -1,8 +1,8 @@
 import messageCSS from "./message.module.css";
-import { Allconvers } from "../context api/context";
-import { Chatcontext } from "../context api/chatcontext";
+import { Allconvers } from "../../context api/context";
+import { Chatcontext } from "../../context api/chatcontext";
 import { useContext, useState } from "react";
-import { Getuserdetails } from "../database";
+import { Getuserdetails } from "../../database";
 export const Message = ({ message }) => {
   const { currentUser } = useContext(Allconvers);
   const { data } = useContext(Chatcontext);

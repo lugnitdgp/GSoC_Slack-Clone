@@ -112,3 +112,21 @@ export async function fetchUsermessages(id) {
     
   }
 }
+export async function insertidforchannel(id) {
+  try {
+    const { data, error } = await supabase
+      .from("channels_list")
+      .insert([{ id: id }])
+      .select();
+    if (data) {
+      console.log("done insert for id of channel");
+      return true;
+    } else {                                      //insert new row with a new users uuid into channels_list where all dm contacts data be stored
+      console.log("insert id for channel", error);
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+    return "false1";
+  }
+}

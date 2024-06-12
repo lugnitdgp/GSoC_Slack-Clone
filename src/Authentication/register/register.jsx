@@ -1,19 +1,25 @@
 import registerCSS from "./register.module.css";
-import supabase from "../supabase.jsx";
-import { useState, useRef, useContext} from "react";
+import supabase from "../../supabase.jsx";
+import { useState, useRef, useContext } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { FaUserAlt,FaGithub,FaRegEye,FaEyeSlash, FaGoogle,FaPhoneAlt  } from "react-icons/fa";
+import {
+  FaUserAlt,
+  FaGithub,
+  FaRegEye,
+  FaEyeSlash,
+  FaGoogle,
+  FaPhoneAlt,
+} from "react-icons/fa";
 import { IoMdMail } from "react-icons/io";
 import bcrypt from "bcryptjs/dist/bcrypt.js";
-import { CheckemailExists } from "../database.jsx";
-import { Allconvers } from "../context api/context.jsx";
-
+import { CheckemailExists } from "../../database.jsx";
+import { Allconvers } from "../../context api/context.jsx";
 
 function Register({ settoken }) {
   const { userId } = useContext(Allconvers);
   let navigate = useNavigate();
   const [passwordVisible, setPasswordVisible] = useState(false); //for hide and showing the pass we alter the input type to accomplishn this//
-  const togglePasswordVisibility = () => setPasswordVisible(!passwordVisible);//by this toggle paasword funcyion we change the state to the oppasite of the prev one
+  const togglePasswordVisibility = () => setPasswordVisible(!passwordVisible); //by this toggle paasword funcyion we change the state to the oppasite of the prev one
   const [passwordVisible2, setPasswordVisible2] = useState(false);
   const togglePasswordVisibility2 = () =>
     setPasswordVisible2(!passwordVisible2);
@@ -48,7 +54,6 @@ function Register({ settoken }) {
       console.error("Error in Google sign-in:", error);
     }
   }
-
 
   const passwordChange = (value) => {
     console.log(passRef); //regexp searches for the specific pattern in strings and here we use to check our
@@ -151,86 +156,98 @@ function Register({ settoken }) {
   }
 
   return (
-    
-      <form onSubmit={signup} className={registerCSS.form}>
-        <h1 className={registerCSS.h1}>Sign up</h1>
-        <div className={registerCSS.social}>
-          <div
-            className={registerCSS.media}
-            onClick={() => handleOAuth("google")}
-          >
-            <FaGoogle />
-          </div>
-          <div
-            className={registerCSS.media}
-            onClick={() => handleOAuth("github")}
-          >
-            <FaGithub />
-          </div>
+    <form onSubmit={signup} className={registerCSS.form}>
+      <h1 className={registerCSS.h1}>Sign up</h1>
+      <div className={registerCSS.social}>
+        <div
+          className={registerCSS.media}
+          onClick={() => handleOAuth("google")}
+        >
+          <FaGoogle />
         </div>
-        <p className={registerCSS.p}>Or use your E-Mail</p>
-        <div className={registerCSS.inputout}>
-          <span>
-            <FaUserAlt />
+        <div
+          className={registerCSS.media}
+          onClick={() => handleOAuth("github")}
+        >
+          <FaGithub />
+        </div>
+      </div>
+      <p className={registerCSS.p}>Or use your E-Mail</p>
+      <div className={registerCSS.inputout}>
+        <span>
+          <FaUserAlt />
+        </span>
+        <input
+          type="text"
+          placeholder="username"
+          ref={usernameRef}
+          className={registerCSS.input}
+        />
+      </div>
+      <div className={registerCSS.inputout}>
+        <span>
+          <IoMdMail />
+        </span>
+        <input
+          type="text"
+          placeholder="E-Mail I.D"
+          ref={emailRef}
+          className={registerCSS.input}
+        />
+      </div>
+      <div className={registerCSS.inputout}>
+        <span>
+          <FaPhoneAlt />
+        </span>
+        <input
+          type="tel"
+          placeholder="Ph No."
+          pattern="[0-9]{10}"
+          ref={phoneRef}
+          className={registerCSS.input}
+        />
+      </div>
+      <div className={registerCSS.inputout}>
+        {passwordVisible ? (
+          <span onClick={togglePasswordVisibility}>
+            <FaRegEye />
           </span>
-          <input type="text" placeholder="username" ref={usernameRef} className={registerCSS.input}/>
-        </div>
-        <div className={registerCSS.inputout}>
-          <span>
-            <IoMdMail />
+        ) : (
+          <span onClick={togglePasswordVisibility}>
+            <FaEyeSlash />
           </span>
-          <input type="text" placeholder="E-Mail I.D" ref={emailRef} className={registerCSS.input}/>
-        </div>
-        <div className={registerCSS.inputout}>
-          <span>
-            <FaPhoneAlt />
+        )}
+        <input
+          type={passwordVisible ? "text" : "password"}
+          placeholder="Password"
+          ref={passRef}
+          className={registerCSS.input}
+          onChange={(e) => {
+            passwordChange(e.target.value);
+          }}
+        />
+      </div>
+      <div className={registerCSS.inputout}>
+        {passwordVisible2 ? (
+          <span onClick={togglePasswordVisibility2}>
+            <FaRegEye />
           </span>
-          <input
-            type="tel"
-            placeholder="Ph No."
-            pattern="[0-9]{10}"
-            ref={phoneRef} className={registerCSS.input}
-          />
-        </div>
-        <div className={registerCSS.inputout}>
-          {passwordVisible ? (
-            <span onClick={togglePasswordVisibility}>
-              <FaRegEye />
-            </span>
-          ) : (
-            <span onClick={togglePasswordVisibility}>
-              <FaEyeSlash />
-            </span>
-          )}
-          <input
-            type={passwordVisible ? "text" : "password"}
-            placeholder="Password"
-            ref={passRef} className={registerCSS.input}
-            onChange={(e) => {
-              passwordChange(e.target.value);
-            }}
-          />
-        </div>
-        <div className={registerCSS.inputout}>
-          {passwordVisible2 ? (
-            <span onClick={togglePasswordVisibility2}>
-              <FaRegEye />
-            </span>
-          ) : (
-            <span onClick={togglePasswordVisibility2}>
-              <FaEyeSlash />
-            </span>
-          )}
-          <input
-            type={passwordVisible2 ? "text" : "password"}
-            placeholder="Confirm Password"
-            ref={cpassRef} className={registerCSS.input}
-          />
-        </div>
-          <button className={registerCSS.enter} type="submit">Signup</button>
-        
-      </form>
-   
+        ) : (
+          <span onClick={togglePasswordVisibility2}>
+            <FaEyeSlash />
+          </span>
+        )}
+        <input
+          type={passwordVisible2 ? "text" : "password"}
+          placeholder="Confirm Password"
+          ref={cpassRef}
+          className={registerCSS.input}
+        />
+      </div>
+      <button className={registerCSS.enter} type="submit">
+        Signup
+      </button>
+    </form>
   );
 }
 export default Register;
