@@ -14,9 +14,10 @@ import { FaPowerOff } from "react-icons/fa6";
 import { Allconvers } from "../context api/context";
 import { Chatcontext } from "../context api/chatcontext";
 import { Chats } from "./dm chats/chats";
+import Addchannel from "./channels/addchannel";
 
 function Home(data) {
-  const { setUserId, currentUser, userId, Dm, setDm } = useContext(Allconvers);
+  const { setUserId, currentUser, userId, Dm, setDm,setAddchannel,addchannel } = useContext(Allconvers);
   const { dispatch } = useContext(Chatcontext);
   const [isLoading, setIsLoading] = useState(true); // Use state to manage loading
   const [name, setName] = useState("");
@@ -132,6 +133,7 @@ function Home(data) {
 
   return (
     <>
+    {addchannel?<Addchannel />:<></>}
       {isLoading ? (
         <h1>Loading...</h1> // Display loading message while fetching
       ) : (
@@ -160,7 +162,11 @@ function Home(data) {
                     <div className={homepaseCSS.hashes}>
                       <button
                         className={homepaseCSS.addchannel}
-                        onClick={(s) => {}}
+                        onClick={(s) => {
+                          setAddchannel(true)
+                          console.log(addchannel)
+                          
+                        }}
                       >
                         Add Channels
                       </button>

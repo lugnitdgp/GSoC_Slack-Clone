@@ -8,6 +8,7 @@ export const AllconversProvider = ({ children }) => {
   const [userId, setUserId] = useState(null); // Initialize with null
   const [Dm, setDm] = useState(false);  // for the direct-messages page management
   const [isLoading, setIsLoading] = useState(true); // Added loading state
+  const [addchannel,setAddchannel]=useState(false)
 
   // Fetch user data once on component mount
   useEffect(() => {
@@ -44,6 +45,7 @@ export const AllconversProvider = ({ children }) => {
     userId,
     setUserId,
     isLoading, Dm,setDm,
+    addchannel,setAddchannel,
   };
 
   return (

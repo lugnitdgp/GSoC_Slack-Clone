@@ -1,5 +1,5 @@
 import uconfpassCSS from "./uconfpass.module.css";
-import Fpassuser from "../allfpass/fpass";
+import Forpassuser from "../allfpass/forpass";
 import Register from "../../register/register";
 import { useRef } from "react";
 
@@ -18,7 +18,7 @@ function Uconfpass({ settoken, setmail }) {
     <div className={uconfpassCSS.body}>
       <div ref={containerRef} className={uconfpassCSS.container}>
         <div className={uconfpassCSS.sign_in}>
-          <Fpassuser setmail={setmail} />
+          <Forpassuser setmail={setmail} />
         </div>
         <div className={uconfpassCSS.sign_up}>
           <Register settoken={settoken} />

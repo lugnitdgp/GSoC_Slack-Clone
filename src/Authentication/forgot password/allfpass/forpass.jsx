@@ -1,11 +1,11 @@
-import supabase from "../../../supabase";
+import supabase from "../../../supabase.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import { FaUserAlt } from "react-icons/fa";
 import fpassCSS from "./fpass.module.css";
 import { CheckemailExists } from "../../../database.jsx";
 
-function Fpassuser({ setmail }) {
+function Forpassuser({ setmail }) {
   let navigate = useNavigate();
 
   const emailRef = useRef("");
@@ -66,4 +66,4 @@ function Fpassuser({ setmail }) {
     </form>
   );
 }
-export default Fpassuser;
+export default Forpassuser;

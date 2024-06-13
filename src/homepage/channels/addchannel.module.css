@@ -1,0 +1,90 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+.body {
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(224, 225, 226, 0.473);
+  z-index: 8;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.box {
+  height: 200px;
+  width: 700px;
+  border-radius: 5px;
+  background-color: rgb(250, 250, 250);
+  border: solid thin blueviolet;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+.h1 {
+  width: 100%;
+  height: 35%;
+  display: flex;
+  padding: 10px;
+  align-items: center;
+  background-color: rgb(238, 237, 236);
+  border-bottom: thin solid blueviolet;
+}
+.inputbox {
+  height: 42%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(246, 250, 249);
+}
+.input {
+  width: 95%;
+  height: 40px;
+  padding: 7px;
+  font-size: 20px;
+  outline: none;
+  border: none;
+  border-radius: 8px;
+}
+.input:focus {
+  outline: blueviolet;
+  border: thin solid rgb(191, 135, 243);
+}
+.bottom {
+  background-color: rgb(246, 250, 249);
+  height: 23%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  padding: 7px;
+}
+.cancel {
+  height: 30px;
+  width: 67px;
+  background-color: rgb(233, 55, 55);
+  border-radius: 10px;
+  margin: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 17px;
+}
+.submit {
+  height: 30px;
+  width: 67px;
+  background-color: rgb(107, 9, 163);
+  border-radius: 10px;
+  margin: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 17px;
+  color: white;
+}
