@@ -3,6 +3,7 @@ import {
   idm,
   fetchUserDmChats,
   fetchUsermessages,
+  fetchUserchannels,
   insertidforchannel,
 } from "../database";
 import { useState, useEffect, useContext } from "react";
@@ -15,10 +16,14 @@ import { Allconvers } from "../context api/context";
 import { Chatcontext } from "../context api/chatcontext";
 import { Chats } from "./dm chats/chats";
 import Addchannel from "./channels/addchannel";
+import { FaSlackHash } from "react-icons/fa";
+import { Channelchats } from "./channels/channelchat";
+import { Channelcontext } from "../context api/channelcontext";
 
 function Home(data) {
   const { setUserId, currentUser, userId, Dm, setDm,setAddchannel,addchannel } = useContext(Allconvers);
   const { dispatch } = useContext(Chatcontext);
+  const {dispatchchannel}=useContext(Channelcontext)
   const [isLoading, setIsLoading] = useState(true); // Use state to manage loading
   const [name, setName] = useState("");
   const [phno, setPhno] = useState("");
@@ -26,7 +31,9 @@ function Home(data) {
   const [dmcontacts, setDmcontacts] = useState([]);
   const [chat, setchat] = useState(false);
   const [fetchdmupdate, setFetchdmupdate] = useState(false);
-  const [condisplay, setCondisplay] = useState(false);
+  const [fetchchannelupdate,setFetchchannelupdate]=useState(false)
+  const [currentuserchannels, setCurrentuserchannels] = useState({});
+  const [channelchat,setChannelchat]=useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,7 +56,15 @@ function Home(data) {
         console.log("dmchatinfo2:", dmcontacts);
       }
     };
-
+    const fetchchannel = async () => {
+      const user = await fetchUserchannels(data.data.user);
+      if(user){
+        setCurrentuserchannels(user);
+        console.log(currentuserchannels);
+      }
+      
+    };
+    fetchchannel();
     fetchData();
     fetchdmdata();
   }, [data]);
@@ -69,6 +84,15 @@ function Home(data) {
     };
     fetchdmdata();
   }, [fetchdmupdate]);
+  useEffect(() => {
+    const fetchchannel = async () => {
+      const user = await fetchUserchannels(currentUser[0]);
+      if(user){setCurrentuserchannels(user);
+      console.log(currentuserchannels);
+      setFetchchannelupdate(false)}
+    };
+    fetchchannel();
+  }, [fetchchannelupdate]);
 
   useEffect(() => {
     const insertdm = async () => {
@@ -124,12 +148,45 @@ function Home(data) {
         supabase.removeChannel(channel);
       };
     };
+    const channellisten = () => {
+      const channel = supabase
+        .channel("currentchannel_list") //to listen to the real time changes in the dm contacts and i also tried updating the contacts
+        .on(
+          //by using the new payload we get but i faced a lag in the time to change the state after the payload
+          "postgres_changes", //is recieved but got errors so i instead used a state to get like a signal that there is contact
+          {
+            //added and then again fetched the contact details again
+            event: "*",
+            schema: "public",
+            table: "channels_list",
+            select: "channels",
+            filter: `id=eq.${data.data.user.id}`,
+          },
+          (payload) => {
+            setFetchchannelupdate(true);
+            console.log("Change received!", payload);
+          }
+        )
+        .subscribe();
+
+      // Cleanup function to unsubscribe from the channel
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    };
     data.data.user.id && dmchats();
+    data.data.user.id && channellisten();
   }, [data.data.user.id]);
 
   const handlechatselect = (u) => {
     dispatch({ type: "Change_user", payload: u }); //we change the reducer state
   };
+  const handlechannelselect = (u) => {
+    dispatchchannel({ type: "Change_channel", payload: u }); //we change the reducer state
+  };
+  useEffect(()=>{
+    console.log(currentuserchannels)
+  },[currentuserchannels])
 
   return (
     <>
@@ -170,6 +227,33 @@ function Home(data) {
                       >
                         Add Channels
                       </button>
+                      {Object.entries(currentuserchannels)?.map((channel) => 
+                        (
+                        <div
+                          className={homepaseCSS.schannel}
+                          key={channel[1].channel_id}
+                          onClick={() => {
+                            handlechannelselect(channel[1])
+                            console.log(channel[1]);
+                            setchat(false)
+                            setConformdm(false);
+                            setDm(false);
+                            setChannelchat(true)
+                          }}
+                          
+                        >
+                          
+                          <div className={homepaseCSS.schannelinfo}>
+                            <>
+                            <FaSlackHash />
+                              <span className={homepaseCSS.schannelname}>
+                                {channel[1]?.channelname}
+                              </span>
+                              
+                            </>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                     <div className={homepaseCSS.contacts}>
                       <button
@@ -177,6 +261,7 @@ function Home(data) {
                         onClick={(s) => {
                           setDm(true);
                           setConformdm(true);
+                          setChannelchat(false)
                         }}
                       >
                         Direct message
@@ -192,6 +277,7 @@ function Home(data) {
                             setchat(true);
                             setConformdm(false);
                             setDm(false);
+                            setChannelchat(false)
                           }}
                           style={{
                             display:
@@ -238,11 +324,11 @@ function Home(data) {
                   />
                 ) : chat ? (
                   <Chats />
-                ) : (
-                  <>
+                ) : (channelchat?(<Channelchats />):
+                  (<>
                     <div className={homepaseCSS.presentcontact}></div>
                     <div className={homepaseCSS.chats}></div>
-                  </>
+                  </>)
                 )}
               </div>
             </div>

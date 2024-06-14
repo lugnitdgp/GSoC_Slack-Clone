@@ -75,6 +75,7 @@
   justify-content: center;
   align-items: center;
   font-size: 17px;
+  cursor: pointer;
 }
 .submit {
   height: 30px;
@@ -87,4 +88,5 @@
   align-items: center;
   font-size: 17px;
   color: white;
+  cursor: pointer;
 }

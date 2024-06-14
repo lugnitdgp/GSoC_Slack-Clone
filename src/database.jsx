@@ -130,3 +130,52 @@ export async function insertidforchannel(id) {
     return "false1";
   }
 }
+export async function insertchannelid(id,name) {
+  try {
+    const { data, error } = await supabase
+      .from("channels_message")
+      .insert([{ channel_id: id,channel_name:name }])
+      .select();
+    if (data) {
+      console.log("done insert for id of channel");
+      return true;
+    } else {                                      //insert new row with a new users uuid into channels_list where all dm contacts data be stored
+      console.log("insert id for channel", error);
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+    return false
+  }
+}
+export async function fetchUserchannels(user) {
+  let { data: channelsstored, error } = await supabase      //to fetch the channels of a user from the channels_list table
+    .from("channels_list")
+    .select("channels")
+    .eq("id", user.id);
+
+  if (error) {
+    console.error("Error fetching user data:", error);
+  } else {
+    return(channelsstored[0]?.channels || []);
+  }
+}
+export async function fetchUserchannelmessages(id) {
+  let { data: channelmessages, error } = await supabase    //to fetch the messages in the channels_message table 
+    .from("channels_message")
+    .select("messages")
+    .eq("channel_id", id);
+
+  if (error) {
+    console.error("Error fetching user data:", error);
+  } else {
+    if(channelmessages[0].messages==null){
+      return([])
+    }
+    else{
+      return(channelmessages[0].messages);
+    }
+    
+  }
+}
+

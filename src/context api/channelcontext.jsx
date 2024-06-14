@@ -7,44 +7,42 @@ import {
 } from "react";
 import { Allconvers } from "./context";
 
-export const Chatcontext = createContext();
+export const Channelcontext = createContext();
 
-export const ChatcontextProvider = ({ children }) => {
+export const ChannelcontextProvider = ({ children }) => {
   const { currentUser } = useContext(Allconvers);
-  console.log(currentUser);
+
   const INTIAL_STATE = {
-    chatId: "null",
-    user: {},
+    channel_id: "null",
+    channel: {},
   };
   const chatReducer = (state, action) => {
     switch (
       action.type //we use Reducer as we can now comfortably deal with complex data types
     ) {
-      case "Change_user":
+      case "Change_channel":
         return {
-          user: action.payload,
-          chatId:
-            action.payload.uid > currentUser[0].id
-              ? action.payload.uid + currentUser[0].id
-              : currentUser[0].id + action.payload.uid,
+          channel: action.payload,
+          channelname: action.payload.channelname,
+          channel_id: action.payload.id,
         };
       default:
         return { state };
     }
   };
-  const [state, dispatch] = useReducer(chatReducer, INTIAL_STATE);
+  const [state, dispatchchannel] = useReducer(chatReducer, INTIAL_STATE);
   useEffect(() => {
     console.log(state);
   }, [state]);
   // Expose values to child components
   const contextValues = {
-    data: state,
-    dispatch,
+    channel_data: state,
+    dispatchchannel,
   };
 
   return (
-    <Chatcontext.Provider value={contextValues}>
+    <Channelcontext.Provider value={contextValues}>
       {children}
-    </Chatcontext.Provider>
+    </Channelcontext.Provider>
   );
 };

@@ -161,3 +161,39 @@
 .sdmcontactmail {
   font-size: 15px;
 }
+.schannel {
+    height: 40px;
+    width: 90%;
+    background-color: rgb(96, 15, 109);
+    display: flex;
+    cursor: pointer;
+    border-bottom: solid thin black;
+    border-radius: 10px;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  .schannel:hover {
+    background-color: rgb(77, 5, 88);
+  }
+  .sdmimg {
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    background-color: azure;
+  }
+  .schannelinfo {
+    color: rgb(222, 225, 228);
+    display: flex;
+    align-items: center;
+    margin-left: 8px;
+  }
+  .schannelname {
+    font-size: 20px;
+    font-weight: 500;
+    margin-left: 10px;
+  }
+  .schannelmail {
+    font-size: 15px;
+  }
