@@ -23,8 +23,10 @@ export const ChannelcontextProvider = ({ children }) => {
       case "Change_channel":
         return {
           channel: action.payload,
+          channeladmins:action.payload.channelinfo.adminid,
           channelname: action.payload.channelname,
-          channel_id: action.payload.id,
+          channel_id: action.payload.channel_id,
+          channelinfo:action.payload.channelinfo,
         };
       default:
         return { state };

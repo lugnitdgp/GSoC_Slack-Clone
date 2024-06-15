@@ -19,11 +19,21 @@ import Addchannel from "./channels/addchannel";
 import { FaSlackHash } from "react-icons/fa";
 import { Channelchats } from "./channels/channelchat";
 import { Channelcontext } from "../context api/channelcontext";
+import Addmember from "./channels/addchannelmember";
 
 function Home(data) {
-  const { setUserId, currentUser, userId, Dm, setDm,setAddchannel,addchannel } = useContext(Allconvers);
+  const {
+    setUserId,
+    currentUser,
+    userId,
+    Dm,
+    setDm,
+    setAddchannel,
+    addchannel,
+    addchannelmember,
+  } = useContext(Allconvers);
   const { dispatch } = useContext(Chatcontext);
-  const {dispatchchannel}=useContext(Channelcontext)
+  const { dispatchchannel } = useContext(Channelcontext);
   const [isLoading, setIsLoading] = useState(true); // Use state to manage loading
   const [name, setName] = useState("");
   const [phno, setPhno] = useState("");
@@ -31,9 +41,9 @@ function Home(data) {
   const [dmcontacts, setDmcontacts] = useState([]);
   const [chat, setchat] = useState(false);
   const [fetchdmupdate, setFetchdmupdate] = useState(false);
-  const [fetchchannelupdate,setFetchchannelupdate]=useState(false)
+  const [fetchchannelupdate, setFetchchannelupdate] = useState(false);
   const [currentuserchannels, setCurrentuserchannels] = useState({});
-  const [channelchat,setChannelchat]=useState(false)
+  const [channelchat, setChannelchat] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,11 +68,10 @@ function Home(data) {
     };
     const fetchchannel = async () => {
       const user = await fetchUserchannels(data.data.user);
-      if(user){
+      if (user) {
         setCurrentuserchannels(user);
         console.log(currentuserchannels);
       }
-      
     };
     fetchchannel();
     fetchData();
@@ -87,9 +96,11 @@ function Home(data) {
   useEffect(() => {
     const fetchchannel = async () => {
       const user = await fetchUserchannels(currentUser[0]);
-      if(user){setCurrentuserchannels(user);
-      console.log(currentuserchannels);
-      setFetchchannelupdate(false)}
+      if (user) {
+        setCurrentuserchannels(user);
+        console.log(currentuserchannels);
+        setFetchchannelupdate(false);
+      }
     };
     fetchchannel();
   }, [fetchchannelupdate]);
@@ -184,13 +195,14 @@ function Home(data) {
   const handlechannelselect = (u) => {
     dispatchchannel({ type: "Change_channel", payload: u }); //we change the reducer state
   };
-  useEffect(()=>{
-    console.log(currentuserchannels)
-  },[currentuserchannels])
+  useEffect(() => {
+    console.log(currentuserchannels);
+  }, [currentuserchannels]);
 
   return (
     <>
-    {addchannel?<Addchannel />:<></>}
+      {addchannelmember ? <Addmember /> : <></>}
+      {addchannel ? <Addchannel /> : <></>}
       {isLoading ? (
         <h1>Loading...</h1> // Display loading message while fetching
       ) : (
@@ -220,36 +232,31 @@ function Home(data) {
                       <button
                         className={homepaseCSS.addchannel}
                         onClick={(s) => {
-                          setAddchannel(true)
-                          console.log(addchannel)
-                          
+                          setAddchannel(true);
+                          console.log(addchannel);
                         }}
                       >
                         Add Channels
                       </button>
-                      {Object.entries(currentuserchannels)?.map((channel) => 
-                        (
+                      {Object.entries(currentuserchannels)?.map((channel) => (
                         <div
                           className={homepaseCSS.schannel}
                           key={channel[1].channel_id}
                           onClick={() => {
-                            handlechannelselect(channel[1])
+                            handlechannelselect(channel[1]);
                             console.log(channel[1]);
-                            setchat(false)
+                            setchat(false);
                             setConformdm(false);
                             setDm(false);
-                            setChannelchat(true)
+                            setChannelchat(true);
                           }}
-                          
                         >
-                          
                           <div className={homepaseCSS.schannelinfo}>
                             <>
-                            <FaSlackHash />
+                              <FaSlackHash />
                               <span className={homepaseCSS.schannelname}>
                                 {channel[1]?.channelname}
                               </span>
-                              
                             </>
                           </div>
                         </div>
@@ -261,7 +268,7 @@ function Home(data) {
                         onClick={(s) => {
                           setDm(true);
                           setConformdm(true);
-                          setChannelchat(false)
+                          setChannelchat(false);
                         }}
                       >
                         Direct message
@@ -277,7 +284,7 @@ function Home(data) {
                             setchat(true);
                             setConformdm(false);
                             setDm(false);
-                            setChannelchat(false)
+                            setChannelchat(false);
                           }}
                           style={{
                             display:
@@ -324,11 +331,13 @@ function Home(data) {
                   />
                 ) : chat ? (
                   <Chats />
-                ) : (channelchat?(<Channelchats />):
-                  (<>
+                ) : channelchat ? (
+                  <Channelchats />
+                ) : (
+                  <>
                     <div className={homepaseCSS.presentcontact}></div>
                     <div className={homepaseCSS.chats}></div>
-                  </>)
+                  </>
                 )}
               </div>
             </div>

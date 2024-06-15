@@ -6,10 +6,10 @@ export const Allconvers = createContext({});
 export const AllconversProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState([]); // Initialize with an empty string
   const [userId, setUserId] = useState(null); // Initialize with null
-  const [Dm, setDm] = useState(false);  // for the direct-messages page management
+  const [Dm, setDm] = useState(false); // for the direct-messages page management
   const [isLoading, setIsLoading] = useState(true); // Added loading state
-  const [addchannel,setAddchannel]=useState(false)
-
+  const [addchannel, setAddchannel] = useState(false);
+  const [addchannelmember, setaddchannelmember] = useState(false);
   // Fetch user data once on component mount
   useEffect(() => {
     const fetchUserData = async () => {
@@ -23,7 +23,7 @@ export const AllconversProvider = ({ children }) => {
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
-          // Handle errors here 
+          // Handle errors here
         }
       }
       setIsLoading(false); // Set loading to false
@@ -35,17 +35,21 @@ export const AllconversProvider = ({ children }) => {
   // Log currentUser whenever it changes
   useEffect(() => {
     console.log("Current User State Updated:", currentUser);
-
   }, [currentUser]);
 
   // All values to child components
   const contextValues = {
+    addchannelmember,
+    setaddchannelmember,
     currentUser,
     setCurrentUser,
     userId,
     setUserId,
-    isLoading, Dm,setDm,
-    addchannel,setAddchannel,
+    isLoading,
+    Dm,
+    setDm,
+    addchannel,
+    setAddchannel,
   };
 
   return (

@@ -2,9 +2,15 @@ import supabase from "../../supabase.jsx";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Allconvers } from "../../context api/context";
 import AddchannnelCSS from "./addchannel.module.css";
-import { insertchannelid, fetchUserchannels } from "../../database";
+import {
+  insertchannelid,
+  fetchUserchannels,
+  fetchUserchannelmembers,
+  insertchannelmember,
+} from "../../database";
 import { v4 as uuid } from "uuid";
 import { Channelcontext } from "../../context api/channelcontext.jsx";
+
 const Addchannel = () => {
   const { addchannel, setAddchannel, currentUser } = useContext(Allconvers);
   const { dispatchchannel } = useContext(Channelcontext);
@@ -53,6 +59,7 @@ const Addchannel = () => {
                 channelinfo: {
                   createdby: currentUser[0].username,
                   createdbyid: currentUser[0].id,
+                  adminid: [{ id: currentUser[0].id }],
                 },
                 date: new Date().toISOString(),
                 allowshow: true,
@@ -66,18 +73,33 @@ const Addchannel = () => {
           console.error("Error updating channels:", error);
         } else {
           console.log("channel updated:", data);
-          dispatchchannel({
-            type: "Change_channel",
-            payload: {
-              channel_id: id,
-              channelname: channelname,
-              channelinfo: {
-                createdby: currentUser[0].username,
-                createdbyid: currentUser[0].id,
-              },
-              allowshow: true,
+          const members = await fetchUserchannelmembers(id);
+          console.log(members);
+          const newmember = [
+            ...members,
+            {
+              member_id: currentUser[0].id,
+              member_name: currentUser[0].username,
+              member_mail: currentUser[0].email,
             },
-          });
+          ];
+          const insert = insertchannelmember(id, newmember);
+          if (insert) {
+            dispatchchannel({
+              type: "Change_channel",
+              payload: {
+                channel_id: id,
+                channelname: channelname,
+                channelinfo: {
+                  createdby: currentUser[0].username,
+                  createdbyid: currentUser[0].id,
+                  adminid: [{ id: currentUser[0].id }],
+                },
+                allowshow: true,
+              },
+            });
+          }
+
           setAddchannel(false);
         }
       }

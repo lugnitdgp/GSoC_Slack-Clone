@@ -4,22 +4,26 @@ import supabase from "../../supabase.jsx";
 import { IoMdAttach } from "react-icons/io";
 import { Allconvers } from "../../context api/context.jsx";
 import { v4 as uuid } from "uuid";
+import { IoMdPersonAdd } from "react-icons/io";
 import {
   fetchUserchannelmessages,
   fetchUserDmChatsid,
 } from "../../database.jsx";
 import { Channelcontext } from "../../context api/channelcontext.jsx";
 import { ChannelMessage } from "./channelmessage.jsx";
+import Addmember from "./addchannelmember.jsx";
 
 export const Channelchats = () => {
   const textRef = useRef(""); //usestate didnot work but useref worked to make the input clear after updation
   const imgRef = useRef(null);
   const { channel_data } = useContext(Channelcontext);
-  const { currentUser } = useContext(Allconvers);
+  const { currentUser, addchannelmember, setaddchannelmember } =
+    useContext(Allconvers);
   const [messages, setMessages] = useState([]);
   const [picurl, setPicurl] = useState("");
   const messagesEndRef = useRef(null);
   const [msgupdate, setMsgupdate] = useState(false);
+  const [addusericon, setaddusericon] = useState(false);
 
   console.log("heloo to channel");
 
@@ -81,6 +85,17 @@ export const Channelchats = () => {
     };
     message();
   }, [channel_data.channel_id]);
+  useEffect(() => {
+    setaddusericon(false);
+    const admins = channel_data.channeladmins;
+    console.log(admins)
+    Object.entries(admins)?.map((admin) => {    //to allow the add user optiion only for admin
+      console.log(admin)          
+      if (admin[1].id == currentUser[0].id) {
+        setaddusericon(true);
+      }
+    });
+  }, [channel_data]);
 
   const handlesend = async () => {
     const img = imgRef.current.files[0];
@@ -149,38 +164,47 @@ export const Channelchats = () => {
   };
 
   return (
-    <div className={ChannelchatCSS.chat}>
-      <div className={ChannelchatCSS.chatinfo}>
-        <span>{channel_data?.channelname}</span>
-      </div>
-      <div className={ChannelchatCSS.messages}>
-        {messages.map((m) => {
-          return <ChannelMessage key={m.channel_id} message={m} />;
-        })}
-        <div ref={messagesEndRef} />
-      </div>
-      <div className={ChannelchatCSS.chatinput}>
-        <textarea
-          placeholder="Type something...."
-          ref={textRef}
-          className={ChannelchatCSS.textinput}
-        />
-        <div className={ChannelchatCSS.send}>
-          <label htmlFor="file">
-            <IoMdAttach className={ChannelchatCSS.attachIcon} size={45} />
-          </label>
-          <input
-            type="file"
-            id="file"
-            ref={imgRef}
-            style={{ display: "none" }} // hide the file input
-          />
+    <>
+      <div className={ChannelchatCSS.chat}>
+        <div className={ChannelchatCSS.chatinfo}>
+          <span>{channel_data?.channelname}</span>
+          {addusericon ? (
+            <IoMdPersonAdd
+              onClick={() => setaddchannelmember(true)} // Call the function to update state
+              style={{ cursor: "pointer" }}
+            />
+          ) : (
+            <></>
+          )}
         </div>
-        <button className={ChannelchatCSS.sendbutton} onClick={handlesend}>
-          Send
-        </button>
+        <div className={ChannelchatCSS.messages}>
+          {messages.map((m) => {
+            return <ChannelMessage key={m.channel_id} message={m} />;
+          })}
+          <div ref={messagesEndRef} />
+        </div>
+        <div className={ChannelchatCSS.chatinput}>
+          <textarea
+            placeholder="Type something...."
+            ref={textRef}
+            className={ChannelchatCSS.textinput}
+          />
+          <div className={ChannelchatCSS.send}>
+            <label htmlFor="file">
+              <IoMdAttach className={ChannelchatCSS.attachIcon} size={45} />
+            </label>
+            <input
+              type="file"
+              id="file"
+              ref={imgRef}
+              style={{ display: "none" }} // hide the file input
+            />
+          </div>
+          <button className={ChannelchatCSS.sendbutton} onClick={handlesend}>
+            Send
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
-  return <></>;
 };
