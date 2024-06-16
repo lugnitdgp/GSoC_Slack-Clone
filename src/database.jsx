@@ -61,10 +61,11 @@ export async function idm(id) {
   }
 }
 export async function UserdetailsbyName(username) {
-  let { data: specific_user_data, error } = await supabase //users details from users table via username
+  let { data: specific_user_data, error } = await supabase
     .from("user_data")
-    .select("*") //selecting all coloumns
-    .eq("username", username); //gets the row where the id matches
+    .select("*")
+    .ilike("username", `%${username}%`); // Using ilike for case-insensitive search and pattern matching
+
   if (error) {
     console.error("Error fetching user data:", error);
     return false;
@@ -197,7 +198,7 @@ export async function insertchannelmember(id, members) {
   try {
     const { data, error } = await supabase
       .from("channels_message")
-      .update({channel_members: members},)
+      .update({ channel_members: members })
       .eq("channel_id", id)
       .select();
     if (data) {
@@ -218,7 +219,7 @@ export async function fetchchannelmember(id) {
     const { data: members, error } = await supabase
       .from("channels_message")
       .select("channel_members")
-      .eq("channel_id", id)
+      .eq("channel_id", id);
     if (members) {
       console.log("recieved members");
       if (members == null) {

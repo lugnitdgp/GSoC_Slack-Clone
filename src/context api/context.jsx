@@ -10,6 +10,7 @@ export const AllconversProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true); // Added loading state
   const [addchannel, setAddchannel] = useState(false);
   const [addchannelmember, setaddchannelmember] = useState(false);
+  const [showmembers, setShowmembers] = useState(false);
   // Fetch user data once on component mount
   useEffect(() => {
     const fetchUserData = async () => {
@@ -50,6 +51,8 @@ export const AllconversProvider = ({ children }) => {
     setDm,
     addchannel,
     setAddchannel,
+    showmembers,
+    setShowmembers,
   };
 
   return (

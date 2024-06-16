@@ -20,6 +20,7 @@ import { FaSlackHash } from "react-icons/fa";
 import { Channelchats } from "./channels/channelchat";
 import { Channelcontext } from "../context api/channelcontext";
 import Addmember from "./channels/addchannelmember";
+import Showmembers from "./channels/membersofchannel";
 
 function Home(data) {
   const {
@@ -31,6 +32,8 @@ function Home(data) {
     setAddchannel,
     addchannel,
     addchannelmember,
+    showmembers,
+    setShowmembers,
   } = useContext(Allconvers);
   const { dispatch } = useContext(Chatcontext);
   const { dispatchchannel } = useContext(Channelcontext);
@@ -201,6 +204,7 @@ function Home(data) {
 
   return (
     <>
+      {showmembers ? <Showmembers /> : <></>}
       {addchannelmember ? <Addmember /> : <></>}
       {addchannel ? <Addchannel /> : <></>}
       {isLoading ? (

@@ -7,25 +7,25 @@ import { v4 as uuid } from "uuid";
 import { IoMdPersonAdd } from "react-icons/io";
 import {
   fetchUserchannelmessages,
-  fetchUserDmChatsid,
+  fetchUserchannels,
 } from "../../database.jsx";
 import { Channelcontext } from "../../context api/channelcontext.jsx";
 import { ChannelMessage } from "./channelmessage.jsx";
+import { IoMdContacts } from "react-icons/io";
 import Addmember from "./addchannelmember.jsx";
 
 export const Channelchats = () => {
   const textRef = useRef(""); //usestate didnot work but useref worked to make the input clear after updation
   const imgRef = useRef(null);
   const { channel_data } = useContext(Channelcontext);
-  const { currentUser, addchannelmember, setaddchannelmember } =
+  const { currentUser, setaddchannelmember, setShowmembers, showmembers } =
     useContext(Allconvers);
   const [messages, setMessages] = useState([]);
   const [picurl, setPicurl] = useState("");
   const messagesEndRef = useRef(null);
   const [msgupdate, setMsgupdate] = useState(false);
   const [addusericon, setaddusericon] = useState(false);
-
-  console.log("heloo to channel");
+  const [accepted, setaccepted] = useState(false);
 
   useEffect(() => {
     // Scroll to bottom whenever messages change
@@ -33,13 +33,19 @@ export const Channelchats = () => {
   }, [messages]);
   useEffect(() => {
     const fetchmessages = async () => {
+      setaccepted(false);
       const messagesuptained = await fetchUserchannelmessages(
         channel_data.channel_id
       );
       if (messagesuptained) {
         setMessages(messagesuptained);
+        console.log(messages);
+      }
+      if (channel_data.allowshow == true) {
+        setaccepted(true);
       }
     };
+
     fetchmessages();
   }, [channel_data.channel_id]);
   useEffect(() => {
@@ -70,7 +76,7 @@ export const Channelchats = () => {
             schema: "public", //here we listen to the changes in realtime and update the postgres changes here
             table: "channels_message",
             select: "messages",
-            filter: `id=eq.${channel_data}`,
+            filter: `channel_id=eq.${channel_data.channel_id}`,
           },
           (payload) => {
             setMsgupdate(true);
@@ -88,9 +94,10 @@ export const Channelchats = () => {
   useEffect(() => {
     setaddusericon(false);
     const admins = channel_data.channeladmins;
-    console.log(admins)
-    Object.entries(admins)?.map((admin) => {    //to allow the add user optiion only for admin
-      console.log(admin)          
+    console.log(admins);
+    Object.entries(admins)?.map((admin) => {
+      //to allow the add user optiion only for admin
+      console.log(admin);
       if (admin[1].id == currentUser[0].id) {
         setaddusericon(true);
       }
@@ -115,7 +122,7 @@ export const Channelchats = () => {
         setPicurl(puburl);
 
         const { data: data2, error: error2 } = await supabase
-          .from("chats_dm")
+          .from("channels_message")
           .update({
             messages: [
               ...messages,
@@ -128,7 +135,7 @@ export const Channelchats = () => {
               },
             ],
           })
-          .eq("id", channel_data.channel_id)
+          .eq("channel_id", channel_data.channel_id)
           .select();
         if (data2) {
           setMsgupdate(true);
@@ -141,7 +148,7 @@ export const Channelchats = () => {
       }
     } else {
       const { data: data3, error: error3 } = await supabase
-        .from("chats_dm")
+        .from("channels_message")
         .update({
           messages: [
             ...messages,
@@ -153,7 +160,7 @@ export const Channelchats = () => {
             },
           ],
         })
-        .eq("id", channel_data.channel_id)
+        .eq("channel_id", channel_data.channel_id)
         .select();
       if (data3) {
         setMsgupdate(true);
@@ -162,48 +169,107 @@ export const Channelchats = () => {
       }
     }
   };
-
+  const acceptinvite = async () => {
+    const fetchedchanneldata = await fetchUserchannels(currentUser[0]);
+    console.log(fetchedchanneldata);
+    fetchedchanneldata.forEach((channel) => {
+      if (channel.channel_id === channel_data.channel_id) {
+        channel.allowshow = true;
+      }
+    });
+    const { data: userchannelupdate, error: channelerr } = await supabase
+      .from("channels_list")
+      .update({
+        channels: fetchedchanneldata,
+      })
+      .eq("id", currentUser[0].id)
+      .select();
+    if (userchannelupdate) {
+      console.log("channel updated");
+      setaccepted(true);
+    }
+    console.log(fetchedchanneldata);
+  };
+  useEffect(() => {
+    console.log(showmembers);
+  }, [showmembers]);
   return (
     <>
       <div className={ChannelchatCSS.chat}>
         <div className={ChannelchatCSS.chatinfo}>
           <span>{channel_data?.channelname}</span>
-          {addusericon ? (
-            <IoMdPersonAdd
-              onClick={() => setaddchannelmember(true)} // Call the function to update state
+          {addusericon && channel_data.allowshow && accepted ? (
+            <>
+              <IoMdContacts
+                onClick={() => setShowmembers(true)} // Call the function to update state
+                style={{ cursor: "pointer" }}
+              />
+              <IoMdPersonAdd
+                onClick={() => setaddchannelmember(true)} // Call the function to update state
+                style={{ cursor: "pointer" }}
+              />
+            </>
+          ) : (
+            <IoMdContacts
+              onClick={() => setShowmembers(true)} // Call the function to update state
               style={{ cursor: "pointer" }}
             />
-          ) : (
-            <></>
           )}
         </div>
-        <div className={ChannelchatCSS.messages}>
-          {messages.map((m) => {
-            return <ChannelMessage key={m.channel_id} message={m} />;
-          })}
-          <div ref={messagesEndRef} />
-        </div>
-        <div className={ChannelchatCSS.chatinput}>
-          <textarea
-            placeholder="Type something...."
-            ref={textRef}
-            className={ChannelchatCSS.textinput}
-          />
-          <div className={ChannelchatCSS.send}>
-            <label htmlFor="file">
-              <IoMdAttach className={ChannelchatCSS.attachIcon} size={45} />
-            </label>
-            <input
-              type="file"
-              id="file"
-              ref={imgRef}
-              style={{ display: "none" }} // hide the file input
-            />
-          </div>
-          <button className={ChannelchatCSS.sendbutton} onClick={handlesend}>
-            Send
-          </button>
-        </div>
+        {!channel_data.allowshow && !accepted ? (
+          <>
+            <div className={ChannelchatCSS.acceptbox}>
+              <div className={ChannelchatCSS.creatorinfo}>
+                <p className={ChannelchatCSS.acceptp}>
+                  You were added into this Channel by "
+                  {channel_data.channelinfo.createdby}"{" "}
+                </p>
+              </div>
+              <div className={ChannelchatCSS.acceptance}>
+                <button
+                  className={ChannelchatCSS.accept}
+                  onClick={acceptinvite}
+                >
+                  Accept the Invitation
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className={ChannelchatCSS.messages}>
+              {messages.map((m) => (
+                <ChannelMessage key={m.channel_id} message={m} />
+              ))}
+              <div ref={messagesEndRef} />
+            </div>
+
+            <div className={ChannelchatCSS.chatinput}>
+              <textarea
+                placeholder="Type something...."
+                ref={textRef}
+                className={ChannelchatCSS.textinput}
+              />
+              <div className={ChannelchatCSS.send}>
+                <label htmlFor="file">
+                  <IoMdAttach className={ChannelchatCSS.attachIcon} size={45} />
+                </label>
+                <input
+                  type="file"
+                  id="file"
+                  ref={imgRef}
+                  style={{ display: "none" }} // hide the file input
+                />
+              </div>
+              <button
+                className={ChannelchatCSS.sendbutton}
+                onClick={handlesend}
+              >
+                Send
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </>
   );

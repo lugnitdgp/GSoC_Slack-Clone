@@ -38,7 +38,7 @@
 .inputbox {
   height: 13%;
   width: 100%;
- 
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -51,80 +51,49 @@
   font-size: 18px;
   padding: 3px;
 }
-.searchresult {
-  position: relative;
-  width: 100%;
+.memberslist {
   height: 78%;
+  width: 100%;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
-.Suserbox {
+.member {
   position: relative;
   width: 98%;
   height: 50px;
   color: black;
   font-size: 20px;
-  display: flex;
-  border-radius: 5px;
-  background-color: aliceblue;
-}
-.Suserbox:hover {
-  background-color: rgb(211, 228, 243);
-  cursor: pointer;
-}
-.disabled {
-  background-color: rgba(128, 128, 128, 0.459);
-  position: relative;
-  width: 98%;
-  height: 50px;
-  color: black;
-  font-size: 20px;
-  display: flex;
-  border-radius: 5px;
-}
-.Suserphoto {
-  width: 8%;
-  height: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  border-radius: 5px;
+  background-color: aliceblue;
+  margin-top: 1px;
+  margin-bottom: 1px;
 }
-.img {
+.member:hover {
+  background-color: rgb(217, 233, 247);
+}
+.memimg {
   width: 30px;
   height: 30px;
   border-radius: 50%;
   border: 2px rgb(72, 25, 240) solid;
 }
-.Suserinfo {
-  width: 92%;
-  display: flex;
+.meminfo {
+  width: 95%;
   height: 100%;
-  position: relative;
-}
-.namep {
-  font-size: 25px;
-}
-.mailp {
-  font-size: 12px;
-}
-.Suserexist {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 100%;
-  width: 75%;
   padding-left: 10px;
 }
-.Suserdsntexist {
-  padding: 2px;
-  font-size: 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.infospan1 {
+  font-size: 23px;
 }
-.noUsers{
-    width: 100%;
-  height: 78%;
-  padding: 10px;
+.infospan2 {
+  font-size: 12px;
 }
