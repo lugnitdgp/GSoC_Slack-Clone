@@ -6,13 +6,17 @@ import Update from "./Authentication/update details/updatedetails.jsx";
 import supabase from "./supabase.jsx";
 import Signingpages from "./Authentication/signingpages/signningpages.jsx";
 import Uconfpass from "./Authentication/forgot password/uifpasscon/passresetconfirm.jsx";
+import Cookies from "js-cookie";
 
 const Pages = () => {
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(
+    Cookies.get("authToken") ? JSON.parse(Cookies.get("authToken")) : null
+  );
   const [updload, setUpdload] = useState(false);
   const [mailcheck, setMailcheck] = useState(
     JSON.parse(localStorage.getItem("mailcheck")) || false // Ensure boolean value is correctly retrieved
   );
+  const [joken, setJoken] = useState(null);
 
   useEffect(() => {
     async function getudetails() {
@@ -20,6 +24,7 @@ const Pages = () => {
         if (val.data?.user) {
           console.log(val.data.user);
           setToken(val.data);
+          setJoken(val.data);
           setUpdload("true");
         }
       });
@@ -27,27 +32,16 @@ const Pages = () => {
     console.log(updload);
     getudetails();
   }, []);
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) {
-      try {
-        const parsedToken = JSON.parse(storedToken);
-        setToken(parsedToken);
-      } catch (error) {
-        console.error("Error parsing stored token:", error);
-        localStorage.removeItem("token");
-      }
-    }
-  }, []);
-
   useEffect(() => {
     if (token) {
-      try {
-        localStorage.setItem("token", JSON.stringify(token));
-      } catch (error) {
-        console.error("Error saving token to localStorage:", error);
-      }
+      Cookies.set("authToken", JSON.stringify(token), {
+        expires: 1 / 12,
+        secure: true,
+      }); // 2 hours = 1/12 day
+      const jwttoken = localStorage.getItem(
+        "sb-kibzydwyaosjaslultsq-auth-token"
+      );
+      setJoken(jwttoken);
     }
   }, [token]);
 
@@ -55,14 +49,13 @@ const Pages = () => {
     localStorage.setItem("mailcheck", JSON.stringify(mailcheck)); // Update local storage on state change
   }, [mailcheck]);
 
-
   return (
     <div>
       <Routes>
         <Route
           path="/fpassuser"
           element={
-            token ? (
+            joken ? (
               <Navigate to="/" replace />
             ) : (
               <Uconfpass setmail={setMailcheck} settoken={setToken} />
@@ -93,7 +86,7 @@ const Pages = () => {
           path="/signing-pages"
           element={
             //<Signingpages />
-            token ? (
+            joken ? (
               <Navigate to="/" replace />
             ) : (
               <Signingpages settoken={setToken} setupdload={setUpdload} />
@@ -104,13 +97,14 @@ const Pages = () => {
           path="/"
           element={
             //<Home data={token} />
-            token && !mailcheck ? (
+            joken && !mailcheck ? (
               <Home data={token} />
             ) : (
               <Navigate to="/signing-pages" replace />
             )
           }
         />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
   );

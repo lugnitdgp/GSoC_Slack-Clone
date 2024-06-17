@@ -125,7 +125,7 @@ function Home(data) {
       if (error) {
         console.log(error);
       } else {
-        localStorage.removeItem("token");
+        // localStorage.removeItem("token");
         localStorage.removeItem("mailcheck");
         window.location.reload();
         alert("successfully logged out");

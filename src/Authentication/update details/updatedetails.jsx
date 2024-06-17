@@ -1,17 +1,20 @@
 import supabase from "../../supabase.jsx";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { FaUserAlt } from "react-icons/fa";
 import { FaPhoneAlt } from "react-icons/fa";
 import updateuserCSS from "./updateuser.module.css";
+import { Getuserdetails } from "../../database.jsx";
 
 function Update(data, settoken) {
   let navigate = useNavigate();
   const usernameRef = useRef("");
   const phoneRef = useRef("");
-  console.log(data.data.user.user_metadata.username);
+  const [fetcheddata, setFetcheddata] = useState(null);
+  console.log(data.data.user);
   if (data.data.user.user_metadata.username) {
-    navigate("/");
+    console.log(data.data.user.user_metadata.username);
+    navigate("/", { replace: true });
   } else {
     async function update(e) {
       e.preventDefault();
@@ -36,10 +39,8 @@ function Update(data, settoken) {
           });
           if (data) {
             alert("update succesful");
-            console.log(data.user);
-            navigate("/");
-            settoken(data);
-            console.log(data.user);
+            window.location.reload();
+            navigate("/", { replace: true });
           } else {
             console.log(error);
           }
@@ -50,6 +51,9 @@ function Update(data, settoken) {
         alert("Enter the Username");
       }
     }
+    useEffect(() => {
+      console.log(fetcheddata);
+    }, [fetcheddata]);
     return (
       <div className={updateuserCSS.body}>
         <form onSubmit={update} className={updateuserCSS.form}>
