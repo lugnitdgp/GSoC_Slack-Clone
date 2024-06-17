@@ -162,6 +162,18 @@ export async function fetchUserchannels(user) {
     return channelsstored[0]?.channels || [];
   }
 }
+export async function fetchUserchannelsbyid(id) {
+  let { data: channelstored, error } = await supabase //to fetch the channels of a user from the channels_list table
+    .from("channels_list")
+    .select("channels")
+    .eq("id", id);
+
+  if (error) {
+    console.error("Error fetching user data:", error);
+  } else {
+    return channelstored[0]?.channels || [];
+  }
+}
 export async function fetchUserchannelmessages(id) {
   let { data: channelmessages, error } = await supabase //to fetch the messages in the channels_message table
     .from("channels_message")
@@ -232,5 +244,41 @@ export async function fetchchannelmember(id) {
     }
   } catch (error) {
     console.log(error);
+  }
+}
+export async function allidsinlist() {
+  try {
+    const { data: ids, error } = await supabase
+      .from("channels_list")
+      .select("id");
+
+    if (ids) {
+      console.log("recieved ids");
+      return ids;
+    } else {
+      console.log("error fething members", error);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+export async function updatechannel(id, channels) {
+  try {
+    const { data: updatedchannels, error } = await supabase
+      .from("channels_list")
+      .update({ channels: channels })
+      .eq("id", id)
+      .select();
+    if (updatedchannels) {
+      console.log("done update of channel");
+      return true;
+    } else {
+      //insert new row with a new users uuid into channels_list where all dm contacts data be stored
+      console.log("update channel", error);
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+    return false;
   }
 }

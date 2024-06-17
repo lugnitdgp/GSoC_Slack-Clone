@@ -18,13 +18,19 @@ export const Channelchats = () => {
   const textRef = useRef(""); //usestate didnot work but useref worked to make the input clear after updation
   const imgRef = useRef(null);
   const { channel_data } = useContext(Channelcontext);
-  const { currentUser, setaddchannelmember, setShowmembers, showmembers } =
-    useContext(Allconvers);
+  const {
+    currentUser,
+    setaddchannelmember,
+    setShowmembers,
+    showmembers,
+    addusericon,
+    setaddusericon,
+  } = useContext(Allconvers);
   const [messages, setMessages] = useState([]);
   const [picurl, setPicurl] = useState("");
   const messagesEndRef = useRef(null);
   const [msgupdate, setMsgupdate] = useState(false);
-  const [addusericon, setaddusericon] = useState(false);
+
   const [accepted, setaccepted] = useState(false);
 
   useEffect(() => {

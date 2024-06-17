@@ -11,6 +11,7 @@ export const AllconversProvider = ({ children }) => {
   const [addchannel, setAddchannel] = useState(false);
   const [addchannelmember, setaddchannelmember] = useState(false);
   const [showmembers, setShowmembers] = useState(false);
+  const [addusericon, setaddusericon] = useState(false);
   // Fetch user data once on component mount
   useEffect(() => {
     const fetchUserData = async () => {
@@ -53,6 +54,8 @@ export const AllconversProvider = ({ children }) => {
     setAddchannel,
     showmembers,
     setShowmembers,
+    addusericon,
+    setaddusericon,
   };
 
   return (

@@ -6,39 +6,124 @@ import { ImCross } from "react-icons/im";
 import { Channelcontext } from "../../context api/channelcontext";
 import { fetchchannelmember, Getuserdetails } from "../../database";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import {
+  fetchUserchannelsbyid,
+  allidsinlist,
+  fetchUserchannels,
+  updatechannel,
+} from "../../database";
 
 const Showmembers = () => {
-  const { showmembers, setShowmembers } = useContext(Allconvers);
+  const {
+    showmembers,
+    setShowmembers,
+    currentUser,
+    addusericon,
+    setaddusericon,
+  } = useContext(Allconvers);
   const [members, setMembers] = useState([]);
   const [refreshmem, setrefreshmem] = useState(false);
-  const { channel_data } = useContext(Channelcontext);
+  const { channel_data, dispatchchannel } = useContext(Channelcontext);
   const [fetchdone, setfetchdone] = useState(false);
   const [username, setUsername] = useState("");
+  const [selectedMemberId, setSelectedMemberId] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [fetchchannelupdate, setFetchchannelupdate] = useState(false);
 
   useEffect(() => {
     const fetchMemAndDetails = async () => {
       const members = await fetchchannelmember(channel_data.channel_id);
       const memberIds = members[0].channel_members;
-      const detailedMembers = await Promise.all(
-        //here Promis.all is used as we can map only resolved ie static data so we wait till the async data
+      const detailedMembers = await Promise.all(  
+ //Promise.all is used to wait till complete fetching is done and the data is static as mapping can't be done to data that is being received
         memberIds.map(async (memberId) => {
-          //becomes completely fetched and static and then map the arrays.
           try {
             const memberDetails = await Getuserdetails(memberId.member_id);
-            return memberDetails; // Return the full member object
+            return memberDetails;
           } catch (error) {
             console.error(error);
-            return null; // Handle errors by returning null to avoid rendering empty elements
+            return null;
           }
         })
       );
-      setMembers(detailedMembers.filter(Boolean)); // Filter out null values from errors
+      setMembers(detailedMembers.filter(Boolean));
       setrefreshmem(false);
       setfetchdone(true);
     };
 
     fetchMemAndDetails();
   }, [channel_data.channel_id, refreshmem]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      if (fetchchannelupdate) {
+        const updchannel = await fetchUserchannels(currentUser[0]);
+        dispatchchannel({ type: "Change_channel", payload: updchannel });
+        setFetchchannelupdate(false);
+      }
+    };
+    fetch();
+  }, [fetchchannelupdate]);
+
+  useEffect(() => {
+    const channellisten = () => {
+      const channel = supabase
+        .channel("currentchannel_list")
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "channels_list",
+            filter: `id=eq.${currentUser[0].id}`,
+          },
+          (payload) => {
+            setFetchchannelupdate(true);
+            console.log("Change received!", payload);
+          }
+        )
+        .subscribe();
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    };
+    channellisten();
+  }, [channel_data.channel_id]);
+
+  useEffect(() => {
+    if (
+      channel_data.channeladmins.some((admin) => admin.id === currentUser[0].id)
+    ) {
+      setIsAdmin(true);
+      setaddusericon(true);
+    } else {
+      setIsAdmin(false);
+      setaddusericon(true);
+    }
+    const channellisten = () => {
+      const channel = supabase
+        .channel("currentchannel_list")
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "channels_list",
+            filter: `id=eq.${currentUser[0].id}`,
+          },
+          (payload) => {
+            setFetchchannelupdate(true);
+            console.log("Change received!", payload);
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    };
+    channellisten();
+  }, [showmembers]);
 
   useEffect(() => {
     const fetchmem = async () => {
@@ -48,14 +133,14 @@ const Showmembers = () => {
         currentmember.map(async (memberId) => {
           try {
             const memberDetails = await Getuserdetails(memberId.member_id);
-            return memberDetails; // Return the full member object
+            return memberDetails;
           } catch (error) {
             console.error(error);
-            return null; // Handle errors by returning null to avoid rendering empty elements
+            return null;
           }
         })
       );
-      setMembers(detailedMembers.filter(Boolean)); // Filter out null values from errors
+      setMembers(detailedMembers.filter(Boolean));
     };
     fetchmem();
   }, []);
@@ -65,7 +150,7 @@ const Showmembers = () => {
   }, [members]);
 
   useEffect(() => {
-    if (username == "") {
+    if (username === "") {
       setrefreshmem(true);
     }
   }, [username]);
@@ -88,7 +173,6 @@ const Showmembers = () => {
         )
         .subscribe();
 
-      // Cleanup function to unsubscribe from the channel to avoid data leakage
       return () => {
         supabase.removeChannel(me);
       };
@@ -107,21 +191,101 @@ const Showmembers = () => {
     const currentmembers = await fetchchannelmember(channel_data.channel_id);
     const currentmems = currentmembers[0].channel_members;
     const matcheds = currentmems.filter((currentmem) =>
-      currentmem.member_name.toLowerCase().includes(username.toLowerCase())
+      currentmem.member_name.toLowerCase().includes(username.toLowerCase())//case insensitive search
     );
     const detailedMembers = await Promise.all(
       matcheds.map(async (memberId) => {
         try {
           const memberDetails = await Getuserdetails(memberId.member_id);
-          return memberDetails; // Return the full member object
+          return memberDetails;
         } catch (error) {
           console.error(error);
-          return null; // Handle errors by returning null to avoid rendering empty elements
+          return null;
         }
       })
     );
-    setMembers(detailedMembers.filter(Boolean)); // Filter out null values from errors
+    setMembers(detailedMembers.filter(Boolean));//removes null data
     setfetchdone(true);
+  };
+
+  const threedotselect = (memberId) => {
+    setSelectedMemberId(memberId === selectedMemberId ? null : memberId);
+  };
+
+  const addasadmin = async (memberid) => {
+    try {
+      const allids = await allidsinlist();
+      for (const Id of allids) {
+        const userChannels = await fetchUserchannelsbyid(Id.id);
+        if (userChannels.length > 0) {
+          const index = userChannels.findIndex(
+            (channel) => channel.channel_id === channel_data.channel_id
+          );
+          if (index !== -1) {
+            const channelToUpdate = userChannels[index];//we change the data in the channel data whose index matches to the channel id we are using currently
+            const updatedAdminIds = [
+              ...channelToUpdate.channelinfo.adminid,
+              { id: memberid },
+            ];
+            channelToUpdate.channelinfo.adminid = updatedAdminIds;
+            userChannels[index] = channelToUpdate;
+            const updatedUserChannels = await updatechannel(
+              Id.id,
+              userChannels
+            );
+            console.log(
+              "Updated userChannels in database:",
+              updatedUserChannels
+            );
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error adding admin:", error);
+    }
+  };
+
+  const deleteasadmin = async (memberid) => {
+    try {
+      if (memberid === channel_data.channelinfo.createdbyid) {
+        console.log("Cannot delete the creator as admin.");
+        return;
+      }
+      const allids = await allidsinlist();
+      for (const Id of allids) {
+        const userChannels = await fetchUserchannelsbyid(Id.id);
+        if (userChannels.length > 0) {
+          const index = userChannels.findIndex(
+            (channel) => channel.channel_id === channel_data.channel_id
+          );
+          if (index !== -1) {
+            const channelToUpdate = userChannels[index];
+            const updatedAdminIds = channelToUpdate.channelinfo.adminid.filter(
+              (admin) => admin.id !== memberid
+            );
+            channelToUpdate.channelinfo.adminid = updatedAdminIds;
+            userChannels[index] = channelToUpdate;
+            const updatedUserChannels = await updatechannel(
+              Id.id,
+              userChannels
+            );
+            console.log(
+              "Updated userChannels in database:",
+              updatedUserChannels
+            );
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error deleting admin:", error);
+    }
+  };
+
+  const admincheck = (memberid) => {
+    return (
+      isAdmin &&
+      !channel_data.channeladmins.some((admin) => admin.id === memberid)
+    );
   };
 
   return (
@@ -164,8 +328,40 @@ const Showmembers = () => {
                       <span className={channelmembersCSS.infospan2}>
                         {member[0]?.email}
                       </span>
+                      {selectedMemberId === member[0]?.id && (
+                        <div className={channelmembersCSS.options}>
+                          <div className={channelmembersCSS.option}>
+                            <p>Direct Message</p>
+                          </div>
+                          {isAdmin ? (
+                            admincheck(member[0].id) ? (
+                              <div
+                                className={channelmembersCSS.option}
+                                onClick={(e) => addasadmin(member[0].id)}
+                              >
+                                <p>Add as admin</p>
+                              </div>
+                            ) : channel_data.channelinfo.createdbyid ===
+                              member[0].id ? (
+                              <></>
+                            ) : (
+                              <div
+                                className={channelmembersCSS.option}
+                                onClick={(e) => deleteasadmin(member[0].id)}
+                              >
+                                <p>Delete as admin</p>
+                              </div>
+                            )
+                          ) : (
+                            <></>
+                          )}
+                        </div>
+                      )}
                     </div>
-                    <BsThreeDotsVertical />
+                    <BsThreeDotsVertical
+                      onClick={() => threedotselect(member[0]?.id)}
+                      style={{ cursor: "pointer" }}
+                    />
                   </>
                 ) : (
                   <p>Error fetching details</p>

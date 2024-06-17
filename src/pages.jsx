@@ -35,9 +35,9 @@ const Pages = () => {
   useEffect(() => {
     if (token) {
       Cookies.set("authToken", JSON.stringify(token), {
-        expires: 1 / 12,
+        expires: 2,
         secure: true,
-      }); // 2 hours = 1/12 day
+      }); //here expire time is taken in days eg:2 hours = 1/12 day
       const jwttoken = localStorage.getItem(
         "sb-kibzydwyaosjaslultsq-auth-token"
       );

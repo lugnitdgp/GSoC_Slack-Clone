@@ -90,10 +90,24 @@
   flex-direction: column;
   justify-content: center;
   padding-left: 10px;
+  position: relative;
 }
 .infospan1 {
   font-size: 23px;
 }
 .infospan2 {
   font-size: 12px;
+}
+.options {
+  height: 90px;
+  width: 80px;
+  background-color: rgb(203, 240, 165);
+  position: absolute;
+  right: 0px;
+  top: 28px;
+  z-index: 5;
+  border-radius: 15px 0px 7px 7px;
+}
+.option {
+  cursor: pointer;
 }
