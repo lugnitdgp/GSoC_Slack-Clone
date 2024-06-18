@@ -196,14 +196,14 @@ export async function fetchUserchannelmembers(id) {
     .select("channel_members")
     .eq("channel_id", id);
 
-  if (error) {
-    console.error("Error fetching user data:", error);
-  } else {
+  if (channelmembers) {
     if (channelmembers[0].channel_members == null) {
       return [];
     } else {
       return channelmembers[0].channel_members;
     }
+  } else {
+    console.error("Error fetching user data:", error);
   }
 }
 export async function insertchannelmember(id, members) {
@@ -232,15 +232,15 @@ export async function fetchchannelmember(id) {
       .from("channels_message")
       .select("channel_members")
       .eq("channel_id", id);
-    if (members) {
+    if (error) {
+      console.log("error fething members", error);
+    } else {
       console.log("recieved members");
       if (members == null) {
         return [];
       } else {
         return members;
       }
-    } else {
-      console.log("error fething members", error);
     }
   } catch (error) {
     console.log(error);

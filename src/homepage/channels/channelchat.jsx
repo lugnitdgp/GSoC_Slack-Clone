@@ -12,12 +12,11 @@ import {
 import { Channelcontext } from "../../context api/channelcontext.jsx";
 import { ChannelMessage } from "./channelmessage.jsx";
 import { IoMdContacts } from "react-icons/io";
-import Addmember from "./addchannelmember.jsx";
 
 export const Channelchats = () => {
   const textRef = useRef(""); //usestate didnot work but useref worked to make the input clear after updation
   const imgRef = useRef(null);
-  const { channel_data } = useContext(Channelcontext);
+  const { channel_data, dispatchchannel } = useContext(Channelcontext);
   const {
     currentUser,
     setaddchannelmember,
@@ -25,12 +24,14 @@ export const Channelchats = () => {
     showmembers,
     addusericon,
     setaddusericon,
+    loadadmincheck,
+    setloadadmincheck,
   } = useContext(Allconvers);
   const [messages, setMessages] = useState([]);
   const [picurl, setPicurl] = useState("");
   const messagesEndRef = useRef(null);
   const [msgupdate, setMsgupdate] = useState(false);
-
+  const [allowshow, setallowshow] = useState(false);
   const [accepted, setaccepted] = useState(false);
 
   useEffect(() => {
@@ -99,16 +100,25 @@ export const Channelchats = () => {
   }, [channel_data.channel_id]);
   useEffect(() => {
     setaddusericon(false);
-    const admins = channel_data.channeladmins;
-    console.log(admins);
-    Object.entries(admins)?.map((admin) => {
-      //to allow the add user optiion only for admin
-      console.log(admin);
-      if (admin[1].id == currentUser[0].id) {
-        setaddusericon(true);
-      }
-    });
-  }, [channel_data]);
+    setloadadmincheck(false);
+    console.log(loadadmincheck);
+    if (!loadadmincheck) {
+      const admins = channel_data.channeladmins;
+      const show = channel_data.allowshow;
+      setallowshow(show);
+      console.log(admins);
+      console.log(accepted);
+      console.log(allowshow);
+      Object.entries(admins)?.map((admin) => {
+        //to allow the add user optiion only for admin
+        console.log(admin);
+        if (admin[1].id == currentUser[0].id) {
+          setaddusericon(true);
+          console.log(addusericon);
+        }
+      });
+    }
+  }, [channel_data, loadadmincheck]);
 
   const handlesend = async () => {
     const img = imgRef.current.files[0];
@@ -199,12 +209,50 @@ export const Channelchats = () => {
   useEffect(() => {
     console.log(showmembers);
   }, [showmembers]);
+
+  useEffect(() => {
+    const message = () => {
+      console.log(msgupdate);
+
+      const channelsupd = supabase
+        .channel("channel")
+        .on(
+          "postgres_changes",
+          {
+            event: "*", //channels are used to listen to real time changes
+            schema: "public", //here we listen to the changes in realtime and update the postgres changes here
+            table: "channels_list",
+            select: "channels",
+            filter: `id=eq.${currentUser[0].id}`,
+          },
+          (payload) => {
+            const updatedchannelslist = payload.new.channels.filter(
+              //getting all ids that are not to be deleted
+              (channel) => channel.channel_id == channel_data.channel_id
+            );
+            console.log(updatedchannelslist);
+            dispatchchannel({
+              type: "Change_channel",
+              payload: updatedchannelslist[0],
+            });
+          }
+        )
+        .subscribe();
+
+      // Cleanup function to unsubscribe from the channel to avoid data leakage
+      return () => {
+        supabase.removeChannel(channelsupd);
+      };
+    };
+    message();
+  }, [channel_data.channel_id]);
+
   return (
     <>
       <div className={ChannelchatCSS.chat}>
         <div className={ChannelchatCSS.chatinfo}>
           <span>{channel_data?.channelname}</span>
-          {addusericon && channel_data.allowshow && accepted ? (
+          {addusericon && allowshow && accepted ? (
             <>
               <IoMdContacts
                 onClick={() => setShowmembers(true)} // Call the function to update state
@@ -228,13 +276,13 @@ export const Channelchats = () => {
               <div className={ChannelchatCSS.creatorinfo}>
                 <p className={ChannelchatCSS.acceptp}>
                   You were added into this Channel by "
-                  {channel_data.channelinfo.createdby}"{" "}
+                  {channel_data.addedby.addername}"
                 </p>
               </div>
               <div className={ChannelchatCSS.acceptance}>
                 <button
                   className={ChannelchatCSS.accept}
-                  onClick={acceptinvite}
+                  onClick={() => acceptinvite()}
                 >
                   Accept the Invitation
                 </button>

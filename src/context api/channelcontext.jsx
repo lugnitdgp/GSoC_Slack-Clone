@@ -10,8 +10,16 @@ import { Allconvers } from "./context";
 export const Channelcontext = createContext();
 
 export const ChannelcontextProvider = ({ children }) => {
-  const { currentUser } = useContext(Allconvers);
-
+  const {
+    currentUser,
+    loadadmincheck,
+    setloadadmincheck,
+    setchat,
+    setConformdm,
+    setDm,
+    setChannelchat,
+  } = useContext(Allconvers);
+  const [load, setload] = useState(false);
   const INTIAL_STATE = {
     channel_id: "null",
     channel: {},
@@ -23,20 +31,47 @@ export const ChannelcontextProvider = ({ children }) => {
       case "Change_channel":
         return {
           channel: action.payload,
-          channeladmins: action.payload?.channelinfo?.adminid,
-          channelname: action.payload?.channelname,
-          channel_id: action.payload?.channel_id,
-          channelinfo: action.payload?.channelinfo,
-          allowshow: action.payload?.allowshow,
+          channeladmins: action.payload.channelinfo.adminid,
+          channelname: action.payload.channelname,
+          channel_id: action.payload.channel_id,
+          channelinfo: action.payload.channelinfo,
+          allowshow: action.payload.allowshow,
+          addedby: action.payload.addedby,
         };
+      case "ADMIN_UPDATE":
+        return {
+          ...state,
+          channelinfo: {
+            ...state.channelinfo,
+            adminid: action.payload, // Update admin IDs here
+          },
+          channeladmins: action.payload,
+        };
+      case "Initial":
+        setchat(false);
+        setConformdm(false);
+        setDm(false);
+        setChannelchat(false);
+        return; // returning nothing, which is undefined
+
       default:
         return { state };
     }
   };
   const [state, dispatchchannel] = useReducer(chatReducer, INTIAL_STATE);
   useEffect(() => {
+    setloadadmincheck(false);
+    setload(true);
     console.log(state);
+    console.log(loadadmincheck);
+    console.log(load);
   }, [state]);
+  useEffect(() => {
+    setloadadmincheck(false);
+    setload(false);
+    console.log(loadadmincheck);
+    console.log(load);
+  }, [load]);
   // Expose values to child components
   const contextValues = {
     channel_data: state,

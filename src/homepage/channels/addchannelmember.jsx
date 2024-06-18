@@ -10,9 +10,10 @@ import {
   insertchannelmember,
   fetchUserchannels,
 } from "../../database";
+import { current } from "@reduxjs/toolkit";
 
 const Addmember = () => {
-  const { setaddchannelmember } = useContext(Allconvers);
+  const { setaddchannelmember, currentUser } = useContext(Allconvers);
   const [Username, setUsername] = useState("");
   const [user, setUser] = useState(null); // Stores searched user data
   const [channelmem, setchannelmem] = useState([]); // Array of existing channel members
@@ -73,6 +74,10 @@ const Addmember = () => {
                 channel_id: channel_data.channel_id,
                 channelname: channel_data.channelname,
                 channelinfo: channel_data.channelinfo,
+                addedby: {
+                  adderid: currentUser[0].id,
+                  addername: currentUser[0].username,
+                },
                 date: new Date().toISOString(),
                 allowshow: false,
               },

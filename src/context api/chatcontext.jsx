@@ -11,7 +11,7 @@ export const Chatcontext = createContext();
 
 export const ChatcontextProvider = ({ children }) => {
   const { currentUser } = useContext(Allconvers);
-  console.log(currentUser);
+
   const INTIAL_STATE = {
     chatId: "null",
     user: {},
