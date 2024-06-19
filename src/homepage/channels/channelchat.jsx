@@ -26,6 +26,12 @@ export const Channelchats = () => {
     setaddusericon,
     loadadmincheck,
     setloadadmincheck,
+    setDm,
+    setConformdm,
+    setChannelchat,
+    fetchchannelupdate,
+    setFetchchannelupdate,
+    setchat,
   } = useContext(Allconvers);
   const [messages, setMessages] = useState([]);
   const [picurl, setPicurl] = useState("");
@@ -33,111 +39,137 @@ export const Channelchats = () => {
   const [msgupdate, setMsgupdate] = useState(false);
   const [allowshow, setallowshow] = useState(false);
   const [accepted, setaccepted] = useState(false);
-
-  useEffect(() => {
-    // Scroll to bottom whenever messages change
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-  useEffect(() => {
-    const fetchmessages = async () => {
-      setaccepted(false);
-      const messagesuptained = await fetchUserchannelmessages(
-        channel_data.channel_id
-      );
-      if (messagesuptained) {
-        setMessages(messagesuptained);
-        console.log(messages);
-      }
-      if (channel_data.allowshow == true) {
-        setaccepted(true);
-      }
-    };
-
-    fetchmessages();
-  }, [channel_data.channel_id]);
-  useEffect(() => {
-    const fetchmessages = async () => {
-      if (msgupdate) {
+  if (channel_data?.channel_id) {
+    useEffect(() => {
+      // Scroll to bottom whenever messages change
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
+    useEffect(() => {
+      const fetchmessages = async () => {
+        setaccepted(false);
         const messagesuptained = await fetchUserchannelmessages(
           channel_data.channel_id
         );
         if (messagesuptained) {
           setMessages(messagesuptained);
-          setMsgupdate(false);
+          console.log(messages);
         }
-      }
-    };
-    fetchmessages();
-  }, [msgupdate]);
-
-  useEffect(() => {
-    const message = () => {
-      console.log(msgupdate);
-
-      const chatsDm = supabase
-        .channel("custom-filter-channel")
-        .on(
-          "postgres_changes",
-          {
-            event: "*", //channels are used to listen to real time changes
-            schema: "public", //here we listen to the changes in realtime and update the postgres changes here
-            table: "channels_message",
-            select: "messages",
-            filter: `channel_id=eq.${channel_data.channel_id}`,
-          },
-          (payload) => {
-            setMsgupdate(true);
-          }
-        )
-        .subscribe();
-
-      // Cleanup function to unsubscribe from the channel to avoid data leakage
-      return () => {
-        supabase.removeChannel(chatsDm);
+        if (channel_data.allowshow == true) {
+          setaccepted(true);
+        }
       };
-    };
-    message();
-  }, [channel_data.channel_id]);
-  useEffect(() => {
-    setaddusericon(false);
-    setloadadmincheck(false);
-    console.log(loadadmincheck);
-    if (!loadadmincheck) {
-      const admins = channel_data.channeladmins;
-      const show = channel_data.allowshow;
-      setallowshow(show);
-      console.log(admins);
-      console.log(accepted);
-      console.log(allowshow);
-      Object.entries(admins)?.map((admin) => {
-        //to allow the add user optiion only for admin
-        console.log(admin);
-        if (admin[1].id == currentUser[0].id) {
-          setaddusericon(true);
-          console.log(addusericon);
+
+      fetchmessages();
+    }, [channel_data.channel_id]);
+    useEffect(() => {
+      const fetchmessages = async () => {
+        if (msgupdate) {
+          const messagesuptained = await fetchUserchannelmessages(
+            channel_data.channel_id
+          );
+          if (messagesuptained) {
+            setMessages(messagesuptained);
+            setMsgupdate(false);
+          }
         }
-      });
-    }
-  }, [channel_data, loadadmincheck]);
+      };
+      fetchmessages();
+    }, [msgupdate]);
 
-  const handlesend = async () => {
-    const img = imgRef.current.files[0];
-    const text = textRef.current.value;
-    if (img) {
-      const path = channel_data.channel_id + "/" + uuid();
-      const { data: data1, error: error1 } = await supabase.storage
-        .from("photos")
-        .upload(`${path}`, img);
-      if (error1) {
-        console.log(error1);
-      } else if (data1) {
-        let url = supabase.storage.from("photos").getPublicUrl(data1.path); //here in the url we habe data in which publicUrl is present
+    useEffect(() => {
+      const message = () => {
+        console.log(msgupdate);
 
-        //first gave that value to a const and then setPicurl
-        const puburl = url.data.publicUrl;
-        setPicurl(puburl);
+        const chatsDm = supabase
+          .channel("custom-filter-channel")
+          .on(
+            "postgres_changes",
+            {
+              event: "*", //channels are used to listen to real time changes
+              schema: "public", //here we listen to the changes in realtime and update the postgres changes here
+              table: "channels_message",
+              select: "messages",
+              filter: `channel_id=eq.${channel_data.channel_id}`,
+            },
+            (payload) => {
+              setMsgupdate(true);
+            }
+          )
+          .subscribe();
 
-        const { data: data2, error: error2 } = await supabase
+        // Cleanup function to unsubscribe from the channel to avoid data leakage
+        return () => {
+          supabase.removeChannel(chatsDm);
+        };
+      };
+      message();
+    }, [channel_data.channel_id]);
+    useEffect(() => {
+      setaddusericon(false);
+      setloadadmincheck(false);
+      console.log(loadadmincheck);
+      if (!loadadmincheck) {
+        const admins = channel_data.channeladmins;
+        const show = channel_data.allowshow;
+        setallowshow(show);
+        console.log(admins);
+        console.log(accepted);
+        console.log(allowshow);
+        Object.entries(admins)?.map((admin) => {
+          //to allow the add user optiion only for admin
+          console.log(admin);
+          if (admin[1].id == currentUser[0].id) {
+            setaddusericon(true);
+            console.log(addusericon);
+          }
+        });
+      }
+    }, [channel_data, loadadmincheck]);
+
+    const handlesend = async () => {
+      const img = imgRef.current.files[0];
+      const text = textRef.current.value;
+      if (img) {
+        const path = channel_data.channel_id + "/" + uuid();
+        const { data: data1, error: error1 } = await supabase.storage
+          .from("photos")
+          .upload(`${path}`, img);
+        if (error1) {
+          console.log(error1);
+        } else if (data1) {
+          let url = supabase.storage.from("photos").getPublicUrl(data1.path); //here in the url we habe data in which publicUrl is present
+
+          //first gave that value to a const and then setPicurl
+          const puburl = url.data.publicUrl;
+          setPicurl(puburl);
+
+          const { data: data2, error: error2 } = await supabase
+            .from("channels_message")
+            .update({
+              messages: [
+                ...messages,
+                {
+                  id: uuid(),
+                  text: text,
+                  senderId: currentUser[0].id,
+                  date: new Date().toISOString(),
+                  image: puburl,
+                },
+              ],
+            })
+            .eq("channel_id", channel_data.channel_id)
+            .select();
+          if (data2) {
+            setMsgupdate(true);
+
+            textRef.current.value = "";
+            imgRef.current.value = null;
+          } else if (error2) {
+            console.log(error2);
+          }
+        }
+      } else {
+        const { data: data3, error: error3 } = await supabase
           .from("channels_message")
           .update({
             messages: [
@@ -147,184 +179,170 @@ export const Channelchats = () => {
                 text: text,
                 senderId: currentUser[0].id,
                 date: new Date().toISOString(),
-                image: puburl,
               },
             ],
           })
           .eq("channel_id", channel_data.channel_id)
           .select();
-        if (data2) {
+        if (data3) {
           setMsgupdate(true);
-
           textRef.current.value = "";
           imgRef.current.value = null;
-        } else if (error2) {
-          console.log(error2);
         }
       }
-    } else {
-      const { data: data3, error: error3 } = await supabase
-        .from("channels_message")
-        .update({
-          messages: [
-            ...messages,
-            {
-              id: uuid(),
-              text: text,
-              senderId: currentUser[0].id,
-              date: new Date().toISOString(),
-            },
-          ],
-        })
-        .eq("channel_id", channel_data.channel_id)
-        .select();
-      if (data3) {
-        setMsgupdate(true);
-        textRef.current.value = "";
-        imgRef.current.value = null;
-      }
-    }
-  };
-  const acceptinvite = async () => {
-    const fetchedchanneldata = await fetchUserchannels(currentUser[0]);
-    console.log(fetchedchanneldata);
-    fetchedchanneldata.forEach((channel) => {
-      if (channel.channel_id === channel_data.channel_id) {
-        channel.allowshow = true;
-      }
-    });
-    const { data: userchannelupdate, error: channelerr } = await supabase
-      .from("channels_list")
-      .update({
-        channels: fetchedchanneldata,
-      })
-      .eq("id", currentUser[0].id)
-      .select();
-    if (userchannelupdate) {
-      console.log("channel updated");
-      setaccepted(true);
-    }
-    console.log(fetchedchanneldata);
-  };
-  useEffect(() => {
-    console.log(showmembers);
-  }, [showmembers]);
-
-  useEffect(() => {
-    const message = () => {
-      console.log(msgupdate);
-
-      const channelsupd = supabase
-        .channel("channel")
-        .on(
-          "postgres_changes",
-          {
-            event: "*", //channels are used to listen to real time changes
-            schema: "public", //here we listen to the changes in realtime and update the postgres changes here
-            table: "channels_list",
-            select: "channels",
-            filter: `id=eq.${currentUser[0].id}`,
-          },
-          (payload) => {
-            const updatedchannelslist = payload.new.channels.filter(
-              //getting all ids that are not to be deleted
-              (channel) => channel.channel_id == channel_data.channel_id
-            );
-            console.log(updatedchannelslist);
-            dispatchchannel({
-              type: "Change_channel",
-              payload: updatedchannelslist[0],
-            });
-          }
-        )
-        .subscribe();
-
-      // Cleanup function to unsubscribe from the channel to avoid data leakage
-      return () => {
-        supabase.removeChannel(channelsupd);
-      };
     };
-    message();
-  }, [channel_data.channel_id]);
+    const acceptinvite = async () => {
+      const fetchedchanneldata = await fetchUserchannels(currentUser[0]);
+      console.log(fetchedchanneldata);
+      fetchedchanneldata.forEach((channel) => {
+        if (channel.channel_id === channel_data.channel_id) {
+          channel.allowshow = true;
+        }
+      });
+      const { data: userchannelupdate, error: channelerr } = await supabase
+        .from("channels_list")
+        .update({
+          channels: fetchedchanneldata,
+        })
+        .eq("id", currentUser[0].id)
+        .select();
+      if (userchannelupdate) {
+        console.log("channel updated");
+        setaccepted(true);
+      }
+      console.log(fetchedchanneldata);
+    };
+    useEffect(() => {
+      console.log(showmembers);
+    }, [showmembers]);
 
-  return (
-    <>
-      <div className={ChannelchatCSS.chat}>
-        <div className={ChannelchatCSS.chatinfo}>
-          <span>{channel_data?.channelname}</span>
-          {addusericon && allowshow && accepted ? (
-            <>
+    useEffect(() => {
+      const message = () => {
+        console.log(msgupdate);
+
+        const channelsupd = supabase
+          .channel("channel")
+          .on(
+            "postgres_changes",
+            {
+              event: "*", //channels are used to listen to real time changes
+              schema: "public", //here we listen to the changes in realtime and update the postgres changes here
+              table: "channels_list",
+              select: "channels",
+              filter: `id=eq.${currentUser[0].id}`,
+            },
+            (payload) => {
+              const updatedchannelslist = payload.new.channels.filter(
+                //getting all ids that are not to be deleted
+                (channel) => channel.channel_id == channel_data.channel_id
+              );
+              console.log(updatedchannelslist);
+              dispatchchannel({
+                type: "Change_channel",
+                payload: updatedchannelslist[0],
+              });
+            }
+          )
+          .subscribe();
+
+        // Cleanup function to unsubscribe from the channel to avoid data leakage
+        return () => {
+          supabase.removeChannel(channelsupd);
+        };
+      };
+      message();
+    }, [channel_data.channel_id]);
+
+    return (
+      <>
+        <div className={ChannelchatCSS.chat}>
+          <div className={ChannelchatCSS.chatinfo}>
+            <span>{channel_data?.channelname}</span>
+            {addusericon && allowshow && accepted ? (
+              <>
+                <IoMdContacts
+                  onClick={() => setShowmembers(true)} // Call the function to update state
+                  style={{ cursor: "pointer" }}
+                />
+                <IoMdPersonAdd
+                  onClick={() => setaddchannelmember(true)} // Call the function to update state
+                  style={{ cursor: "pointer" }}
+                />
+              </>
+            ) : (
               <IoMdContacts
                 onClick={() => setShowmembers(true)} // Call the function to update state
                 style={{ cursor: "pointer" }}
               />
-              <IoMdPersonAdd
-                onClick={() => setaddchannelmember(true)} // Call the function to update state
-                style={{ cursor: "pointer" }}
-              />
+            )}
+          </div>
+          {!channel_data.allowshow && !accepted ? (
+            <>
+              <div className={ChannelchatCSS.acceptbox}>
+                <div className={ChannelchatCSS.creatorinfo}>
+                  <p className={ChannelchatCSS.acceptp}>
+                    You were added into this Channel by "
+                    {channel_data.addedby.addername}"
+                  </p>
+                </div>
+                <div className={ChannelchatCSS.acceptance}>
+                  <button
+                    className={ChannelchatCSS.accept}
+                    onClick={() => acceptinvite()}
+                  >
+                    Accept the Invitation
+                  </button>
+                </div>
+              </div>
             </>
           ) : (
-            <IoMdContacts
-              onClick={() => setShowmembers(true)} // Call the function to update state
-              style={{ cursor: "pointer" }}
-            />
-          )}
-        </div>
-        {!channel_data.allowshow && !accepted ? (
-          <>
-            <div className={ChannelchatCSS.acceptbox}>
-              <div className={ChannelchatCSS.creatorinfo}>
-                <p className={ChannelchatCSS.acceptp}>
-                  You were added into this Channel by "
-                  {channel_data.addedby.addername}"
-                </p>
+            <>
+              <div className={ChannelchatCSS.messages}>
+                {messages.map((m) => (
+                  <ChannelMessage key={m.channel_id} message={m} />
+                ))}
+                <div ref={messagesEndRef} />
               </div>
-              <div className={ChannelchatCSS.acceptance}>
+
+              <div className={ChannelchatCSS.chatinput}>
+                <textarea
+                  placeholder="Type something...."
+                  ref={textRef}
+                  className={ChannelchatCSS.textinput}
+                />
+                <div className={ChannelchatCSS.send}>
+                  <label htmlFor="file">
+                    <IoMdAttach
+                      className={ChannelchatCSS.attachIcon}
+                      size={45}
+                    />
+                  </label>
+                  <input
+                    type="file"
+                    id="file"
+                    ref={imgRef}
+                    style={{ display: "none" }} // hide the file input
+                  />
+                </div>
                 <button
-                  className={ChannelchatCSS.accept}
-                  onClick={() => acceptinvite()}
+                  className={ChannelchatCSS.sendbutton}
+                  onClick={handlesend}
                 >
-                  Accept the Invitation
+                  Send
                 </button>
               </div>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className={ChannelchatCSS.messages}>
-              {messages.map((m) => (
-                <ChannelMessage key={m.channel_id} message={m} />
-              ))}
-              <div ref={messagesEndRef} />
-            </div>
-
-            <div className={ChannelchatCSS.chatinput}>
-              <textarea
-                placeholder="Type something...."
-                ref={textRef}
-                className={ChannelchatCSS.textinput}
-              />
-              <div className={ChannelchatCSS.send}>
-                <label htmlFor="file">
-                  <IoMdAttach className={ChannelchatCSS.attachIcon} size={45} />
-                </label>
-                <input
-                  type="file"
-                  id="file"
-                  ref={imgRef}
-                  style={{ display: "none" }} // hide the file input
-                />
-              </div>
-              <button
-                className={ChannelchatCSS.sendbutton}
-                onClick={handlesend}
-              >
-                Send
-              </button>
-            </div>
-          </>
-        )}
-      </div>
-    </>
-  );
+            </>
+          )}
+        </div>
+      </>
+    );
+  } else {
+    setchat(false);
+    setConformdm(false);
+    setDm(false);
+    setShowmembers(false);
+    setaddchannelmember(false);
+    setChannelchat(false);
+    setFetchchannelupdate(true);
+  }
 };

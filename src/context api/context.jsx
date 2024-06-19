@@ -16,7 +16,7 @@ export const AllconversProvider = ({ children }) => {
   const [chat, setchat] = useState(false);
   const [confirmdm, setConformdm] = useState(false);
   const [channelchat, setChannelchat] = useState(false);
-  const [selectedchannel, setselectedchannel] = useState([{}]);
+  const [fetchchannelupdate, setFetchchannelupdate] = useState(false);
   // Fetch user data once on component mount
   useEffect(() => {
     const fetchUserData = async () => {
@@ -69,8 +69,8 @@ export const AllconversProvider = ({ children }) => {
     setConformdm,
     channelchat,
     setChannelchat,
-    selectedchannel,
-    setselectedchannel,
+    fetchchannelupdate,
+    setFetchchannelupdate,
   };
 
   return (

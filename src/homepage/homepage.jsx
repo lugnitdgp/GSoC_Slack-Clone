@@ -41,9 +41,9 @@ function Home(data) {
     Dm,
     confirmdm,
     chat,
-    selectedchannel,
+    fetchchannelupdate,
+    setFetchchannelupdate,
     setchat,
-    setselectedchannel,
   } = useContext(Allconvers);
   const { dispatch } = useContext(Chatcontext);
   const { channel_data, dispatchchannel } = useContext(Channelcontext);
@@ -52,7 +52,7 @@ function Home(data) {
   const [phno, setPhno] = useState("");
   const [dmcontacts, setDmcontacts] = useState([]);
   const [fetchdmupdate, setFetchdmupdate] = useState(false);
-  const [fetchchannelupdate, setFetchchannelupdate] = useState(false);
+
   const [currentuserchannels, setCurrentuserchannels] = useState({});
 
   useEffect(() => {
@@ -107,24 +107,7 @@ function Home(data) {
     const fetchchannel = async () => {
       const user = await fetchUserchannels(currentUser[0]);
       console.log(user);
-      console.log(selectedchannel.channel_id);
-      if (selectedchannel?.channel_id) {
-        const currentmems = await fetchchannelmember(
-          selectedchannel.channel_id
-        );
-        const curmem = currentmems[0];
-        console.log(currentmems[0]);
-        if (!curmem.some((mem) => mem.member_id == currentUser[0].id)) {
-          console.log("Closing");
-          dispatch({ type: "Initial" });
-          setchat(false);
-          setConformdm(false);
-          setDm(false);
-          setChannelchat(false);
-          setShowmembers(false);
-          setAddchannel(false);
-        }
-      }
+
       if (user) {
         setCurrentuserchannels(user);
         console.log(currentuserchannels);
@@ -133,14 +116,7 @@ function Home(data) {
     };
     fetchchannel();
   }, [fetchchannelupdate, loadadmincheck]);
-  useEffect(() => {
-    console.log(selectedchannel.channel_id);
-    const mem = async () => {
-      const currentmems = await fetchchannelmember(selectedchannel.channel_id);
-      console.log(currentmems[0]);
-    };
-    mem();
-  }, [selectedchannel]);
+
   useEffect(() => {
     const insertdm = async () => {
       const idm0 = await idm(userId);
@@ -229,7 +205,6 @@ function Home(data) {
     dispatch({ type: "Change_user", payload: u }); //we change the reducer state
   };
   const handlechannelselect = (u) => {
-    setselectedchannel(u);
     dispatchchannel({ type: "Change_channel", payload: u }); //we change the reducer state
   };
   useEffect(() => {

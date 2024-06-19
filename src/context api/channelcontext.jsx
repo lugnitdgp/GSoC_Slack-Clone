@@ -29,15 +29,19 @@ export const ChannelcontextProvider = ({ children }) => {
       action.type //we use Reducer as we can now comfortably deal with complex data types
     ) {
       case "Change_channel":
-        return {
-          channel: action.payload,
-          channeladmins: action.payload.channelinfo.adminid,
-          channelname: action.payload.channelname,
-          channel_id: action.payload.channel_id,
-          channelinfo: action.payload.channelinfo,
-          allowshow: action.payload.allowshow,
-          addedby: action.payload.addedby,
-        };
+        if (action.payload?.channelinfo) {
+          return {
+            channel: action.payload,
+            channeladmins: action.payload.channelinfo.adminid,
+            channelname: action.payload.channelname,
+            channel_id: action.payload.channel_id,
+            channelinfo: action.payload.channelinfo,
+            allowshow: action.payload.allowshow,
+            addedby: action.payload.addedby,
+          };
+        } else {
+          return;
+        }
       case "ADMIN_UPDATE":
         return {
           ...state,
@@ -47,12 +51,6 @@ export const ChannelcontextProvider = ({ children }) => {
           },
           channeladmins: action.payload,
         };
-      case "Initial":
-        setchat(false);
-        setConformdm(false);
-        setDm(false);
-        setChannelchat(false);
-        return; // returning nothing, which is undefined
 
       default:
         return { state };
@@ -63,14 +61,10 @@ export const ChannelcontextProvider = ({ children }) => {
     setloadadmincheck(false);
     setload(true);
     console.log(state);
-    console.log(loadadmincheck);
-    console.log(load);
   }, [state]);
   useEffect(() => {
     setloadadmincheck(false);
     setload(false);
-    console.log(loadadmincheck);
-    console.log(load);
   }, [load]);
   // Expose values to child components
   const contextValues = {
