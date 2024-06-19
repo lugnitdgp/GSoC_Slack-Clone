@@ -13,7 +13,10 @@ import {
   updatechannel,
   fetchUserchannelmembers,
   insertchannelmember,
+  fetchUserDmChats,
 } from "../../database";
+import { Chatcontext } from "../../context api/chatcontext";
+import { Chats } from "../dm chats/chats";
 
 const Showmembers = () => {
   const {
@@ -23,6 +26,11 @@ const Showmembers = () => {
     setaddusericon,
     loadadmincheck,
     setloadadmincheck,
+    Dm,
+    setchat,
+    setDm,
+    setaddchannelmember,
+    setChannelchat,
   } = useContext(Allconvers);
   const [members, setMembers] = useState([]);
   const [refreshmem, setrefreshmem] = useState(false);
@@ -32,6 +40,27 @@ const Showmembers = () => {
   const [selectedMemberId, setSelectedMemberId] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [fetchchannelupdate, setFetchchannelupdate] = useState(false);
+  const [clickeduserdm, setClickeduserdm] = useState("");
+  const [combinedId, setcombinedId] = useState("");
+  const [isUpdating, setIsUpdating] = useState(false); // Flag to track update process
+  const { dispatch } = useContext(Chatcontext);
+  const [currentuserdm_chats, setcurrentuserdm_chats] = useState([]);
+  const [userdm_chats, setuserdm_chats] = useState([]);
+  const [dmcontacts, setDmcontacts] = useState([]);
+  const [dmopenchaclose, setdmopenchaclose] = useState(false);
+
+  useEffect(() => {
+    const fetchdmdata = async () => {
+      console.log(combinedId);
+      const dmcontactinfo = await fetchUserDmChats(currentUser[0]);
+      console.log(dmcontactinfo);
+      if (dmcontactinfo) {
+        setDmcontacts(dmcontactinfo);
+      }
+    };
+    fetchdmdata();
+  }, [combinedId]);
+
   if (channel_data?.channel_id) {
     useEffect(() => {
       const fetchMemAndDetails = async () => {
@@ -378,10 +407,160 @@ const Showmembers = () => {
         );
       }
     };
+    const handleUser = async (user) => {
+      console.log(user);
+      setClickeduserdm(user);
+    };
+    useEffect(() => {
+      console.log(clickeduserdm);
+      if (clickeduserdm) {
+        const combinedid =
+          clickeduserdm.id > currentUser[0].id
+            ? clickeduserdm.id + currentUser[0].id
+            : currentUser[0].id + clickeduserdm.id;
+        setcombinedId(combinedid);
+
+        (async () => {
+          setIsUpdating(true); // Set update flag to true
+          try {
+            const currdmchat = await fetchUserDmChats(currentUser[0]);
+            const usdmchat = await fetchUserDmChats(clickeduserdm);
+            setcurrentuserdm_chats(currdmchat);
+            setuserdm_chats(usdmchat);
+          } catch (error) {
+            console.error("Error fetching dm chats:", error);
+          } finally {
+            setIsUpdating(false); // Set update flag to false after fetching
+          }
+        })();
+      }
+    }, [clickeduserdm]);
+    useEffect(() => {
+      if (combinedId && !isUpdating) {
+        const checkCombinedIdExists = (chats) =>
+          chats.some((chat) => chat.combinedId === combinedId);
+
+        const currentUserCombinedIdExists =
+          checkCombinedIdExists(currentuserdm_chats);
+        const selectedUserCombinedIdExists =
+          checkCombinedIdExists(userdm_chats);
+        if (currentUserCombinedIdExists) {
+          Object.entries(dmcontacts)?.map((contact) => {
+            if (contact[1].combinedId == combinedId) {
+              dispatch({ type: "Change_user", payload: contact[1].userinfo });
+              setdmopenchaclose(true);
+              setDm(false);
+              setShowmembers(false);
+              setaddchannelmember(false);
+              setChannelchat(false);
+              setchat(true);
+            }
+          });
+        }
+
+        (async () => {
+          try {
+            // Insert new chat if combined ID doesn't exist in either user's chats
+            if (!currentUserCombinedIdExists && !selectedUserCombinedIdExists) {
+              const { data, error } = await supabase
+                .from("chats_dm")
+                .insert([{ id: combinedId, messages: [] }])
+                .select();
+
+              if (error) {
+                console.error("Error inserting chat:", error);
+              } else {
+                console.log(data);
+              }
+            }
+
+            // Update direct messages for current user if combined ID doesn't exist
+            if (!currentUserCombinedIdExists) {
+              const { data, error } = await supabase
+                .from("direct_messages")
+                .update({
+                  dm_chats: [
+                    ...currentuserdm_chats,
+                    {
+                      combinedId: combinedId,
+                      userinfo: {
+                        uid: clickeduserdm.id,
+                        uusername: clickeduserdm.username,
+                        uemail: clickeduserdm.email,
+                        uphoto: clickeduserdm.avatar_url,
+                      },
+                      date: new Date().toISOString(),
+                      showstatus: false,
+                    },
+                  ],
+                })
+                .eq("id", currentUser[0].id)
+                .select();
+
+              if (error) {
+                console.error("Error updating direct message:", error);
+              } else {
+                console.log("Message updated successfully current:", data);
+                dispatch({
+                  type: "Change_user",
+                  payload: {
+                    uid: clickeduserdm.id,
+                    uusername: clickeduserdm.username,
+                    uemail: clickeduserdm.email,
+                    uphoto: clickeduserdm.avatar_url,
+                  },
+                });
+                setShowmembers(false);
+                setaddchannelmember(false);
+                setChannelchat(false);
+                setdmopenchaclose(true);
+                setDm(false);
+                setchat(true);
+              }
+            }
+
+            // Update direct messages for selected user if combined ID doesn't exist
+            if (!selectedUserCombinedIdExists) {
+              const { data, error } = await supabase
+                .from("direct_messages")
+                .update({
+                  dm_chats: [
+                    ...userdm_chats,
+                    {
+                      combinedId: combinedId,
+                      userinfo: {
+                        uid: currentUser[0].id,
+                        uusername: currentUser[0].username,
+                        uemail: currentUser[0].email,
+                        uphoto: currentUser[0].avatar_url,
+                      },
+                      date: new Date().toISOString(),
+                      showstatus: false,
+                    },
+                  ],
+                })
+                .eq("id", clickeduserdm.id)
+                .select();
+
+              if (error) {
+                console.log("Error updating direct message2:", error);
+              } else {
+                console.log("Message updated successfully2 user:", data);
+              }
+            }
+          } catch (error) {
+            console.error("Unexpected error:", error);
+          }
+        })();
+      }
+    }, [combinedId, isUpdating]);
+    useEffect(() => {
+      console.log("Dm", Dm, "dmopenchaclose", dmopenchaclose);
+    }, [dmopenchaclose, Dm]);
 
     return (
       <>
-        {" "}
+        <></>
         {channel_data && channel_data.channelinfo ? (
           <div className={channelmembersCSS.body}>
             <div className={channelmembersCSS.box}>
@@ -427,7 +606,13 @@ const Showmembers = () => {
                             </span>
                             {selectedMemberId === member[0]?.id && (
                               <div className={channelmembersCSS.options}>
-                                <div className={channelmembersCSS.option}>
+                                <div
+                                  className={channelmembersCSS.option}
+                                  onClick={() => {
+                                    handleUser(member[0]);
+                                    setClickeduserdm(member[0]);
+                                  }}
+                                >
                                   <p>Direct Message</p>
                                 </div>
                                 {isAdmin ? (
