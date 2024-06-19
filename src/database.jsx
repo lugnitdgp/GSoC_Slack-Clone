@@ -282,3 +282,81 @@ export async function updatechannel(id, channels) {
     return false;
   }
 }
+export async function insertchanneldolistid(id) {
+  try {
+    const { data, error } = await supabase
+      .from("Channel_todolist")
+      .insert([{ id: id }])
+      .select();
+    if (data) {
+      console.log("done insert for id of channel do list");
+      return true;
+    } else {
+      //insert new row with a new users uuid into channels_list where all dm contacts data be stored
+      console.log("insert id for channel do list", error);
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+export async function insert_todoid(id) {
+  try {
+    const { data, error } = await supabase
+      .from("Todo_list")
+      .insert([{ id: id }])
+      .select();
+    if (data) {
+      console.log("done insert for id of to do list");
+      return true;
+    } else {
+      //insert new row with a new users uuid into tos_list where all dm contacts data be stored
+      console.log("insert id for to do list", error);
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+export async function fetchusertodo(id) {
+  try {
+    const { data: usertodo, error } = await supabase
+      .from("Todo_list")
+      .select("todo_list")
+      .eq("id", id);
+    if (error) {
+      console.log("error fething user todo", error);
+    } else {
+      console.log("recieved user todo");
+      if (usertodo[0].todo_list == null) {
+        return [];
+      } else {
+        return usertodo[0].todo_list;
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+export async function fetchchanneltodo(id) {
+  try {
+    const { data: channeltodo, error } = await supabase
+      .from("Channel_todolist")
+      .select("todo_list")
+      .eq("id", id);
+    if (error) {
+      console.log("error fething channel todo", error);
+    } else {
+      console.log("recieved channel todo");
+      if (channeltodo[0].todo_list == null) {
+        return [];
+      } else {
+        return channeltodo[0].todo_list;
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}

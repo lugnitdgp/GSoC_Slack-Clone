@@ -1,0 +1,182 @@
+.body {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box {
+  background-color: white;
+  padding: 20px;
+  width: 400px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.closeIcon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.head {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.head h1 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.assignTo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.assignTo label {
+  margin-bottom: 10px;
+}
+.checkboxes {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.searchBox {
+  margin-bottom: 0px;
+}
+
+.searchBox input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+.searchResults {
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+.member {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  margin-bottom: 5px;
+}
+
+.member:hover {
+  background-color: #f0f0f0;
+}
+
+.memimg {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.meminfo {
+  flex-grow: 1;
+}
+
+.infospan1 {
+  display: block;
+  font-weight: bold;
+}
+
+.infospan2 {
+  display: block;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.selectionIndicator {
+  font-size: 0.8rem;
+  color: green;
+}
+
+.taskName,
+.dueDateTime,
+.taskDescription {
+  margin-bottom: 20px;
+}
+
+.taskName label,
+.dueDateTime label,
+.taskDescription label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.taskName input,
+.dueDateTime input[type="datetime-local"],
+.taskDescription textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.dueDateTimeOptions {
+  display: flex;
+  align-items: center;
+}
+
+.dueDateTimeOptions label {
+  margin-left: 10px;
+}
+
+.submitButton {
+  text-align: center;
+}
+
+.submitButton button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.notification {
+  background-color: #28a745;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+  animation: fadeInOut 5s ease-in-out; /* Apply fadeInOut animation for notifications */
+}
+
+.requiredLabel {
+  display: block;
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 5px;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

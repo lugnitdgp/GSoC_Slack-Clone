@@ -6,6 +6,7 @@ import {
   fetchUserchannels,
   insertidforchannel,
   fetchchannelmember,
+  insert_todoid,
 } from "../database";
 import { useState, useEffect, useContext } from "react";
 import supabase from "../supabase";
@@ -22,6 +23,7 @@ import { Channelchats } from "./channels/channelchat";
 import { Channelcontext } from "../context api/channelcontext";
 import Addmember from "./channels/addchannelmember";
 import Showmembers from "./channels/membersofchannel";
+import Assigntask from "./ToDo_list/assigntask";
 
 function Home(data) {
   const {
@@ -44,6 +46,8 @@ function Home(data) {
     fetchchannelupdate,
     setFetchchannelupdate,
     setchat,
+    assigntask,
+    setAssigntask,
   } = useContext(Allconvers);
   const { dispatch } = useContext(Chatcontext);
   const { channel_data, dispatchchannel } = useContext(Channelcontext);
@@ -52,7 +56,6 @@ function Home(data) {
   const [phno, setPhno] = useState("");
   const [dmcontacts, setDmcontacts] = useState([]);
   const [fetchdmupdate, setFetchdmupdate] = useState(false);
-
   const [currentuserchannels, setCurrentuserchannels] = useState({});
 
   useEffect(() => {
@@ -121,8 +124,10 @@ function Home(data) {
     const insertdm = async () => {
       const idm0 = await idm(userId);
       const idforchanneldata = await insertidforchannel(userId);
+      const todoidinsert = await insert_todoid(userId);
       console.log(idm0);
       console.log(idforchanneldata);
+      console.log(todoidinsert);
     };
     insertdm();
   }, [userId]);
@@ -213,6 +218,7 @@ function Home(data) {
 
   return (
     <>
+      {assigntask ? <Assigntask /> : <></>}
       {showmembers ? <Showmembers /> : <></>}
       {addchannelmember ? <Addmember /> : <></>}
       {addchannel ? <Addchannel /> : <></>}

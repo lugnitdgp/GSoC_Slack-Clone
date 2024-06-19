@@ -99,15 +99,26 @@
   font-size: 12px;
 }
 .options {
-  height: 90px;
+  max-height: 120px;
   width: 80px;
-  background-color: rgb(203, 240, 165);
+  
   position: absolute;
   right: 0px;
   top: 28px;
   z-index: 5;
   border-radius: 15px 0px 7px 7px;
+  background-color: rgb(230, 158, 92);
+  overflow: hidden;
+  padding: 2px;
+  padding-left: 5px;
 }
 .option {
+  height: 35px;
+  width: 80px;
+  font-size: 15px;
+  background-color: rgb(230, 158, 92);
   cursor: pointer;
+}
+.option:hover{
+    background-color: rgb(226, 146, 71);
 }

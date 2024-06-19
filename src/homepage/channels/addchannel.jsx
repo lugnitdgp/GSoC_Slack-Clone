@@ -7,6 +7,7 @@ import {
   fetchUserchannels,
   fetchUserchannelmembers,
   insertchannelmember,
+  insertchanneldolistid,
 } from "../../database";
 import { v4 as uuid } from "uuid";
 import { Channelcontext } from "../../context api/channelcontext.jsx";
@@ -42,7 +43,8 @@ const Addchannel = () => {
     const channelname = channel.current.value;
     const id = uuid();
     const creation = await insertchannelid(id, channelname);
-    if (creation) {
+    const insertionlist = await insertchanneldolistid(id);
+    if (creation && insertionlist) {
       const checkIdExists = (channels) =>
         channels.some((channel) => channel.channel_id === id);
 

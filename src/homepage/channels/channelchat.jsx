@@ -12,6 +12,8 @@ import {
 import { Channelcontext } from "../../context api/channelcontext.jsx";
 import { ChannelMessage } from "./channelmessage.jsx";
 import { IoMdContacts } from "react-icons/io";
+import { MdAssignmentAdd } from "react-icons/md";
+import { FaTasks } from "react-icons/fa";
 
 export const Channelchats = () => {
   const textRef = useRef(""); //usestate didnot work but useref worked to make the input clear after updation
@@ -32,6 +34,8 @@ export const Channelchats = () => {
     fetchchannelupdate,
     setFetchchannelupdate,
     setchat,
+    assigntask,
+    setAssigntask,
   } = useContext(Allconvers);
   const [messages, setMessages] = useState([]);
   const [picurl, setPicurl] = useState("");
@@ -112,9 +116,6 @@ export const Channelchats = () => {
         const admins = channel_data.channeladmins;
         const show = channel_data.allowshow;
         setallowshow(show);
-        console.log(admins);
-        console.log(accepted);
-        console.log(allowshow);
         Object.entries(admins)?.map((admin) => {
           //to allow the add user optiion only for admin
           console.log(admin);
@@ -260,12 +261,25 @@ export const Channelchats = () => {
             <span>{channel_data?.channelname}</span>
             {addusericon && allowshow && accepted ? (
               <>
+                <FaTasks style={{ cursor: "pointer" }} />
+                <MdAssignmentAdd
+                  onClick={() => setAssigntask(true)}
+                  style={{ cursor: "pointer" }}
+                />
                 <IoMdContacts
                   onClick={() => setShowmembers(true)} // Call the function to update state
                   style={{ cursor: "pointer" }}
                 />
                 <IoMdPersonAdd
                   onClick={() => setaddchannelmember(true)} // Call the function to update state
+                  style={{ cursor: "pointer" }}
+                />
+              </>
+            ) : allowshow && accepted ? (
+              <>
+                <FaTasks />
+                <IoMdContacts
+                  onClick={() => setShowmembers(true)} // Call the function to update state
                   style={{ cursor: "pointer" }}
                 />
               </>
@@ -338,6 +352,7 @@ export const Channelchats = () => {
     );
   } else {
     setchat(false);
+    setAssigntask(false);
     setConformdm(false);
     setDm(false);
     setShowmembers(false);
