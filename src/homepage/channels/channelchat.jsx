@@ -36,6 +36,7 @@ export const Channelchats = () => {
     setchat,
     assigntask,
     setAssigntask,
+    setViewchanneltask,
   } = useContext(Allconvers);
   const [messages, setMessages] = useState([]);
   const [picurl, setPicurl] = useState("");
@@ -261,7 +262,10 @@ export const Channelchats = () => {
             <span>{channel_data?.channelname}</span>
             {addusericon && allowshow && accepted ? (
               <>
-                <FaTasks style={{ cursor: "pointer" }} />
+                <FaTasks
+                  onClick={() => setViewchanneltask(true)}
+                  style={{ cursor: "pointer" }}
+                />
                 <MdAssignmentAdd
                   onClick={() => setAssigntask(true)}
                   style={{ cursor: "pointer" }}
@@ -277,7 +281,10 @@ export const Channelchats = () => {
               </>
             ) : allowshow && accepted ? (
               <>
-                <FaTasks />
+                <FaTasks
+                  onClick={() => setViewchanneltask(true)}
+                  style={{ cursor: "pointer" }}
+                />
                 <IoMdContacts
                   onClick={() => setShowmembers(true)} // Call the function to update state
                   style={{ cursor: "pointer" }}
@@ -355,6 +362,7 @@ export const Channelchats = () => {
     setAssigntask(false);
     setConformdm(false);
     setDm(false);
+    setViewchanneltask(false);
     setShowmembers(false);
     setaddchannelmember(false);
     setChannelchat(false);

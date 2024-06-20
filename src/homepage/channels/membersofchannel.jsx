@@ -560,7 +560,6 @@ const Showmembers = () => {
 
     return (
       <>
-        <></>
         {channel_data && channel_data.channelinfo ? (
           <div className={channelmembersCSS.body}>
             <div className={channelmembersCSS.box}>

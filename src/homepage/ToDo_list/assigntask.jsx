@@ -27,6 +27,8 @@ const Assigntask = () => {
   const [members, setMembers] = useState([]);
   const [user_todo, setUserTodo] = useState([]);
   const [channel_todo, setChannelTodo] = useState([]);
+  const [refreshuserlist, setrefreshuserlist] = useState(false);
+  const [refreshchannellist, setrefreshchannellist] = useState(false);
 
   // Notification states
   const [showNotification, setShowNotification] = useState(false);
@@ -36,9 +38,10 @@ const Assigntask = () => {
       const fetchUserTodoList = async () => {
         const receivedUserTodo = await fetchusertodo(selectedMemberId);
         setUserTodo(receivedUserTodo);
+        setrefreshuserlist(false);
       };
       fetchUserTodoList();
-    }, [selectedMemberId]);
+    }, [selectedMemberId, refreshuserlist]);
 
     useEffect(() => {
       const fetchChannelTodoList = async () => {
@@ -46,9 +49,69 @@ const Assigntask = () => {
           channel_data.channel_id
         );
         setChannelTodo(receivedChannelTodo);
+        setrefreshchannellist(false);
       };
       fetchChannelTodoList();
-    }, [channel_data]);
+    }, [channel_data, refreshchannellist]);
+    useEffect(() => {
+      console.log(refreshchannellist), [refreshchannellist];
+    });
+    useEffect(() => {
+      console.log(refreshuserlist), [refreshuserlist];
+    });
+    useEffect(() => {
+      const chanlistupd = () => {
+        const channellistupd = supabase
+          .channel("channel_list")
+          .on(
+            "postgres_changes",
+            {
+              event: "*", //channels are used to listen to real time changes
+              schema: "public", //here we listen to the changes in realtime and update the postgres changes here
+              table: "Channel_todolist",
+              select: "todo_list",
+              filter: `id=eq.${channel_data.channel_id}`,
+            },
+            (payload) => {
+              setrefreshchannellist(true);
+            }
+          )
+          .subscribe();
+
+        // Cleanup function to unsubscribe from the channel to avoid data leakage
+        return () => {
+          supabase.removeChannel(channellistupd);
+        };
+      };
+
+      chanlistupd();
+    }, [channel_data.channel_id]);
+    useEffect(() => {
+      const userlistupd = () => {
+        const userlistupds = supabase
+          .channel("user_list")
+          .on(
+            "postgres_changes",
+            {
+              event: "*", //channels are used to listen to real time changes
+              schema: "public", //here we listen to the changes in realtime and update the postgres changes here
+              table: "Todo_list",
+              select: "todo_list",
+              filter: `id=eq.${selectedMemberId}`,
+            },
+            (payload) => {
+              setrefreshuserlist(true);
+            }
+          )
+          .subscribe();
+
+        // Cleanup function to unsubscribe from the channel to avoid data leakage
+        return () => {
+          supabase.removeChannel(userlistupds);
+        };
+      };
+      userlistupd();
+    }, [selectedMemberId]);
 
     // Function to handle search query change
     const handleSearchChange = async (e) => {
@@ -83,7 +146,6 @@ const Assigntask = () => {
         // Check if required fields are filled
         if (
           !taskName ||
-          (!assignToMember && channel_todo.length === 0) ||
           (assignToMember && !selectedMemberId) ||
           (!noDueDate && !dueDateTime) ||
           !taskDescription

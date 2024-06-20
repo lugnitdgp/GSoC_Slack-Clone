@@ -24,6 +24,7 @@ import { Channelcontext } from "../context api/channelcontext";
 import Addmember from "./channels/addchannelmember";
 import Showmembers from "./channels/membersofchannel";
 import Assigntask from "./ToDo_list/assigntask";
+import Viewchanneltask from "./ToDo_list/viewchanneltask";
 
 function Home(data) {
   const {
@@ -48,6 +49,10 @@ function Home(data) {
     setchat,
     assigntask,
     setAssigntask,
+    viewchanneltasks,
+
+    viewtask,
+    setViewtask,
   } = useContext(Allconvers);
   const { dispatch } = useContext(Chatcontext);
   const { channel_data, dispatchchannel } = useContext(Channelcontext);
@@ -218,6 +223,7 @@ function Home(data) {
 
   return (
     <>
+      {viewchanneltasks ? <Viewchanneltask /> : <></>}
       {assigntask ? <Assigntask /> : <></>}
       {showmembers ? <Showmembers /> : <></>}
       {addchannelmember ? <Addmember /> : <></>}

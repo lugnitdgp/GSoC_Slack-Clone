@@ -1,0 +1,143 @@
+.body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: #f0f0f085;
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  left: 0;
+}
+
+.box {
+  width: 80%;
+  max-width: 800px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  height: 80vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 10%;
+}
+
+.heading {
+  color: #333;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.closeIcon {
+  cursor: pointer;
+}
+
+.tasks {
+  display: flex;
+  height: 90%;
+  width: 100%;
+  position: relative;
+}
+
+.todo,
+.done {
+  flex: 1;
+  margin: 10px;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.sectionHeading {
+  color: #333;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.taskList {
+  list-style-type: none;
+  padding: 0;
+  overflow-y: auto;
+  height: calc(100% - 30px);
+}
+
+.taskItem {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  height: 130px;
+  width: 100%;
+  background-color: #f0dbc7;
+}
+
+.taskContainer {
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.taskInfo {
+  flex: 1;
+}
+
+.taskMeta {
+  margin: 5px 0;
+}
+
+.taskActions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button,
+.removebutton {
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
+  height: 30px;
+  width: 70px;
+}
+
+.button {
+  background-color: #007bff;
+  margin-bottom: 3px;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.removebutton {
+  background-color: #ff1100;
+  margin-top: 2px;
+}
+
+.removebutton:hover {
+  background-color: #b32400;
+}
+
+.taskMetaNotPastDue {
+  color: green;
+}
+
+.taskMetaPastDue {
+  color: red;
+}
+.taskMetaNone {
+  color: rgb(128, 31, 240);
+}
