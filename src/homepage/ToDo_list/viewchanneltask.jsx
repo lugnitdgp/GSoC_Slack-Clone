@@ -144,7 +144,10 @@ const Viewchanneltask = () => {
                                 Due Date: {dueDateDisplay}
                               </p>
                               <p className={viewchanneltaskCSS.taskMeta}>
-                                Assigned By: {task.assigned_by}
+                                Assigned By:{" "}
+                                {task.assigned_byid === currentUser[0].id
+                                  ? `${task.assigned_by} (You)`
+                                  : `${task.assigned_by}`}
                               </p>
                               <p className={viewchanneltaskCSS.taskMeta}>
                                 Assigned on:{" "}
@@ -196,7 +199,10 @@ const Viewchanneltask = () => {
                                 : "None"}
                             </p>
                             <p className={viewchanneltaskCSS.taskMeta}>
-                              Assigned By: {task.assigned_by}
+                              Assigned By:{" "}
+                              {task.assigned_byid === currentUser[0].id
+                                ? `${task.assigned_by} (You)`
+                                : `${task.assigned_by}`}
                             </p>
                             <p className={viewchanneltaskCSS.taskMeta}>
                               Assigned on:{" "}

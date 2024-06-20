@@ -20,6 +20,7 @@ export const AllconversProvider = ({ children }) => {
   const [assigntask, setAssigntask] = useState(false);
   const [viewchanneltasks, setViewchanneltask] = useState(false);
   const [viewtask, setViewtask] = useState(false);
+  const [assigntaskself, setassigntaskself] = useState(false);
   // Fetch user data once on component mount
   useEffect(() => {
     const fetchUserData = async () => {
@@ -80,6 +81,8 @@ export const AllconversProvider = ({ children }) => {
     setViewchanneltask,
     viewtask,
     setViewtask,
+    assigntaskself,
+    setassigntaskself,
   };
 
   return (

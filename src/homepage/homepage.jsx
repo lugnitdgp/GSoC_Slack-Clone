@@ -25,6 +25,10 @@ import Addmember from "./channels/addchannelmember";
 import Showmembers from "./channels/membersofchannel";
 import Assigntask from "./ToDo_list/assigntask";
 import Viewchanneltask from "./ToDo_list/viewchanneltask";
+import { MdAssignmentAdd } from "react-icons/md";
+import { FaTasks } from "react-icons/fa";
+import Viewutask from "./ToDo_list/viewusertask";
+import Assigntaskself from "./ToDo_list/mytododlist";
 
 function Home(data) {
   const {
@@ -50,9 +54,10 @@ function Home(data) {
     assigntask,
     setAssigntask,
     viewchanneltasks,
-
     viewtask,
     setViewtask,
+    assigntaskself,
+    setassigntaskself,
   } = useContext(Allconvers);
   const { dispatch } = useContext(Chatcontext);
   const { channel_data, dispatchchannel } = useContext(Channelcontext);
@@ -224,7 +229,9 @@ function Home(data) {
   return (
     <>
       {viewchanneltasks ? <Viewchanneltask /> : <></>}
+      {viewtask ? <Viewutask /> : <></>}
       {assigntask ? <Assigntask /> : <></>}
+      {assigntaskself ? <Assigntaskself /> : <></>}
       {showmembers ? <Showmembers /> : <></>}
       {addchannelmember ? <Addmember /> : <></>}
       {addchannel ? <Addchannel /> : <></>}
@@ -343,6 +350,18 @@ function Home(data) {
                       color="white"
                       className={homepaseCSS.poweroff}
                       onClick={() => signout()}
+                    />
+                    <FaTasks
+                      onClick={() => setViewtask(true)}
+                      size={30}
+                      color="white"
+                      style={{ cursor: "pointer" }}
+                    />
+                    <MdAssignmentAdd
+                      onClick={() => setassigntaskself(true)}
+                      size={30}
+                      color="white"
+                      style={{ cursor: "pointer" }}
                     />
                   </div>
                 </div>
