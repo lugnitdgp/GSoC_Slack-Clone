@@ -38,19 +38,20 @@ const Addmember = () => {
       }
     }, [refreshchannel]);
 
-    const handleInput = (e) => {
-      if (e.code === "Enter") {
-        handleSearch();
-      }
-    };
+    const handleInput = async (e) => {
+      setUsername(e.target.value); // Update username state
 
-    const handleSearch = async () => {
-      const fetchedUser = await UserdetailsbyName(Username);
+      // Call handleSearch only if the input value is not empty
+      if (e.target.value.trim() !== "") {
+        const fetchedUser = await UserdetailsbyName(e.target.value);
 
-      if (fetchedUser && fetchedUser.length > 0) {
-        setUser(fetchedUser); // Update searched user data
+        if (fetchedUser && fetchedUser.length > 0) {
+          setUser(fetchedUser);
+        } else {
+          setUser(null); // Set user to null to display "No User Found"
+        }
       } else {
-        setUser(null); // Set user to null to display "No User Found"
+        setUser(null); // Clear user state if input value is empty
       }
     };
 
@@ -154,8 +155,8 @@ const Addmember = () => {
               type="text"
               className={addmemberCSS.input}
               placeholder="Search for a member"
-              onChange={(e) => setUsername(e.target.value)}
-              onKeyDown={handleInput}
+              onChange={handleInput} // Trigger search on input change
+              value={Username}
             />
           </div>
           <div className={addmemberCSS.searchresult}>

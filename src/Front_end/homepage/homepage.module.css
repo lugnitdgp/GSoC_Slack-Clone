@@ -24,10 +24,20 @@
 .top {
   background-color: rgb(74, 1, 83);
   width: 100%;
-  height: 4%;
+  height: 5%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+.search {
+  width: 600px;
+  height: 100%;
+  position: relative;
+}
+
 .bottom {
-  height: 96%;
+  height: 95%;
   width: 100%;
   background-color: rgb(74, 1, 83);
   display: flex;

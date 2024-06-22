@@ -30,21 +30,21 @@ export default function Searchuser({ currentUser }) {
     fetchdmdata();
   }, [combinedId]);
 
-  // Handle search input and fetch user details
-  const handleSearch = async () => {
-    const fetchedUser = await UserdetailsbyName(Username);
+  // Trigger search on input change
+  const handleInput = async (e) => {
+    setUsername(e.target.value); // Update username state
 
-    if (fetchedUser && fetchedUser.length > 0) {
-      setUser(fetchedUser);
+    // Call handleSearch only if the input value is not empty
+    if (e.target.value.trim() !== "") {
+      const fetchedUser = await UserdetailsbyName(e.target.value);
+
+      if (fetchedUser && fetchedUser.length > 0) {
+        setUser(fetchedUser);
+      } else {
+        setUser(null); // Set user to null to display "No User Found"
+      }
     } else {
-      setUser(null); // Set user to null to display "No User Found"
-    }
-  };
-
-  // Trigger search on Enter key press
-  const handleInput = (e) => {
-    if (e.code === "Enter") {
-      handleSearch();
+      setUser(null); // Clear user state if input value is empty
     }
   };
 
@@ -205,8 +205,8 @@ export default function Searchuser({ currentUser }) {
                   name="to"
                   className={chatboxnavCSS.input}
                   placeholder="Find a User"
-                  onKeyDown={handleInput}
-                  onChange={(e) => setUsername(e.target.value)}
+                  onChange={handleInput} // Trigger search on input change
+                  value={Username} // Bind input value to state
                 />
               </div>
             </div>

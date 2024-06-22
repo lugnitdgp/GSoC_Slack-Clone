@@ -30,7 +30,7 @@ import { FaTasks } from "react-icons/fa";
 import Viewutask from "./ToDo_list/viewusertask";
 import Assigntaskself from "./ToDo_list/mytododlist";
 import TodoListChanges from "../Mailing/mailsender";
-
+import Totalsearch from "./Totalsearch/totalsearch";
 
 function Home(data) {
   const {
@@ -230,7 +230,6 @@ function Home(data) {
 
   return (
     <>
-     
       {viewchanneltasks ? <Viewchanneltask /> : <></>}
       {viewtask ? <Viewutask /> : <></>}
       {assigntask ? <Assigntask /> : <></>}
@@ -241,12 +240,12 @@ function Home(data) {
       {isLoading ? (
         <h1>Loading...</h1> // Display loading message while fetching
       ) : (
-       
-       
         <div className={homepaseCSS.whole}>
           <div className={homepaseCSS.box}>
             <div className={homepaseCSS.top}>
-              <div className={homepaseCSS.search}></div>
+              <div className={homepaseCSS.search}>
+                <Totalsearch />
+              </div>
               <div className={homepaseCSS.logo}></div>
             </div>
             <div className={homepaseCSS.bottom}>
@@ -392,7 +391,6 @@ function Home(data) {
             </div>
           </div>
         </div>
-       
       )}
       <TodoListChanges />
     </>

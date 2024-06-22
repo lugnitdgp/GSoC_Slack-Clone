@@ -8,12 +8,17 @@ import { IoMdPersonAdd } from "react-icons/io";
 import {
   fetchUserchannelmessages,
   fetchUserchannels,
+  updatechannel,
+  fetchUserchannelsbyid,
+  Getuserdetails,
+  allidsinlist,
 } from "../../database.jsx";
 import { Channelcontext } from "../../context api/channelcontext.jsx";
 import { ChannelMessage } from "./channelmessage.jsx";
 import { IoMdContacts } from "react-icons/io";
 import { MdAssignmentAdd } from "react-icons/md";
 import { FaTasks } from "react-icons/fa";
+import { RiDeleteBin6Fill } from "react-icons/ri";
 
 export const Channelchats = () => {
   const textRef = useRef(""); //usestate didnot work but useref worked to make the input clear after updation
@@ -254,6 +259,83 @@ export const Channelchats = () => {
       };
       message();
     }, [channel_data.channel_id]);
+    const Removechannel = async () => {
+      try {
+        if (
+          channel_data.channeladmins.some(
+            (admin) => admin.id === currentUser[0].id
+          )
+        ) {
+          const allids = await allidsinlist();
+          for (const Id of allids) {
+            const userChannels = await fetchUserchannelsbyid(Id.id);
+            const usermail = await Getuserdetails(Id.id);
+            console.log(usermail);
+            if (userChannels.length > 0) {
+              const newchannels = userChannels.filter(
+                (channel) => channel.channel_id !== channel_data.channel_id
+              );
+              if (
+                userChannels?.some(
+                  (channe) => channe.channel_id === channel_data.channel_id
+                )
+              ) {
+                try {
+                  const response = await fetch(
+                    `http://localhost:${
+                      import.meta.env.VITE_Backend_Port
+                    }/api/sendUserEmail`,
+                    {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        to: usermail[0].email,
+                        subject: `Channel was deleted`,
+                        message: `A Channel:"${channel_data.channelname}",was deleted by "${currentUser[0].username}"`,
+                      }),
+                    }
+                  );
+                  if (!response.ok) {
+                    throw new Error("Failed to send email");
+                  }
+                  console.log("Email sent successfully");
+                } catch (error) {
+                  console.error("Error sending email:", error);
+                }
+              }
+              const updatedUserChannels = await updatechannel(
+                Id.id,
+                newchannels
+              );
+
+              console.log(
+                "Updated userChannels in database:",
+                updatedUserChannels
+              );
+            }
+          }
+        }
+        const { error: delerr } = await supabase
+          .from("channels_message")
+          .delete()
+          .eq("channel_id", channel_data.channel_id);
+
+        const channelscurrent = await fetchUserchannelsbyid(currentUser[0].id);
+        console.log(channelscurrent);
+        const updatedchannel = channelscurrent.filter(
+          (channel) => channel.channel_id !== channel_data.channel_id
+        );
+
+        const chanresult = await updatechannel(
+          currentUser[0].id,
+          updatedchannel
+        );
+      } catch (error) {
+        console.error("Error removing member:", error);
+      }
+    };
 
     return (
       <>
@@ -276,6 +358,10 @@ export const Channelchats = () => {
                 />
                 <IoMdPersonAdd
                   onClick={() => setaddchannelmember(true)} // Call the function to update state
+                  style={{ cursor: "pointer" }}
+                />
+                <RiDeleteBin6Fill
+                  onClick={() => Removechannel()} // Call the function to update state
                   style={{ cursor: "pointer" }}
                 />
               </>

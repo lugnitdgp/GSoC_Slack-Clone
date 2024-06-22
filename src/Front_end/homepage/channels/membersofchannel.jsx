@@ -242,33 +242,41 @@ const Showmembers = () => {
       memb();
     }, [channel_data.channel_id]);
 
-    const handleInput = (e) => {
-      if (e.code === "Enter") {
-        handleSearch();
-      }
+    const handleInputChange = (e) => {
+      setUsername(e.target.value);
+      handleSearch(); // Call handleSearch on every input change
     };
-
     const handleSearch = async () => {
-      setfetchdone(false);
-      const currentmembers = await fetchchannelmember(channel_data.channel_id);
-      const currentmems = currentmembers[0].channel_members;
-      const matcheds = currentmems.filter(
-        (currentmem) =>
-          currentmem.member_name.toLowerCase().includes(username.toLowerCase()) //case insensitive search
-      );
-      const detailedMembers = await Promise.all(
-        matcheds.map(async (memberId) => {
-          try {
-            const memberDetails = await Getuserdetails(memberId.member_id);
-            return memberDetails;
-          } catch (error) {
-            console.error(error);
-            return null;
-          }
-        })
-      );
-      setMembers(detailedMembers.filter(Boolean)); //removes null data
-      setfetchdone(true);
+      setfetchdone(false); // Start fetching
+
+      try {
+        const currentMembers = await fetchchannelmember(
+          channel_data.channel_id
+        );
+        const currentMems = currentMembers[0].channel_members;
+
+        const matcheds = currentMems.filter((currentMem) =>
+          currentMem.member_name.toLowerCase().includes(username.toLowerCase())
+        );
+
+        const detailedMembers = await Promise.all(
+          matcheds.map(async (memberId) => {
+            try {
+              const memberDetails = await Getuserdetails(memberId.member_id);
+              return memberDetails;
+            } catch (error) {
+              console.error(error);
+              return null;
+            }
+          })
+        );
+
+        setMembers(detailedMembers.filter(Boolean));
+        setfetchdone(true); // Fetching done
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setfetchdone(true); // Ensure to set fetch status to true even on error
+      }
     };
 
     const threedotselect = (memberId) => {
@@ -659,8 +667,8 @@ const Showmembers = () => {
                   type="text"
                   className={channelmembersCSS.input}
                   placeholder="Search for a member"
-                  onChange={(e) => setUsername(e.target.value)}
-                  onKeyDown={handleInput}
+                  value={username}
+                  onChange={handleInputChange}
                 />
               </div>
               <div className={channelmembersCSS.memberslist}>
