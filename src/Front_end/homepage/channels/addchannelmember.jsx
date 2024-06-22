@@ -102,6 +102,30 @@ const Addmember = () => {
             );
             if (memupdate) {
               console.log("mem update successful");
+              try {
+                const response = await fetch(
+                  `http://localhost:${
+                    import.meta.env.VITE_Backend_Port
+                  }/api/sendUserEmail`,
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      to: u.email,
+                      subject: `Channel Invitation`,
+                      message: `You are invited to the Channel:"${channel_data.channelname}",by "${currentUser[0].username}"`,
+                    }),
+                  }
+                );
+                if (!response.ok) {
+                  throw new Error("Failed to send email");
+                }
+                console.log("Email sent successfully");
+              } catch (error) {
+                console.error("Error sending email:", error);
+              }
               setrefreshchannel(true);
             }
           }

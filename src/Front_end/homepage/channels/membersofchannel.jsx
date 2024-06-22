@@ -48,6 +48,7 @@ const Showmembers = () => {
   const [userdm_chats, setuserdm_chats] = useState([]);
   const [dmcontacts, setDmcontacts] = useState([]);
   const [dmopenchaclose, setdmopenchaclose] = useState(false);
+  const [deletesuccess, setdeletesuccess] = useState(false);
 
   useEffect(() => {
     const fetchdmdata = async () => {
@@ -274,7 +275,7 @@ const Showmembers = () => {
       setSelectedMemberId(memberId === selectedMemberId ? null : memberId);
     };
 
-    const addasadmin = async (memberid) => {
+    const addasadmin = async (memberid, email) => {
       try {
         const allids = await allidsinlist();
         for (const Id of allids) {
@@ -303,18 +304,44 @@ const Showmembers = () => {
             }
           }
         }
+
+        try {
+          const response = await fetch(
+            `http://localhost:${
+              import.meta.env.VITE_Backend_Port
+            }/api/sendUserEmail`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                to: email,
+                subject: `Made as Admin to a Channel`,
+                message: `You were made the Admin of the Channel:"${channel_data.channelname}",by "${currentUser[0].username}"`,
+              }),
+            }
+          );
+          if (!response.ok) {
+            throw new Error("Failed to send email");
+          }
+          console.log("Email sent successfully");
+        } catch (error) {
+          console.error("Error sending email:", error);
+        }
       } catch (error) {
         console.error("Error adding admin:", error);
       }
     };
 
-    const deleteasadmin = async (memberid) => {
+    const deleteasadmin = async (memberid, email) => {
       try {
         if (memberid === channel_data.channelinfo.createdbyid) {
           console.log("Cannot delete the creator as admin.");
           return;
         }
         const allids = await allidsinlist();
+
         for (const Id of allids) {
           const userChannels = await fetchUserchannelsbyid(Id.id);
           if (userChannels.length > 0) {
@@ -340,15 +367,43 @@ const Showmembers = () => {
                 "Updated userChannels in database:",
                 updatedUserChannels
               );
+              if (updatedUserChannels) {
+                setdeletesuccess(true);
+              }
             }
           }
+        }
+
+        try {
+          const response = await fetch(
+            `http://localhost:${
+              import.meta.env.VITE_Backend_Port
+            }/api/sendUserEmail`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                to: email,
+                subject: `Removed as Admin to a Channel`,
+                message: `You were removed as the Admin of the Channel:"${channel_data.channelname}",by "${currentUser[0].username}"`,
+              }),
+            }
+          );
+          if (!response.ok) {
+            throw new Error("Failed to send email");
+          }
+          console.log("Email sent successfully");
+        } catch (error) {
+          console.error("Error sending email:", error);
         }
       } catch (error) {
         console.error("Error deleting admin:", error);
       }
     };
 
-    const Removemember = async (memberid) => {
+    const Removemember = async (memberid, email) => {
       try {
         if (channel_data.channeladmins.some((admin) => admin.id === memberid)) {
           const allids = await allidsinlist();
@@ -387,6 +442,32 @@ const Showmembers = () => {
           channel_data.channel_id,
           updatedmem
         );
+        if (memresult) {
+          try {
+            const response = await fetch(
+              `http://localhost:${
+                import.meta.env.VITE_Backend_Port
+              }/api/sendUserEmail`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  to: email,
+                  subject: `Removed from a Channel`,
+                  message: `You were removed from the Channel:"${channel_data.channelname}",by "${currentUser[0].username}"`,
+                }),
+              }
+            );
+            if (!response.ok) {
+              throw new Error("Failed to send email");
+            }
+            console.log("Email sent successfully");
+          } catch (error) {
+            console.error("Error sending email:", error);
+          }
+        }
         const channelscurrent = await fetchUserchannelsbyid(memberid);
         console.log(channelscurrent);
         const updatedchannel = channelscurrent.filter(
@@ -620,7 +701,10 @@ const Showmembers = () => {
                                       <div
                                         className={channelmembersCSS.option}
                                         onClick={(e) =>
-                                          addasadmin(member[0].id)
+                                          addasadmin(
+                                            member[0].id,
+                                            member[0].email
+                                          )
                                         }
                                       >
                                         <p>Add as admin</p>
@@ -628,7 +712,10 @@ const Showmembers = () => {
                                       <div
                                         className={channelmembersCSS.option}
                                         onClick={(e) =>
-                                          Removemember(member[0].id)
+                                          Removemember(
+                                            member[0].id,
+                                            member[0].email
+                                          )
                                         }
                                       >
                                         <p>Remove</p>
@@ -642,7 +729,10 @@ const Showmembers = () => {
                                       <div
                                         className={channelmembersCSS.option}
                                         onClick={(e) =>
-                                          deleteasadmin(member[0].id)
+                                          deleteasadmin(
+                                            member[0].id,
+                                            member[0].email
+                                          )
                                         }
                                       >
                                         <p>Delete as admin</p>
@@ -650,7 +740,10 @@ const Showmembers = () => {
                                       <div
                                         className={channelmembersCSS.option}
                                         onClick={(e) =>
-                                          Removemember(member[0].id)
+                                          Removemember(
+                                            member[0].id,
+                                            member[0].email
+                                          )
                                         }
                                       >
                                         <p>Remove</p>

@@ -360,3 +360,78 @@ export async function fetchchanneltodo(id) {
     console.log(error);
   }
 }
+export async function insert_taskid(id) {
+  try {
+    const { data, error } = await supabase
+      .from("Mails_sent")
+      .insert([{ task_id: id }])
+      .select();
+    if (data) {
+      console.log("done task id insert ");
+      return true;
+    } else {
+      //insert new row with a new users uuid into tos_list where all dm contacts data be stored
+      console.log("task id insert ", error);
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+export async function mailtimestampupd(id, timestamp) {
+  try {
+    const { data: updatedtimestamp, error } = await supabase
+      .from("Mails_sent")
+      .update({ last_sent: timestamp, t_f: true })
+      .eq("task_id", id)
+      .select();
+    if (updatedtimestamp) {
+      console.log("done update of timestamp");
+      return true;
+    } else {
+      //insert new row with a new users uuid into timestamps_list where all dm contacts data be stored
+      console.log("update timestamp", error);
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+export async function fetchmailsentmsg(id) {
+  try {
+    const { data: mail_lastsent, error } = await supabase
+      .from("Mails_sent")
+      .select("last_sent")
+      .eq("task_id", id);
+    if (error) {
+      console.log("error fething last_sent todo", error);
+    } else {
+      console.log("recieved last_sent todo");
+      return mail_lastsent;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+export async function fetchmailbool(id) {
+  try {
+    const { data: mail_bool, error } = await supabase
+      .from("Mails_sent")
+      .select("t_f")
+      .eq("task_id", id);
+    if (error) {
+      console.log("error fething t_f todo", error);
+    } else {
+      console.log("recieved t_f todo");
+      if (mail_bool[0].t_f == null) {
+        return false;
+      } else {
+        return mail_bool[0].t_f;
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}

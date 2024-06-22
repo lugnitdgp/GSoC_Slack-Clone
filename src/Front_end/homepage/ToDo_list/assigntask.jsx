@@ -9,6 +9,7 @@ import {
   Getuserdetails,
   fetchchanneltodo,
   fetchusertodo,
+  insert_taskid,
 } from "../../database.jsx"; // Import your utility functions
 import { v4 as uuid } from "uuid";
 
@@ -18,7 +19,7 @@ const Assigntask = () => {
   const [assignToMember, setAssignToMember] = useState(true);
   const [selectedMemberId, setSelectedMemberId] = useState(null); // State to store selected member ID
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  const [selectedMembermail, setSelectedMembermail] = useState(null);
   const [taskName, setTaskName] = useState("");
   const [dueDateTime, setDueDateTime] = useState("");
   const [noDueDate, setNoDueDate] = useState(false); // State to track if "No Due Date" option is selected
@@ -54,11 +55,11 @@ const Assigntask = () => {
       fetchChannelTodoList();
     }, [channel_data, refreshchannellist]);
     useEffect(() => {
-      console.log(refreshchannellist), [refreshchannellist];
-    });
+      console.log(refreshchannellist);
+    }, [refreshchannellist]);
     useEffect(() => {
-      console.log(refreshuserlist), [refreshuserlist];
-    });
+      console.log(refreshuserlist);
+    }, [refreshuserlist]);
     useEffect(() => {
       const chanlistupd = () => {
         const channellistupd = supabase
@@ -182,6 +183,7 @@ const Assigntask = () => {
             .from("Channel_todolist")
             .update({ todo_list: todoListData })
             .eq("id", channel_data.channel_id);
+          await insert_taskid(task_id);
         } else {
           todoListData = [
             ...user_todo,
@@ -201,6 +203,33 @@ const Assigntask = () => {
             .from("Todo_list")
             .update({ todo_list: todoListData })
             .eq("id", selectedMemberId);
+          await insert_taskid(task_id);
+          try {
+            const response = await fetch(
+              `http://localhost:${
+                import.meta.env.VITE_Backend_Port
+              }/api/sendUserEmail`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  to: selectedMembermail,
+                  subject: `New Task Assigned`,
+                  message: `Task "${taskName}" was assigned to you by "${
+                    currentUser[0].username
+                  }". Due Date: ${noDueDate ? null : dueDateTime || null}`,
+                }),
+              }
+            );
+            if (!response.ok) {
+              throw new Error("Failed to send email");
+            }
+            console.log("Email sent successfully");
+          } catch (error) {
+            console.error("Error sending email:", error);
+          }
         }
 
         // Clear input fields and reset states after successful submission
@@ -281,7 +310,10 @@ const Assigntask = () => {
                       <div
                         key={member[0]?.id}
                         className={assigntaskCSS.member}
-                        onClick={() => setSelectedMemberId(member[0]?.id)}
+                        onClick={() => {
+                          setSelectedMemberId(member[0]?.id);
+                          setSelectedMembermail(member[0]?.email);
+                        }}
                       >
                         {member ? (
                           <>

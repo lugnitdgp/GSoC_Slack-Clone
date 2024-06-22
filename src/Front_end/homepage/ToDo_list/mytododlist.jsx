@@ -3,7 +3,7 @@ import assigntaskselfCSS from "./mytodolist.module.css";
 import { Allconvers } from "../../context api/context";
 import { useContext, useState, useEffect } from "react";
 import { ImCross } from "react-icons/im";
-import { fetchusertodo } from "../../database.jsx"; // Import your utility functions
+import { fetchusertodo,insert_taskid } from "../../database.jsx"; // Import your utility functions
 import { v4 as uuid } from "uuid";
 
 const Assigntaskself = () => {
@@ -92,6 +92,7 @@ const Assigntaskself = () => {
         .from("Todo_list")
         .update({ todo_list: todoListData })
         .eq("id", currentUser[0].id);
+        await insert_taskid(task_id)
 
       // Clear input fields and reset states after successful submission
       setTaskName("");

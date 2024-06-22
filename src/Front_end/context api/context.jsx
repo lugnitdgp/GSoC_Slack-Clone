@@ -31,6 +31,7 @@ export const AllconversProvider = ({ children }) => {
           if (user && user.length > 0) {
             console.log("Fetched User ID:", user[0].id);
             setCurrentUser(user);
+            
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
