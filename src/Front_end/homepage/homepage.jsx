@@ -244,7 +244,7 @@ function Home(data) {
           <div className={homepaseCSS.box}>
             <div className={homepaseCSS.top}>
               <div className={homepaseCSS.search}>
-                <Totalsearch />
+                {currentUser[0]?.id ? <Totalsearch /> : <></>}
               </div>
               <div className={homepaseCSS.logo}></div>
             </div>

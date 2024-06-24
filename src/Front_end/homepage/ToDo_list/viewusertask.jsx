@@ -9,6 +9,7 @@ const Viewutask = () => {
   const { currentUser, setViewtask } = useContext(Allconvers);
   const [isAdmin, setIsAdmin] = useState(false);
   const [tasks, setTasks] = useState([]);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     if (currentUser) {
@@ -23,7 +24,14 @@ const Viewutask = () => {
     const interval = setInterval(fetchTasks, 60000); // Update every minute
     return () => clearInterval(interval); // Clean up interval on component unmount
   }, [currentUser]);
-
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const fetchedTasks = await fetchusertodo(currentUser[0].id);
+      setTasks(fetchedTasks);
+      setRefresh(false);
+    };
+    fetchTasks();
+  }, [refresh]);
   // Function to calculate time remaining until due date
   const calculateTimeRemaining = (dueDate) => {
     if (!dueDate)
@@ -60,6 +68,10 @@ const Viewutask = () => {
     const updatedTasks = tasks.filter((task) => task.task_id !== task_id);
     setTasks(updatedTasks);
     await updateTasks(updatedTasks);
+    const { error: dele } = await supabase
+      .from("Mails_sent")
+      .delete()
+      .eq("task_id", task_id);
   };
   const undoTask = async (task_id) => {
     //to bring back tasks back into To Do
@@ -86,6 +98,34 @@ const Viewutask = () => {
     const dueDateB = new Date(b.duedate).getTime();
     return dueDateA - dueDateB; // Ascending order (nearest due date first)
   });
+
+  useEffect(() => {
+    const usertodoupdate = () => {
+      const usrdupd = supabase
+        .channel("user-todo-update")
+        .on(
+          "postgres_changes",
+          {
+            event: "*", //channels are used to listen to real time changes
+            schema: "public", //here we listen to the changes in realtime and update the postgres changes here
+            table: "Todo_list",
+            select: "todo_list",
+            filter: `id=eq.${currentUser[0].id}`,
+          },
+          (payload) => {
+            console.log("refreshed");
+            setRefresh(true);
+          }
+        )
+        .subscribe();
+
+      // Cleanup function to unsubscribe from the channel to avoid data leakage
+      return () => {
+        supabase.removeChannel(usrdupd);
+      };
+    };
+    usertodoupdate();
+  }, [currentUser[0]]);
 
   return (
     <>

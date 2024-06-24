@@ -11,6 +11,7 @@ const Viewchanneltask = () => {
   const { currentUser, setViewchanneltask } = useContext(Allconvers);
   const [isAdmin, setIsAdmin] = useState(false);
   const [tasks, setTasks] = useState([]);
+  const [refresh, setRefresh] = useState(false);
 
   if (channel_data?.channel_id) {
     useEffect(() => {
@@ -29,7 +30,14 @@ const Viewchanneltask = () => {
       const interval = setInterval(fetchTasks, 60000); // Update every minute
       return () => clearInterval(interval); // Clean up interval on component unmount
     }, [channel_data, currentUser]);
-
+    useEffect(() => {
+      const fetchTasks = async () => {
+        const fetchedTasks = await fetchchanneltodo(channel_data.channel_id);
+        setTasks(fetchedTasks);
+        setRefresh(false);
+      };
+      fetchTasks();
+    }, [refresh]);
     // Function to calculate time remaining until due date
     const calculateTimeRemaining = (dueDate) => {
       if (!dueDate)
@@ -66,6 +74,10 @@ const Viewchanneltask = () => {
       const updatedTasks = tasks.filter((task) => task.task_id !== task_id);
       setTasks(updatedTasks);
       await updateTasks(updatedTasks);
+      const { error: dele } = await supabase
+        .from("Mails_sent")
+        .delete()
+        .eq("task_id", task_id);
     };
     const undoTask = async (task_id) => {
       //to bring back tasks back into To Do
@@ -82,7 +94,7 @@ const Viewchanneltask = () => {
         .eq("id", channel_data.channel_id);
     };
     // Sort tasks by due date (nearest due date first), with "None" due date at the bottom
-    const sortedTasks = tasks.slice().sort((a, b) => {
+    const sortedTasks = tasks?.slice().sort((a, b) => {
       //slice is used so that a new copy be created which decreses the risk of db data changing
       if (!a.duedate && !b.duedate) return 0; // Both have no due date
       if (!a.duedate) return 1; // a has no due date, place it after b
@@ -92,6 +104,33 @@ const Viewchanneltask = () => {
       const dueDateB = new Date(b.duedate).getTime();
       return dueDateA - dueDateB; // Ascending order (nearest due date first)
     });
+    useEffect(() => {
+      const channeltodoupdate = () => {
+        const chtdupd = supabase
+          .channel("chanel-todo-update")
+          .on(
+            "postgres_changes",
+            {
+              event: "*", //channels are used to listen to real time changes
+              schema: "public", //here we listen to the changes in realtime and update the postgres changes here
+              table: "Channel_todolist",
+              select: "todo_list",
+              filter: `id=eq.${channel_data.channel_id}`,
+            },
+            (payload) => {
+              console.log("refreshed");
+              setRefresh(true);
+            }
+          )
+          .subscribe();
+
+        // Cleanup function to unsubscribe from the channel to avoid data leakage
+        return () => {
+          supabase.removeChannel(chtdupd);
+        };
+      };
+      channeltodoupdate();
+    }, [channel_data]);
 
     return (
       <>
@@ -112,7 +151,7 @@ const Viewchanneltask = () => {
                 <h2 className={viewchanneltaskCSS.sectionHeading}>To Do</h2>
                 <ul className={viewchanneltaskCSS.taskList}>
                   {sortedTasks //calls the sorting function for the filtered tasks
-                    .filter((task) => !task.taskdone)
+                    ?.filter((task) => !task.taskdone)
                     .map((task) => {
                       const { days, hours, minutes, seconds, distance } =
                         calculateTimeRemaining(task.duedate); //time left is calculated to change the due date color accordingly
@@ -182,7 +221,7 @@ const Viewchanneltask = () => {
                 <h2 className={viewchanneltaskCSS.sectionHeading}>Done</h2>
                 <ul className={viewchanneltaskCSS.taskList}>
                   {sortedTasks
-                    .filter((task) => task.taskdone)
+                    ?.filter((task) => task.taskdone)
                     .map((task) => (
                       <li
                         key={task.task_id}

@@ -321,6 +321,10 @@ export const Channelchats = () => {
           .from("channels_message")
           .delete()
           .eq("channel_id", channel_data.channel_id);
+        const { error: dele } = await supabase
+          .from("Channel_todolist")
+          .delete()
+          .eq("id", channel_data.channel_id);
 
         const channelscurrent = await fetchUserchannelsbyid(currentUser[0].id);
         console.log(channelscurrent);
