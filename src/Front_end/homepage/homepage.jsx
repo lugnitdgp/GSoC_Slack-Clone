@@ -31,6 +31,10 @@ import Viewutask from "./ToDo_list/viewusertask";
 import Assigntaskself from "./ToDo_list/mytododlist";
 import TodoListChanges from "../Mailing/mailsender";
 import Totalsearch from "./Totalsearch/totalsearch";
+import Googlecalendar from "./google calendar/googlecalendar";
+import { FaCalendarAlt } from "react-icons/fa";
+import { SiGooglecalendar } from "react-icons/si";
+
 
 function Home(data) {
   const {
@@ -59,7 +63,8 @@ function Home(data) {
     viewtask,
     setViewtask,
     assigntaskself,
-    setassigntaskself,
+    setassigntaskself, opencalendarevents,
+    setopencalendarevents,
   } = useContext(Allconvers);
   const { dispatch } = useContext(Chatcontext);
   const { channel_data, dispatchchannel } = useContext(Channelcontext);
@@ -228,6 +233,29 @@ function Home(data) {
     console.log(currentuserchannels);
   }, [currentuserchannels]);
 
+  const calendarAuth = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:${import.meta.env.VITE_Backend_Port}/api/googleauth`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            // Add additional headers if required by your backend
+          },
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        console.log("OAuth Response:", data);
+        window.location.href = data.url; // Redirect to OAuth2 authentication URL
+      } else {
+        console.error("Failed to initiate OAuth:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error initiating OAuth:", error);
+    }
+  };
   return (
     <>
       {viewchanneltasks ? <Viewchanneltask /> : <></>}
@@ -235,6 +263,7 @@ function Home(data) {
       {assigntask ? <Assigntask /> : <></>}
       {assigntaskself ? <Assigntaskself /> : <></>}
       {showmembers ? <Showmembers /> : <></>}
+    //  {opencalendarevents ? <Googlecalendar /> : <></>}
       {addchannelmember ? <Addmember /> : <></>}
       {addchannel ? <Addchannel /> : <></>}
       {isLoading ? (
@@ -366,6 +395,18 @@ function Home(data) {
                       size={30}
                       color="white"
                       style={{ cursor: "pointer" }}
+                    />
+                     <SiGooglecalendar
+                      onClick={calendarAuth}
+                      size={30}
+                      color="white"
+                      style={{ cursor: "pointer", marginTop: "10px" }}
+                    />
+                    <FaCalendarAlt
+                      onClick={() => setopencalendarevents(true)}
+                      size={30}
+                      color="white"
+                      style={{ cursor: "pointer", marginTop: "10px" }}
                     />
                   </div>
                 </div>

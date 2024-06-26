@@ -21,6 +21,7 @@ export const AllconversProvider = ({ children }) => {
   const [viewchanneltasks, setViewchanneltask] = useState(false);
   const [viewtask, setViewtask] = useState(false);
   const [assigntaskself, setassigntaskself] = useState(false);
+  const[opencalendarevents,setopencalendarevents]=useState(false)
   // Fetch user data once on component mount
   useEffect(() => {
     const fetchUserData = async () => {
@@ -48,6 +49,8 @@ export const AllconversProvider = ({ children }) => {
   useEffect(() => {
     console.log("Current User State Updated:", currentUser);
   }, [currentUser]);
+
+ 
 
   // All values to child components
   const contextValues = {
@@ -84,6 +87,7 @@ export const AllconversProvider = ({ children }) => {
     setViewtask,
     assigntaskself,
     setassigntaskself,
+    opencalendarevents,setopencalendarevents
   };
 
   return (
