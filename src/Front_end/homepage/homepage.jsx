@@ -35,7 +35,6 @@ import Googlecalendar from "./google calendar/googlecalendar";
 import { FaCalendarAlt } from "react-icons/fa";
 import { SiGooglecalendar } from "react-icons/si";
 
-
 function Home(data) {
   const {
     setUserId,
@@ -63,7 +62,8 @@ function Home(data) {
     viewtask,
     setViewtask,
     assigntaskself,
-    setassigntaskself, opencalendarevents,
+    setassigntaskself,
+    opencalendarevents,
     setopencalendarevents,
   } = useContext(Allconvers);
   const { dispatch } = useContext(Chatcontext);
@@ -263,7 +263,7 @@ function Home(data) {
       {assigntask ? <Assigntask /> : <></>}
       {assigntaskself ? <Assigntaskself /> : <></>}
       {showmembers ? <Showmembers /> : <></>}
-    //  {opencalendarevents ? <Googlecalendar /> : <></>}
+      {opencalendarevents ? <Googlecalendar /> : <></>}
       {addchannelmember ? <Addmember /> : <></>}
       {addchannel ? <Addchannel /> : <></>}
       {isLoading ? (
@@ -396,7 +396,7 @@ function Home(data) {
                       color="white"
                       style={{ cursor: "pointer" }}
                     />
-                     <SiGooglecalendar
+                    <SiGooglecalendar
                       onClick={calendarAuth}
                       size={30}
                       color="white"

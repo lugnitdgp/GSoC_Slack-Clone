@@ -27,8 +27,10 @@ function Uconfpass({ settoken, setmail }) {
         <div className={uconfpassCSS.overlaycon}>
           <div className={uconfpassCSS.overlay}>
             <div className={uconfpassCSS.overlay_left}>
-              <h1>Hey</h1>
-              <p>Already a user and forgot password?</p>
+              <div className={uconfpassCSS.overlayheadings}>
+                <h1>Hey</h1>
+                <p>Already a user and forgot password?</p>
+              </div>
               <button
                 className={uconfpassCSS.signin}
                 onClick={handleforgotClick}
@@ -37,8 +39,10 @@ function Uconfpass({ settoken, setmail }) {
               </button>
             </div>
             <div className={uconfpassCSS.overlay_right}>
-              <h1>Helooo</h1>
-              <p>Are you a new User then:</p>
+              <div className={uconfpassCSS.overlayheadings}>
+                <h1>Helooo</h1>
+                <p>Are you a new User then:</p>
+              </div>
               <button
                 className={uconfpassCSS.signup}
                 onClick={handleSignupClick}

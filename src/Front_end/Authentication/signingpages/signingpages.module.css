@@ -1,7 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
 * {
   box-sizing: border-box;
 }
+
 .body {
   height: 100vh;
   width: 100vw;
@@ -13,6 +15,7 @@
   background-size: cover;
   font-family: "montserrat", sans-serif;
 }
+
 .container {
   position: relative;
   width: 768px;
@@ -24,6 +27,7 @@
   box-shadow: 0px 14px 28px rgba(0, 0, 0, 0.25),
     0px 10px 10px rgba(0, 0, 0, 0.22);
 }
+
 .sign_in {
   position: absolute;
   top: 0px;
@@ -31,8 +35,10 @@
   height: 100%;
   transition: all 0.6s ease-in-out;
   width: 50%;
-  z-index: 2;
+  z-index: 102;
+  min-height: 460px; /* Minimum height for sign_in */
 }
+
 .sign_up {
   position: absolute;
   top: 0px;
@@ -40,9 +46,11 @@
   height: 100%;
   transition: all 0.6s ease-in-out;
   width: 50%;
-  z-index: 1;
+  z-index: 101;
   opacity: 0;
+  min-height: 460px; /* Minimum height for sign_up */
 }
+
 .signin,
 .signup {
   margin: 15px;
@@ -55,14 +63,17 @@
   color: #2b2a2a;
   font-size: 18px;
 }
+
 .container.right_panel_active .sign_in {
   transform: translateX(100%);
 }
+
 .container.right_panel_active .sign_up {
   transform: translateX(100%);
   opacity: 1;
-  z-index: 5;
+  z-index: 105;
 }
+
 .overlaycon {
   position: absolute;
   top: 0px;
@@ -73,9 +84,11 @@
   transition: transform 0.6s ease-in-out;
   z-index: 100;
 }
+
 .container.right_panel_active .overlaycon {
   transform: translateX(-100%);
 }
+
 .overlay {
   position: relative;
   color: #181818;
@@ -90,6 +103,7 @@
 .container.right_panel_active .overlay {
   transform: translateX(50%);
 }
+
 .overlay_right,
 .overlay_left {
   position: absolute;
@@ -105,9 +119,101 @@
   transform: translateX(0);
   transition: transform 0.6s ease-in-out;
 }
+
 .overlay_left {
   left: 0px;
 }
+
 .overlay_right {
   right: 0px;
+}
+.overlayheadings {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 849px) {
+  .container {
+    width: 370px;
+    min-height: 600px; /* Increased to accommodate minimum height */
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sign_in,
+  .sign_up {
+    top: 0%;
+    left: 0;
+    height: 50%;
+    width: 100%; /* Minimum height for smaller screens */
+    transform: translateY(0); /* Reset transform for vertical layout */
+  }
+
+  .signin,
+  .signup {
+    margin: 15px;
+    width: 175px;
+    font-size: 14px;
+  }
+
+  .container.right_panel_active .sign_in {
+    transform: translateY(137px);
+  }
+
+  .container.right_panel_active .sign_up {
+    transform: translateY(137px);
+  }
+
+  .overlaycon {
+    left: 0px;
+    top: 50%;
+    height: 50%; /* Remaining height for overlay */
+    width: 100%;
+    z-index: 100;
+    transform: translateY(0); /* No vertical transformation for overlay */
+  }
+
+  .container.right_panel_active .overlaycon {
+    transform: translateY(-100%);
+  }
+
+  .overlay {
+    left: 0;
+    top: 50%; /* Position overlay above the container */
+    width: 100%;
+    height: 100%; /* Double height to cover entire container */
+    transform: translateY(0);
+  }
+
+  .container.right_panel_active .overlay {
+    transform: translateY(-100%);
+  }
+
+  .overlay_right,
+  .overlay_left {
+    flex-direction: row;
+    padding: 0px 10px;
+    left: 0px;
+    width: 100%;
+    height: 50%;
+    transform: translateY(0);
+  }
+
+  .overlay_left {
+    top: 50%;
+  }
+
+  .overlay_right {
+    top: 0%;
+  }
+  .h1 {
+    font-size: 24px;
+  }
+}
+@media (max-width: 395px) {
+  .container {
+    width: 340px;
+  }
 }

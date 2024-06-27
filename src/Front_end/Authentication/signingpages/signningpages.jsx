@@ -27,8 +27,11 @@ function Signingpages({ settoken, setUpdload }) {
         <div className={signingpagesCSS.overlaycon}>
           <div className={signingpagesCSS.overlay}>
             <div className={signingpagesCSS.overlay_left}>
-              <h1>Welcome back!</h1>
-              <p>To get back to your chats, please Login</p>
+              <div className={signingpagesCSS.overlayheadings}>
+                <h1 className={signingpagesCSS.h1}>Welcome back!</h1>
+                <p>To get back to your chats, please Login</p>
+              </div>
+
               <button
                 className={signingpagesCSS.signin}
                 onClick={handleSigninClick}
@@ -37,8 +40,10 @@ function Signingpages({ settoken, setUpdload }) {
               </button>
             </div>
             <div className={signingpagesCSS.overlay_right}>
-              <h1>Hey, What's New!</h1>
-              <p>To get back to your chats, please Login</p>
+              <div className={signingpagesCSS.overlayheadings}>
+                <h1 className={signingpagesCSS.h1}>Hey, What's New!</h1>
+                <p>To get back to your chats, please Login</p>
+              </div>
               <button
                 className={signingpagesCSS.signup}
                 onClick={handleSignupClick}

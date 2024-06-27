@@ -72,3 +72,23 @@
 .enter:hover {
   background: #f34324;
 }
+@media (max-width: 849px) {
+  .form {
+    width: 370px;
+    min-height: 320px;
+  }
+  .head {
+    height: 130px;
+    font-size: 15px;
+  }
+}
+@media (max-width: 390px) {
+  .form {
+    width: 340px;
+    min-height: 320px;
+  }
+  .head {
+    height: 110px;
+    font-size: 12px;
+  }
+}
