@@ -53,7 +53,6 @@ function Login({ settoken, setUpdload }) {
           });
           if (data) {
             if (data.user != null && data.session != null) {
-              alert("Successful log in redirecting to Homepage");
               navigate("/");
               settoken(data);
             } else if (data.user == null && data.session == null) {

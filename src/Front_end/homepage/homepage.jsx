@@ -163,7 +163,6 @@ function Home(data) {
         // localStorage.removeItem("token");
         localStorage.removeItem("mailcheck");
         window.location.reload();
-        alert("successfully logged out");
       }
     } catch (error) {
       console.log(error);

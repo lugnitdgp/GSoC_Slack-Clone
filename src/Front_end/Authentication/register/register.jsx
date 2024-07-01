@@ -137,7 +137,6 @@ function Register({ settoken }) {
         if (data) {
           console.log(data);
           if (data.user != null && data.session != null) {
-            alert("Sign up successful");
             settoken(data);
             navigate("/");
           } else if (data.user == null && data.session == null) {
