@@ -141,3 +141,21 @@
 .taskMetaNone {
   color: rgb(128, 31, 240);
 }
+@media (max-width: 830px) {
+  .tasks {
+    flex-direction: column;
+  }
+}
+@media (max-width: 450px) {
+  .box {
+    padding: 3px;
+  }
+  .todo,
+  .done {
+    font-size: smaller;
+    padding: 6px;
+  }
+  .taskItem {
+    padding: 3px;
+  }
+}

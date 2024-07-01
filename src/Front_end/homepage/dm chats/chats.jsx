@@ -153,7 +153,7 @@ export const Chats = () => {
                 id: uuid(),
                 text: text,
                 senderId: currentUser[0].id,
-                date: new Date().toISOString(),
+                date: new Date().toLocaleString(),
                 image: puburl,
               },
             ],
@@ -180,7 +180,7 @@ export const Chats = () => {
               id: uuid(),
               text: text,
               senderId: currentUser[0].id,
-              date: new Date().toISOString(),
+              date: new Date().toLocaleString(),
             },
           ],
         })
@@ -215,7 +215,7 @@ export const Chats = () => {
         />
         <div className={ChatsCSS.send}>
           <label htmlFor="file">
-            <IoMdAttach className={ChatsCSS.attachIcon} size={45} />
+            <IoMdAttach className={ChatsCSS.attachIcon} />
           </label>
           <input
             type="file"

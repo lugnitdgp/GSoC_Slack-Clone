@@ -1,75 +1,129 @@
-*{
-    padding: 0px;
-    margin: 0px;
-    box-sizing: border-box;
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
-.searchbar{
-    background-color: rgb(229, 229, 231);
-    height: 8%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    padding: 4px 3px 0px 10px;
-    border-bottom: 1px solid rgb(110, 100, 108);
+
+body {
+  font-family: Arial, sans-serif; /* Adjusted font for better compatibility */
 }
-.heading{
-    height: 60%;
-    width: 100%;
-    font-size: 30px;
+.searchbar {
+  min-height: 85px;
+  background-color: rgb(244, 244, 247);
+  height: 8%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Adjusted alignment */
+  padding: 10px;
+  border-bottom: 1px solid rgb(110, 100, 108);
 }
-.enter{
-    height: 40%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    
-    position: relative;
-    font-size: 20px;
+.heading {
+  font-size: 24px; /* Reduced font size for heading */
 }
-.input{
-    height: 20%;
-    width: 98%;
-    margin-left: 28px;
-    margin-top: 4px;
-    border: 0px;
-    outline: none;
-    background-color: transparent;
+.enter {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  position: relative;
 }
-.chats{
-    height: 92%;
-    width: 100%;
-    background-color: rgb(229, 229, 231);
+label {
+  margin-right: 10px; /* Added margin for label */
+  font-size: 16px; /* Adjusted font size */
 }
-.textwork{
-    height: 15%;
-    width: 100%;
-    background-color: rgb(229, 229, 231);
+.in {
+  width: 100%;
+  position: relative;
 }
-.Suserbox{
-    width: 100%;
-    height: 35px;
-    color: black;
-    font-size: 20px;
-    display: flex;
+.input {
+  background-color: transparent;
+  flex: 1;
+  height: 100%;
+  padding: 8px;
+  border: transparent;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+  width: 100%;
 }
-.Suserbox:hover{
-    background-color: aliceblue;
-    cursor: pointer;
+.chats {
+  height: calc(92% - 40px); /* Adjusted height calculation */
+  width: 100%;
+  overflow-y: auto; /* Added scroll for overflow */
+  background-color: rgb(255, 255, 255);
 }
-.Suserphoto{
-    width: 35px;
-    height: 35px;
-    background-color: aqua;
+.textwork {
+  height: 15%;
+  width: 100%;
+  background-color: rgb(255, 255, 255);
 }
-.img{
+.Suserbox {
+  width: 100%;
+  height: 60px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ccc; /* Added border for separation */
+}
+.Suserbox:hover {
+  background-color: #c9c8c8; /* Light background on hover */
+  cursor: pointer;
+}
+
+.Suserphoto {
+  width: 40px;
+  height: 40px;
+  background-color: aqua; /* Placeholder color */
+  border-radius: 50%;
+  margin-right: 10px; /* Added margin for spacing */
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover; /* Ensure image fits container */
+}
+
+.Suserinfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 10px; /* Adjusted padding */
+}
+
+@media (max-width: 768px) {
+  .heading {
+    font-size: 20px; /* Adjusted font size for smaller screens */
+  }
+
+  .input {
+    font-size: 14px; /* Reduced font size for input */
+  }
+
+  .Suserbox {
+    height: 50px; /* Reduced height for smaller screens */
+  }
+
+  .Suserphoto {
     width: 30px;
     height: 30px;
-    border-radius: 50%;
+  }
 }
-.Suserinfo{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 35px;
+
+@media (max-width: 576px) {
+  .heading {
+    font-size: 18px; /* Further reduced font size */
+  }
+
+  .Suserbox {
+    height: 40px; /* Further reduced height */
+  }
+
+  .Suserphoto {
+    width: 25px;
+    height: 25px;
+  }
 }

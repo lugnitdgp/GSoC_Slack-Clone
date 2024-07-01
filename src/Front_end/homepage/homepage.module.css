@@ -3,8 +3,9 @@
   margin: 0px;
   box-sizing: border-box;
 }
+
 .whole {
-  background-color: rgb(74, 1, 83);
+  background-color: #ffae00; /* Orange background */
   position: relative;
   height: 100vh;
   width: 100vw;
@@ -13,6 +14,7 @@
   align-items: center;
   justify-content: center;
 }
+
 .box {
   height: 100vh;
   width: 100vw;
@@ -21,8 +23,10 @@
   display: flex;
   flex-direction: column;
 }
+
 .top {
-  background-color: rgb(74, 1, 83);
+  min-height: 45px;
+  background-color: #ffae00; /* Orange background */
   width: 100%;
   height: 5%;
   position: relative;
@@ -30,67 +34,91 @@
   align-items: center;
   justify-content: center;
 }
+
 .search {
   width: 600px;
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
 }
-
+.opnsidebar {
+  display: none;
+}
 .bottom {
   height: 95%;
   width: 100%;
-  background-color: rgb(74, 1, 83);
+  background-color: #ffae00; /* Orange background */
   display: flex;
   position: relative;
 }
+
 .sidebar {
   height: 100%;
   width: 20%;
-  background-color: rgb(74, 1, 83);
+  background-color: #ffae00; /* Orange background */
   position: relative;
   display: flex;
   flex-direction: row-reverse;
+  min-width: 300px;
 }
+
 .userdetails {
+  padding: 8px;
+  min-height: 43px;
+  font-size: 35px;
   height: 5%;
   width: 100%;
-  background-color: rgb(123, 19, 139);
+  background-color: #fed330; /* Light yellow background */
   display: flex;
+  align-items: center;
+  justify-content: baseline;
+  color: rgb(54, 88, 3);
 }
+
 .chatbox {
-  width: 80%;
+  width: 79.5%;
   height: 99.5%;
-  background-color: chocolate;
+  background-color: #ffffff; /* Light orange background */
   overflow: hidden;
   position: relative;
   display: flex;
   flex-direction: column;
-  border-radius: 0px 7px 7px 0px;
+  border-radius: 0px 10px 10px 0px;
 }
+
 .presentcontact {
   height: 8%;
   width: 100%;
-  background-color: rgb(229, 229, 231);
-  border-bottom: 1px solid rgb(110, 100, 108);
+  background-color: #ffffff; /* Light yellow background */
+  border-bottom: 1px solid #6e646c; /* Dark gray border */
 }
+
 .chats {
   height: 92%;
   width: 100%;
-  background-color: rgb(229, 229, 231);
+  background-color: #ffffff; /* Light yellow background */
 }
+
 .left {
+  padding-top: 10px;
+  min-width: 40px;
   width: 12%;
   height: 100%;
-  background-color: rgb(74, 1, 83);
+  background-color: #ffae00; /* Orange background */
 }
+
 .right {
+  min-width: 250px;
   width: 88%;
   height: 99.5%;
   overflow: hidden;
   border-radius: 7px 0px 0px 7px;
   position: relative;
-  background-color: rgb(123, 19, 139);
+  background-color: #fed330; /* Light yellow background */
 }
+
 .userleft {
   width: 75%;
   height: 100%;
@@ -98,23 +126,10 @@
   display: flex;
   align-items: center;
   font-size: 30px;
-  color: white;
+  color: #ffae00; /* Orange text color */
   padding-left: 25px;
 }
-.dm {
-  height: 25px;
-  width: 50%;
-  background-color: transparent;
-  cursor: pointer;
-  margin: 3px;
-}
-.addchannel {
-  height: 25px;
-  width: 50%;
-  background-color: transparent;
-  cursor: pointer;
-  margin: 3px;
-}
+
 .userright {
   width: 25%;
   height: 100%;
@@ -122,95 +137,199 @@
   justify-content: center;
   align-items: center;
 }
+
 .faedit {
   cursor: pointer;
 }
-.poweroff {
-  margin: 7px;
-  cursor: pointer;
-}
-.dmcontacts {
-  height: 400px;
-  width: 90%;
-  position: relative;
-  color: black;
-  background-color: blanchedalmond;
-}
-.sdmcontact {
-  height: 40px;
-  width: 90%;
-  background-color: rgb(96, 15, 109);
-  display: flex;
-  cursor: pointer;
-  border-bottom: solid thin black;
-  border-radius: 10px;
-  margin-bottom: 2px;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-}
-.sdmcontact:hover {
-  background-color: rgb(77, 5, 88);
-}
-.sdmimg {
+.sidebaricons {
   height: 25px;
   width: 25px;
-  border-radius: 50%;
-  background-color: azure;
-}
-.sdmcontactinfo {
-  color: rgb(222, 225, 228);
-  display: flex;
-  flex-direction: column;
-  margin-left: 8px;
-}
-.sdmcontactname {
-  font-size: 20px;
-  font-weight: 500;
-}
-.sdmcontactmail {
-  font-size: 15px;
-}
-.schannel {
-  height: 40px;
-  width: 90%;
-  background-color: rgb(96, 15, 109);
-  display: flex;
+  color: white;
   cursor: pointer;
-  border-bottom: solid thin black;
-  border-radius: 10px;
-  margin-bottom: 2px;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
+  margin-bottom: 15px; /* Icon color */
 }
-.schannel:hover {
-  background-color: rgb(77, 5, 88);
-}
-.sdmimg {
-  height: 25px;
-  width: 25px;
-  border-radius: 50%;
-  background-color: azure;
-}
-.schannelinfo {
-  color: rgb(222, 225, 228);
-  display: flex;
-  align-items: center;
-  margin-left: 8px;
-}
-.schannelname {
-  font-size: 20px;
-  font-weight: 500;
-  margin-left: 10px;
-}
-.schannelmail {
-  font-size: 15px;
-}
+
 .allcom {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  height: 140px;
+}
+
+.community {
+  display: flex;
+  flex-direction: column; /* Ensure components stack vertically */
+}
+
+.dropmenu1,
+.dropmenu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative; /* Ensure icons are positioned relative to their container */
+}
+
+.droph31,
+.droph3 {
+  margin-right: 10px; /* Adjust as needed */
+}
+
+.rotateIcon {
+  transform: rotate(-90deg);
+  transition: transform 0.3s ease; /* Smooth transition for rotation */
+}
+
+.sdmimg {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  background-color: #feca57; /* Light orange background */
+}
+
+.addChannels,
+.directMessages {
+  margin-bottom: 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center; /* Spacing between sections */
+  position: relative;
+}
+
+.dropdown1,
+.dropdown {
+  padding: 0 10px 0 8px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative; /* Ensure dropdown menus are positioned relative */
+}
+
+.dropmenu1,
+.dropmenu {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative; /* Ensure icons are positioned relative to their container */
+}
+
+.droph31,
+.droph3 {
+  color: #606264;
+  margin-right: 7px; /* Adjust as needed */
+}
+
+.rotateIcon {
+  transform: rotate(-90deg);
+  transition: transform 0.3s ease; /* Smooth transition for rotation */
+}
+
+.dropdownMenu {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  max-height: 200px; /* Adjust as needed */
+  overflow-y: auto; /* Enable scrolling if needed */
+}
+
+.schannel,
+.sdmcontact {
+  height: 40px;
+  width: 100%;
+  display: flex;
+  cursor: pointer;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.sdmcontact {
+  padding-left: 5px;
+}
+.schannel:hover,
+.sdmcontact:hover {
+  background-color: #ffae00; /* Light orange background on hover */
+}
+
+.schannelinfo,
+.sdmcontactinfo {
+  color: #161e2b; /* Dark text color */
+  display: flex;
+  justify-content: center;
+  margin-left: 8px;
+}
+.sdmcontactinfo {
+  flex-direction: column;
+}
+.schannelname,
+.sdmcontactname {
+  font-size: 20px;
+  font-weight: 500;
+  margin-left: 5px; /* Adjust as needed */
+}
+
+.schannelmail,
+.sdmcontactmail {
+  font-size: 15px;
+}
+.sdmcontactmail {
+  margin-left: 5px;
+}
+@media (max-width: 1460px) {
+  .chatbox {
+    border-radius: 7px;
+    width: 100%;
+  }
+  .box {
+    width: 98vw;
+  }
+  .opnsidebar {
+    display: block; /* Show opnsidebar icon */
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+  }
+  .sidebar.opened {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 20%; /* Adjust width as needed */
+    height: 100%;
+    background-color: #ffae00; /* Orange background */
+    transform: translateX(0); /* Start from the fully visible position */
+    transition: transform 0.5s ease; /* Smooth animation for sliding effect */
+  }
+
+  .sidebar {
+    border-radius: 0 15px 15px 0;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: -20%; /* Move sidebar off-screen initially */
+    z-index: 2;
+    width: 20%; /* Adjust width as needed */
+    height: 100%;
+    background-color: #ffae00; /* Orange background */
+    transform: translateX(-100%); /* Initially hide the sidebar off-screen */
+    transition: transform 0.5s ease; /* Smooth animation for sliding effect */
+  }
+}
+@media (max-width: 700px) {
+  .search {
+    max-width: 450px;
+  }
+}
+@media (max-width: 550px) {
+  .search {
+    max-width: 350px;
+  }
+}
+@media (max-width: 450px) {
+  .search {
+    max-width: 250px;
+  }
 }

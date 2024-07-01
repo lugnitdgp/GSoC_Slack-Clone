@@ -8,7 +8,7 @@ import {
   fetchchannelmember,
   insert_todoid,
 } from "../database";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import supabase from "../supabase";
 import homepaseCSS from "./homepage.module.css";
 import { FaEdit } from "react-icons/fa";
@@ -31,9 +31,12 @@ import Viewutask from "./ToDo_list/viewusertask";
 import Assigntaskself from "./ToDo_list/mytododlist";
 import TodoListChanges from "../Mailing/mailsender";
 import Totalsearch from "./Totalsearch/totalsearch";
-import Googlecalendar from "./google calendar/googlecalendar";
+import Googlecalendar from "./googlecalendar.jsx/googlecalendar";
 import { FaCalendarAlt } from "react-icons/fa";
 import { SiGooglecalendar } from "react-icons/si";
+import { RiArrowDropDownLine } from "react-icons/ri";
+import { FaPlus } from "react-icons/fa";
+import { GiHamburgerMenu } from "react-icons/gi";
 
 function Home(data) {
   const {
@@ -74,6 +77,7 @@ function Home(data) {
   const [dmcontacts, setDmcontacts] = useState([]);
   const [fetchdmupdate, setFetchdmupdate] = useState(false);
   const [currentuserchannels, setCurrentuserchannels] = useState({});
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -256,6 +260,43 @@ function Home(data) {
       console.error("Error initiating OAuth:", error);
     }
   };
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
+  const handleDMClick = (contact) => {
+    console.log(contact.userinfo);
+    handlechatselect(contact.userinfo);
+    setchat(true);
+    setConformdm(false);
+    setDm(false);
+    setChannelchat(false);
+    //  setDropdownOpen(false);
+  };
+  const [addChannelOpen, setAddChannelOpen] = useState(false);
+
+  const toggleAddChannel = () => {
+    setAddChannelOpen(!addChannelOpen);
+  };
+
+  const handleChannelClick = (channel) => {
+    handlechannelselect(channel);
+
+    setchat(false);
+    setConformdm(false);
+    setDm(false);
+    setChannelchat(true);
+  };
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const sidebarRef = useRef(null);
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+    if (sidebarOpen) {
+      sidebarRef.current.classList.add(homepaseCSS.opened);
+    } else {
+      sidebarRef.current.classList.remove(homepaseCSS.opened);
+    }
+  };
   return (
     <>
       {viewchanneltasks ? <Viewchanneltask /> : <></>}
@@ -272,141 +313,168 @@ function Home(data) {
         <div className={homepaseCSS.whole}>
           <div className={homepaseCSS.box}>
             <div className={homepaseCSS.top}>
+              <div className={homepaseCSS.logo}>
+                <GiHamburgerMenu
+                  size={18}
+                  className={homepaseCSS.opnsidebar}
+                  onClick={toggleSidebar}
+                />
+              </div>
               <div className={homepaseCSS.search}>
                 {currentUser[0]?.id ? <Totalsearch /> : <></>}
               </div>
-              <div className={homepaseCSS.logo}></div>
             </div>
             <div className={homepaseCSS.bottom}>
-              <div className={homepaseCSS.sidebar}>
+              <div ref={sidebarRef} className={homepaseCSS.sidebar}>
                 <div className={homepaseCSS.right}>
                   <div className={homepaseCSS.userdetails}>
-                    <div className={homepaseCSS.userleft}>
-                      <p className={homepaseCSS.NaMe}>{name}</p>
+                    <p className={homepaseCSS.NaMe}>{name}</p>
+                    {/* <div className={homepaseCSS.userleft}>
                     </div>
                     <div className={homepaseCSS.userright}>
                       <FaEdit
                         className={homepaseCSS.faedit}
                         size={23}
                         color="white"
-                      />
+     
                     </div>
+                 */}
                   </div>
                   <div className={homepaseCSS.community}>
-                    <div className={homepaseCSS.hashes}>
-                      <button
-                        className={homepaseCSS.addchannel}
-                        onClick={(s) => {
-                          setAddchannel(true);
-                          console.log(addchannel);
-                        }}
-                      >
-                        Add Channels
-                      </button>
-                      {Object.entries(currentuserchannels)?.map((channel) => (
+                    <div className={homepaseCSS.addChannels}>
+                      <div className={homepaseCSS.dropdown1}>
                         <div
-                          className={homepaseCSS.schannel}
-                          key={channel[1].channel_id}
+                          className={homepaseCSS.dropmenu1}
                           onClick={() => {
-                            handlechannelselect(channel[1]);
-                            console.log(channel[1]);
-                            setchat(false);
-                            setConformdm(false);
-                            setDm(false);
-                            setChannelchat(true);
+                            toggleAddChannel();
                           }}
                         >
-                          <div className={homepaseCSS.schannelinfo}>
-                            <>
-                              <FaSlackHash />
-                              <span className={homepaseCSS.schannelname}>
-                                {channel[1]?.channelname}
-                              </span>
-                            </>
-                          </div>
+                          <h3 className={homepaseCSS.droph31}>Channels</h3>
+                          <RiArrowDropDownLine
+                            style={{ color: "#36393b", cursor: "pointer" }}
+                            className={
+                              addChannelOpen ? "" : homepaseCSS.rotateIcon
+                            }
+                            size={30}
+                          />
                         </div>
-                      ))}
-                    </div>
-                    <div className={homepaseCSS.contacts}>
-                      <button
-                        className={homepaseCSS.dm}
-                        onClick={(s) => {
-                          setDm(true);
-                          setConformdm(true);
-                          setChannelchat(false);
-                        }}
-                      >
-                        Direct message
-                      </button>
-
-                      {Object.entries(dmcontacts)?.map((contact) => (
-                        <div
-                          className={homepaseCSS.sdmcontact}
-                          key={contact[1].combinedId}
+                        <FaPlus
                           onClick={() => {
-                            console.log(contact[1].userinfo);
-                            handlechatselect(contact[1].userinfo);
-                            setchat(true);
-                            setConformdm(false);
-                            setDm(false);
+                            setAddchannel(true);
+                          }}
+                          style={{ color: "#606264", cursor: "pointer" }}
+                          size={13}
+                        />
+                      </div>
+                      {addChannelOpen && (
+                        <div className={homepaseCSS.dropdownMenu}>
+                          {Object.entries(currentuserchannels)?.map(
+                            (channel) => (
+                              <div
+                                className={homepaseCSS.schannel}
+                                key={channel[1].channel_id}
+                                onClick={() => {
+                                  handleChannelClick(channel[1]);
+                                  toggleSidebar();
+                                }}
+                              >
+                                <div className={homepaseCSS.schannelinfo}>
+                                  <FaSlackHash />
+                                  <span className={homepaseCSS.schannelname}>
+                                    {channel[1]?.channelname}
+                                  </span>
+                                </div>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className={homepaseCSS.directMessages}>
+                      <div className={homepaseCSS.dropdown}>
+                        <div
+                          className={homepaseCSS.dropmenu}
+                          onClick={toggleDropdown}
+                        >
+                          <h3 className={homepaseCSS.droph3}>Direct message</h3>
+                          <RiArrowDropDownLine
+                            style={{ color: "#36393b", cursor: "pointer" }}
+                            className={
+                              dropdownOpen ? "" : homepaseCSS.rotateIcon
+                            }
+                            size={30}
+                          />
+                        </div>
+                        <FaPlus
+                          onClick={() => {
+                            toggleSidebar();
+                            setDm(true);
+                            setConformdm(true);
                             setChannelchat(false);
                           }}
-                          style={{
-                            display:
-                              contact[1].showstatus === true ? "flex" : "none",
-                          }}
-                        >
-                          <img
-                            src={contact[1]?.userinfo?.uphoto}
-                            alt=""
-                            className={homepaseCSS.sdmimg}
-                          />
-                          <div className={homepaseCSS.sdmcontactinfo}>
-                            <>
-                              <span className={homepaseCSS.sdmcontactname}>
-                                {contact[1]?.userinfo?.uusername}
-                              </span>
-                              <span className={homepaseCSS.sdmcontactmail}>
-                                {contact[1]?.userinfo?.uemail}
-                              </span>
-                            </>
-                          </div>
+                          style={{ color: "#606264", cursor: "pointer" }}
+                          size={13}
+                        />
+                      </div>
+                      {dropdownOpen && (
+                        <div className={homepaseCSS.dropdownMenu}>
+                          {Object.entries(dmcontacts)?.map((contact) => (
+                            <div
+                              className={homepaseCSS.sdmcontact}
+                              key={contact[1].combinedId}
+                              onClick={() => {
+                                handleDMClick(contact[1]);
+                                toggleSidebar();
+                              }}
+                              style={{
+                                display:
+                                  contact[1].showstatus === true
+                                    ? "flex"
+                                    : "none",
+                              }}
+                            >
+                              <img
+                                src={contact[1]?.userinfo?.uphoto}
+                                alt=""
+                                className={homepaseCSS.sdmimg}
+                              />
+                              <div className={homepaseCSS.sdmcontactinfo}>
+                                <span className={homepaseCSS.sdmcontactname}>
+                                  {contact[1]?.userinfo?.uusername}
+                                </span>
+                                <span className={homepaseCSS.sdmcontactmail}>
+                                  {contact[1]?.userinfo?.uemail}
+                                </span>
+                              </div>
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                      )}
                     </div>
                   </div>
                 </div>
                 <div className={homepaseCSS.left}>
                   <div className={homepaseCSS.allcom}>
                     <FaPowerOff
-                      size={30}
-                      color="white"
-                      className={homepaseCSS.poweroff}
+                      className={homepaseCSS.sidebaricons}
                       onClick={() => signout()}
                     />
                     <FaTasks
+                      className={homepaseCSS.sidebaricons}
                       onClick={() => setViewtask(true)}
-                      size={30}
-                      color="white"
-                      style={{ cursor: "pointer" }}
                     />
                     <MdAssignmentAdd
+                      className={homepaseCSS.sidebaricons}
                       onClick={() => setassigntaskself(true)}
-                      size={30}
-                      color="white"
-                      style={{ cursor: "pointer" }}
                     />
                     <SiGooglecalendar
+                      className={homepaseCSS.sidebaricons}
                       onClick={calendarAuth}
-                      size={30}
-                      color="white"
-                      style={{ cursor: "pointer", marginTop: "10px" }}
                     />
                     <FaCalendarAlt
+                      className={homepaseCSS.sidebaricons}
                       onClick={() => setopencalendarevents(true)}
-                      size={30}
-                      color="white"
-                      style={{ cursor: "pointer", marginTop: "10px" }}
                     />
                   </div>
                 </div>

@@ -164,7 +164,10 @@
   margin-top: 10px;
   animation: fadeInOut 5s ease-in-out; /* Apply fadeInOut animation for notifications */
 }
-
+.datelabel label {
+  font-size: medium;
+  width: 45px;
+}
 .requiredLabel {
   display: block;
   color: red;
@@ -178,5 +181,18 @@
   }
   100% {
     opacity: 0;
+  }
+}
+@media (max-width: 550px) {
+  .box {
+    width: 300px;
+    padding: 10px;
+  }
+  .datelabel {
+    font-size: 15px;
+    margin-left: 2px;
+  }
+  .checkboxes label {
+    font-size: 15px;
   }
 }

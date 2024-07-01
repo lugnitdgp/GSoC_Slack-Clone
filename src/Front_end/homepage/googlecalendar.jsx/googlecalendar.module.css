@@ -1,0 +1,218 @@
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.box {
+  min-width: 300px;
+  background-color: white;
+  border-radius: 8px;
+  width: 55%;
+  height: 650px;
+  display: flex;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+}
+
+.closeIcon {
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #666;
+}
+
+.left {
+  padding: 20px;
+  border-right: 1px solid #ccc;
+  min-width: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  margin-bottom: 10px;
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.button {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.button:hover {
+  background-color: #52b335;
+}
+
+.right {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.right h2 {
+  margin-bottom: 10px;
+}
+
+.filterButtons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.button {
+  margin-right: 10px;
+  padding: 8px;
+  cursor: pointer;
+  border: none;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.button:hover {
+  background-color: #6e6666;
+}
+
+.activeButton {
+  margin-right: 10px;
+  padding: 8px;
+  cursor: pointer;
+  border: none;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: #00ff6a; /* Medium shade of green for active button */
+  color: rgb(105, 103, 103);
+}
+
+.activeButton:hover {
+  background-color: #00ff6a; /* Darkest shade of green on hover */
+}
+
+.button:not(.activeButton):not(:hover) {
+  background-color: #2ecc71; /* Lightest shade of green when not hovered or selected */
+  color: white;
+}
+.noEvents {
+  margin-top: 20px;
+  text-align: center;
+  color: #999;
+}
+.eventsContainer {
+  min-height: 350px;
+  height: 100%;
+  width: 100%;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.eventfetched {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.phead {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.datehead {
+  font-weight: bold;
+}
+
+.description {
+  margin-top: 5px;
+}
+
+.deleteevent {
+  position: absolute; /* Position the delete button relative to its closest positioned ancestor (.eventBox) */
+  top: 60px; /* Adjust top position as needed */
+  right: 15px; /* Adjust right position as needed */
+  cursor: pointer;
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 14px;
+}
+
+.deleteButton:hover {
+  background-color: #c82333;
+}
+
+@media (max-width: 1550px) {
+  .box {
+    width: 850px;
+  }
+  .right {
+    min-width: 500px;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 1060px) {
+  .box {
+    overflow-y: auto;
+    width: 500px;
+    flex-direction: column;
+    border-right: none;
+    border-bottom: 1px solid #ccc;
+    height: 500px;
+  }
+}
+@media (max-width: 560px) {
+  .right {
+    min-width: 325px;
+    padding: 10px;
+  }
+  .box {
+    width: 325px;
+  }
+  .button {
+    margin-bottom: 7px;
+    margin-right: 5px;
+    padding: 5px;
+    font-size: 15px;
+  }
+  .activeButton {
+    margin-bottom: 7px;
+    margin-right: 5px;
+    padding: 5px;
+    font-size: 15px;
+  }
+}

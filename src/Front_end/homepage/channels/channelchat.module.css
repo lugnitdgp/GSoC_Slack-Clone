@@ -20,12 +20,31 @@
   width: 100%;
   background-color: rgb(252, 251, 250);
   border-bottom: 1px rgb(145, 141, 141) solid;
+  position: relative;
+}
+
+.additional_options > * {
+  margin-right: 8px;
+  /* Ensure icons and three-dots are above other content */
+}
+
+.additional_options {
+  height: 38px;
+  position: absolute;
+  top: 100%;
+  bottom: 0; /* Adjust based on your design */
+  right: 10px; /* Adjust based on your design */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+  z-index: 1; /* Ensure it's above other content */
 }
 .messages {
   height: 85%;
   width: 100%;
   background-color: rgb(252, 251, 250);
-  overflow: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   position: relative;
 }
@@ -51,6 +70,8 @@
 }
 .attachIcon {
   cursor: pointer;
+  height: 42px;
+  width: 34px;
 }
 .sendbutton {
   height: 45px;
@@ -61,6 +82,7 @@
   cursor: pointer;
 }
 .acceptbox {
+  padding: 10px;
   height: 100%;
   width: 100%;
   display: flex;
@@ -70,12 +92,52 @@
   font-size: 35px;
 }
 .acceptance {
-  width: 280px;
+  width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 .decline,
 .accept {
+  margin-top: 10px;
+  height: 40px;
+  width: 150px;
+  border-radius: 7px;
+  background-color: rgb(99, 204, 99);
   cursor: pointer;
+}
+.accept:hover {
+  background-color: rgb(98, 202, 98);
+}
+@media (max-height: 700px) {
+  .chatinfo {
+    font-size: 20px;
+  }
+}
+@media (max-width: 1282px) {
+  .sendbutton {
+    height: 40px;
+    width: 45px;
+  }
+}
+@media (max-width: 1000px) {
+  .sendbutton {
+    height: 35px;
+    width: 40px;
+  }
+  .textinput {
+    width: 80%;
+    font-size: 15px;
+  }
+}
+@media (max-width: 500px) {
+  .textinput {
+    width: 75%;
+  }
+}
+@media (max-width: 400px) {
+  .textinput {
+    height: 90%;
+    width: 70%;
+  }
 }

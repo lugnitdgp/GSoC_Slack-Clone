@@ -50,6 +50,7 @@
 
 .todo,
 .done {
+  font-size: medium;
   flex: 1;
   margin: 10px;
   padding: 10px;
@@ -140,4 +141,22 @@
 }
 .taskMetaNone {
   color: rgb(128, 31, 240);
+}
+@media (max-width: 830px) {
+  .tasks {
+    flex-direction: column;
+  }
+}
+@media (max-width: 450px) {
+  .box {
+    padding: 3px;
+  }
+  .todo,
+  .done {
+    font-size: smaller;
+    padding: 6px;
+  }
+  .taskItem {
+    padding: 3px;
+  }
 }

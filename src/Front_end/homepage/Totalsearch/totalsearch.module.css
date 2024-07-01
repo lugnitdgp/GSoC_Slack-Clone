@@ -1,59 +1,80 @@
 * {
-    box-sizing: border-box;
-  }
-  
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  max-width: 600px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative; /* Ensure relative positioning for absolute children */
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  font-size: 15px;
+  height: 85%;
+  border-radius: 5px;
+}
+
+.results {
+  width: 100%;
+  display: grid;
+  gap: 1px;
+  position: absolute;
+  z-index: 2;
+  top: calc(
+    100% + 10px
+  ); /* Adjust top position to create a gap below the input */
+  background-color: #fff; /* Ensure a white background for results */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow for a card-like appearance */
+  border-radius: 4px; /* Rounded corners for the results box */
+  max-height: 300px; /* Limit max height if needed */
+  overflow-y: auto; /* Enable scrolling if results exceed max height */
+}
+
+.resultItem {
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  cursor: pointer; /* Add pointer cursor for clickable items */
+}
+
+.resultItem:hover {
+  background-color: #ebebeb; /* Lighten background on hover */
+}
+
+.item {
+  padding: 10px;
+}
+
+.dmContact {
+  border-left: 5px solid #1a73e8; /* Blue color for DM Contacts */
+}
+
+.channel {
+  border-left: 5px solid #34a853; /* Green color for Channels */
+}
+@media (max-width: 850px) {
   .container {
-    width: 100%;
-    max-width: 600px;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative; /* Ensure relative positioning for absolute children */
+    max-width: 550px;
   }
-  
-  .input {
-    width: 100%;
-    padding: 10px;
-    font-size: 15px;
-    height: 85%;
-    border-radius: 5px;
+}
+@media (max-width: 700px) {
+  .container {
+    max-width: 450px;
   }
-  
-  .results {
-    width: 100%;
-    display: grid;
-    gap: 1px;
-    position: absolute;
-    z-index: 2;
-    top: calc(100% + 10px); /* Adjust top position to create a gap below the input */
-    background-color: #fff; /* Ensure a white background for results */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow for a card-like appearance */
-    border-radius: 4px; /* Rounded corners for the results box */
-    max-height: 300px; /* Limit max height if needed */
-    overflow-y: auto; /* Enable scrolling if results exceed max height */
+}
+@media (max-width: 550px) {
+  .container {
+    max-width: 350px;
   }
-  
-  .resultItem {
-    padding: 10px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-    cursor: pointer; /* Add pointer cursor for clickable items */
+}
+@media (max-width: 450px) {
+  .container {
+    max-width: 250px;
   }
-  
-  .resultItem:hover {
-    background-color: #ebebeb; /* Lighten background on hover */
-  }
-  
-  .item {
-    padding: 10px;
-  }
-  
-  .dmContact {
-    border-left: 5px solid #1a73e8; /* Blue color for DM Contacts */
-  }
-  
-  .channel {
-    border-left: 5px solid #34a853; /* Green color for Channels */
-  }
-  
+}

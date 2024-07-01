@@ -19,6 +19,7 @@ import { IoMdContacts } from "react-icons/io";
 import { MdAssignmentAdd } from "react-icons/md";
 import { FaTasks } from "react-icons/fa";
 import { RiDeleteBin6Fill } from "react-icons/ri";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 export const Channelchats = () => {
   const textRef = useRef(""); //usestate didnot work but useref worked to make the input clear after updation
@@ -88,8 +89,6 @@ export const Channelchats = () => {
 
     useEffect(() => {
       const message = () => {
-        console.log(msgupdate);
-
         const chatsDm = supabase
           .channel("custom-filter-channel")
           .on(
@@ -125,14 +124,26 @@ export const Channelchats = () => {
         Object.entries(admins)?.map((admin) => {
           //to allow the add user optiion only for admin
           console.log(admin);
-          if (admin[1].id == currentUser[0].id) {
+          if (admin[1].id === currentUser[0].id) {
+            console.log(admin[1].id === currentUser[0].id);
             setaddusericon(true);
             console.log(addusericon);
           }
         });
       }
     }, [channel_data, loadadmincheck]);
-
+    useEffect(() => {
+      console.log(allowshow);
+    }, [allowshow]);
+    useEffect(() => {
+      console.log(addusericon);
+    }, [addusericon]);
+    useEffect(() => {
+      console.log(accepted);
+    }, [accepted]);
+    useEffect(() => {
+      console.log(loadadmincheck);
+    }, [loadadmincheck]);
     const handlesend = async () => {
       const img = imgRef.current.files[0];
       const text = textRef.current.value;
@@ -185,7 +196,7 @@ export const Channelchats = () => {
                 id: uuid(),
                 text: text,
                 senderId: currentUser[0].id,
-                date: new Date().toISOString(),
+                date: new Date().toLocaleString(),
               },
             ],
           })
@@ -219,10 +230,6 @@ export const Channelchats = () => {
       }
       console.log(fetchedchanneldata);
     };
-    useEffect(() => {
-      console.log(showmembers);
-    }, [showmembers]);
-
     useEffect(() => {
       const message = () => {
         console.log(msgupdate);
@@ -340,51 +347,67 @@ export const Channelchats = () => {
         console.error("Error removing member:", error);
       }
     };
+    const [showOptions, setShowOptions] = useState(false);
+
+    const toggleOptions = () => {
+      setShowOptions(!showOptions);
+    };
 
     return (
       <>
         <div className={ChannelchatCSS.chat}>
           <div className={ChannelchatCSS.chatinfo}>
             <span>{channel_data?.channelname}</span>
-            {addusericon && allowshow && accepted ? (
-              <>
-                <FaTasks
-                  onClick={() => setViewchanneltask(true)}
-                  style={{ cursor: "pointer" }}
-                />
-                <MdAssignmentAdd
-                  onClick={() => setAssigntask(true)}
-                  style={{ cursor: "pointer" }}
-                />
-                <IoMdContacts
-                  onClick={() => setShowmembers(true)} // Call the function to update state
-                  style={{ cursor: "pointer" }}
-                />
-                <IoMdPersonAdd
-                  onClick={() => setaddchannelmember(true)} // Call the function to update state
-                  style={{ cursor: "pointer" }}
-                />
-                <RiDeleteBin6Fill
-                  onClick={() => Removechannel()} // Call the function to update state
-                  style={{ cursor: "pointer" }}
-                />
-              </>
-            ) : allowshow && accepted ? (
-              <>
-                <FaTasks
-                  onClick={() => setViewchanneltask(true)}
-                  style={{ cursor: "pointer" }}
-                />
-                <IoMdContacts
-                  onClick={() => setShowmembers(true)} // Call the function to update state
-                  style={{ cursor: "pointer" }}
-                />
-              </>
-            ) : (
-              <IoMdContacts
-                onClick={() => setShowmembers(true)} // Call the function to update state
-                style={{ cursor: "pointer" }}
-              />
+
+            {/* Three-dots icon for additional options */}
+            <BsThreeDotsVertical
+              onClick={toggleOptions}
+              style={{ cursor: "pointer" }}
+            />
+            {showOptions && (
+              <div className={ChannelchatCSS.additional_options}>
+                {/* Icons for main actions */}
+                {addusericon && allowshow && accepted ? (
+                  <>
+                    <FaTasks
+                      onClick={() => setViewchanneltask(true)}
+                      style={{ cursor: "pointer" }}
+                    />
+                    <MdAssignmentAdd
+                      onClick={() => setAssigntask(true)}
+                      style={{ cursor: "pointer" }}
+                    />
+                    <IoMdContacts
+                      onClick={() => setShowmembers(true)}
+                      style={{ cursor: "pointer" }}
+                    />
+                    <IoMdPersonAdd
+                      onClick={() => setaddchannelmember(true)}
+                      style={{ cursor: "pointer" }}
+                    />
+                    <RiDeleteBin6Fill
+                      onClick={() => Removechannel()}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </>
+                ) : allowshow && accepted ? (
+                  <>
+                    <FaTasks
+                      onClick={() => setViewchanneltask(true)}
+                      style={{ cursor: "pointer" }}
+                    />
+                    <IoMdContacts
+                      onClick={() => setShowmembers(true)}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </>
+                ) : (
+                  <IoMdContacts
+                    onClick={() => setShowmembers(true)}
+                    style={{ cursor: "pointer" }}
+                  />
+                )}
+              </div>
             )}
           </div>
           {!channel_data.allowshow && !accepted ? (
@@ -423,10 +446,7 @@ export const Channelchats = () => {
                 />
                 <div className={ChannelchatCSS.send}>
                   <label htmlFor="file">
-                    <IoMdAttach
-                      className={ChannelchatCSS.attachIcon}
-                      size={45}
-                    />
+                    <IoMdAttach className={ChannelchatCSS.attachIcon} />
                   </label>
                   <input
                     type="file"

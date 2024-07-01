@@ -52,9 +52,7 @@ const Showmembers = () => {
 
   useEffect(() => {
     const fetchdmdata = async () => {
-      console.log(combinedId);
       const dmcontactinfo = await fetchUserDmChats(currentUser[0]);
-      console.log(dmcontactinfo);
       if (dmcontactinfo) {
         setDmcontacts(dmcontactinfo);
       }
@@ -115,7 +113,7 @@ const Showmembers = () => {
                 setaddusericon(true);
               } else {
                 setIsAdmin(false);
-                setaddusericon(true);
+                setaddusericon(false);
               }
             }
           } catch (error) {
@@ -163,7 +161,7 @@ const Showmembers = () => {
           setaddusericon(true);
         } else {
           setIsAdmin(false);
-          setaddusericon(true);
+          setaddusericon(false);
         }
       }
       const channellisten = () => {

@@ -164,12 +164,25 @@ const Googlecalendar = () => {
       <div>
         {events.length > 0 ? (
           events.map((event) => (
-            <div key={event.id}>
-              <p>{event.summary}</p>
-              <p>{new Date(event.start.dateTime).toLocaleString()}</p>
-              <p>{new Date(event.end.dateTime).toLocaleString()}</p>
-              {event.description && <p>{event.description}</p>}
-              <button onClick={() => handleDeleteEvent(event.id)}>
+            <div key={event.id} className={googlecalendarCSS.eventfetched}>
+              <p className={googlecalendarCSS.phead}>{event.summary}</p>
+              <p className={googlecalendarCSS.date}>
+                <p className={googlecalendarCSS.datehead}>Start:</p>
+                {new Date(event.start.dateTime).toLocaleString()}
+              </p>
+              <p className={googlecalendarCSS.date}>
+                <p className={googlecalendarCSS.datehead}>End:</p>{" "}
+                {new Date(event.end.dateTime).toLocaleString()}
+              </p>
+              {event.description && (
+                <p className={googlecalendarCSS.description}>
+                  {event.description}
+                </p>
+              )}
+              <button
+                onClick={() => handleDeleteEvent(event.id)}
+                className={googlecalendarCSS.deleteevent}
+              >
                 Delete
               </button>
             </div>

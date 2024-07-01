@@ -38,7 +38,6 @@
 .inputbox {
   height: 13%;
   width: 100%;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -101,7 +100,6 @@
 .options {
   max-height: 120px;
   width: 80px;
-  
   position: absolute;
   right: 0px;
   top: 28px;
@@ -119,6 +117,15 @@
   background-color: rgb(230, 158, 92);
   cursor: pointer;
 }
-.option:hover{
-    background-color: rgb(226, 146, 71);
+.option:hover {
+  background-color: rgb(226, 146, 71);
+}
+@media (max-width: 650px) {
+  .box {
+    height: 380px;
+    width: 328px;
+  }
+  .h1 {
+    font-size: 25px;
+  }
 }

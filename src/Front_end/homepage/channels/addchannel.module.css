@@ -90,3 +90,19 @@
   color: white;
   cursor: pointer;
 }
+@media (max-width: 950px) {
+  .box {
+    width: 500px;
+  }
+}
+@media (max-width: 600px) {
+  .box {
+    width: 350px;
+  }
+}
+@media (max-width: 400px) {
+  .box {
+    width: 320px;
+    height: 150px;
+  }
+}

@@ -10,12 +10,12 @@
   position: relative;
 }
 .chatinfo {
-    display: flex;
-    justify-content: left;
-    padding: 10px;
-    align-items: center;
-    font-size: 30px;
-    font-weight: bolder;
+  display: flex;
+  justify-content: left;
+  padding: 10px;
+  align-items: center;
+  font-size: 30px;
+  font-weight: bolder;
   height: 5%;
   width: 100%;
   background-color: rgb(252, 251, 250);
@@ -25,10 +25,9 @@
   height: 85%;
   width: 100%;
   background-color: rgb(252, 251, 250);
-  overflow: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   position: relative;
-  
 }
 .chatinput {
   height: 10%;
@@ -50,14 +49,43 @@
   word-wrap: break-word;
   white-space: pre-wrap;
 }
-.attachIcon{
-    cursor: pointer;
+.attachIcon {
+  cursor: pointer;
+  height: 42px;
+  width: 34px;
 }
-.sendbutton{
-    height: 45px;
-    width: 55px;
-    background-color: antiquewhite;
-    border: thin black solid;
-    border-radius: 10px;
-    cursor: pointer;
+.sendbutton {
+  height: 45px;
+  width: 55px;
+  background-color: antiquewhite;
+  border: thin black solid;
+  border-radius: 10px;
+  cursor: pointer;
+}
+@media (max-width: 1282px) {
+  .sendbutton {
+    height: 40px;
+    width: 45px;
+  }
+}
+@media (max-width: 1000px) {
+  .sendbutton {
+    height: 35px;
+    width: 40px;
+  }
+  .textinput {
+    width: 80%;
+    font-size: 15px;
+  }
+}
+@media (max-width: 500px) {
+  .textinput {
+    width: 75%;
+  }
+}
+@media (max-width: 400px) {
+  .textinput {
+    height: 90%;
+    width: 70%;
+  }
 }

@@ -371,20 +371,22 @@ const Assigntask = () => {
                   setNoDueDate(false); // Ensure "No Due Date" is unchecked when a due date is selected
                 }}
               />
-              <label>
-                <input
-                  type="checkbox"
-                  checked={noDueDate}
-                  onChange={(e) => {
-                    setNoDueDate(e.target.checked);
-                    if (e.target.checked) {
-                      setDueDateTime(""); // Reset due date when "No Due Date" is checked
-                    }
-                  }}
-                  style={{ cursor: "pointer", marginLeft: "10px" }}
-                />
-                No Due Date
-              </label>
+              <div className={assigntaskCSS.datelabel}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={noDueDate}
+                    onChange={(e) => {
+                      setNoDueDate(e.target.checked);
+                      if (e.target.checked) {
+                        setDueDateTime(""); // Reset due date when "No Due Date" is checked
+                      }
+                    }}
+                    style={{ cursor: "pointer" }}
+                  />
+                  No Due
+                </label>
+              </div>
             </div>
             <span className={assigntaskCSS.requiredLabel}>* Required</span>
           </div>

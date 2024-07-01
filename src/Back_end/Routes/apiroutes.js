@@ -13,8 +13,9 @@ const client = new google.auth.OAuth2(
   process.env.REDIRECT_URL
 );
 console.log(client);
-const checkTokensMiddleware = async (req, res, next) => {//even though this function is not called still using the express sessions if the request exits in the session
-  const tokens = req.session.tokens;                      //then the fetching data when expiry occurs still happens
+const checkTokensMiddleware = async (req, res, next) => {
+  //even though this function is not called still using the express sessions if the request exits in the session
+  const tokens = req.session.tokens; //then the fetching data when expiry occurs still happens
   if (!tokens || !tokens.access_token || !tokens.refresh_token) {
     return res.status(401).json({ error: "OAuth2 tokens not set" });
   }
@@ -83,8 +84,8 @@ router.get("/googleauth/redirect", async (req, res) => {
   try {
     const { tokens } = await client.getToken(code);
     client.setCredentials(tokens);
-    //req.session.tokens = tokens;
-    res.redirect("http://localhost:5177");
+    req.session.tokens = tokens;
+    res.redirect("http://localhost:5173");
   } catch (error) {
     console.error("Error handling OAuth2 redirect:", error);
     res.status(500).send("Error handling OAuth2 redirect");
@@ -136,7 +137,7 @@ router.post("/createEvent", async (req, res) => {
     });
 
     const createdEvent = response.data;
-    res.status(200);
+    res.status(200).json({ message: "Event added successfully" });
   } catch (error) {
     console.error("Error creating event:", error);
     res.status(500).json({ error: "Failed to create event" });
