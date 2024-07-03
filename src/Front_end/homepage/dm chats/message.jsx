@@ -106,6 +106,7 @@ export const Message = ({ message }) => {
       </div>
       <div className={messageCSS.messageinfo}>
         <img src={message?.image} alt="" className={messageCSS.img} />
+        <video src={message?.image} alt="" className={messageCSS.img} autoPlay loop muted></video>
         <span className={messageCSS.date}>{message?.date}</span>
       </div>
       <div className={messageCSS.messagecontent}>

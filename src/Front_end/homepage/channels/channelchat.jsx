@@ -170,7 +170,7 @@ export const Channelchats = () => {
                   id: uuid(),
                   text: text,
                   senderId: currentUser[0].id,
-                  date: new Date().toISOString(),
+                  date: new Date().toLocaleString(),
                   image: puburl,
                 },
               ],
