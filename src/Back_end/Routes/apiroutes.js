@@ -12,7 +12,6 @@ const client = new google.auth.OAuth2(
   process.env.CLIENT_SECRET,
   process.env.REDIRECT_URL
 );
-console.log(client);
 const checkTokensMiddleware = async (req, res, next) => {
   //even though this function is not called still using the express sessions if the request exits in the session
   const tokens = req.session.tokens; //then the fetching data when expiry occurs still happens
@@ -50,7 +49,7 @@ async function refreshTokens(tokens) {
 
 router.use(
   session({
-    secret: process.env.SESSION_SECRET || generateSessionSecret(32),
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: { secure: true },

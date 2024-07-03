@@ -8,7 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: url("/home/sravan/Desktop/web/slack clone/slack-clone/src/Front_end/images/pexels-photonova-2872856.jpg");
+  background: url("src/Front_end/images/pexels-photonova-2872856.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   font-family: "montserrat", sans-serif;

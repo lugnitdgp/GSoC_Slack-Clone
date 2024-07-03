@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: dockerfile-frontend
+    ports:
+      - "5172:5173"  # Expose frontend port 5173
+    environment:
+      - NODE_ENV=development
+      # Add other environment variables if necessary
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: .
+      dockerfile: dockerfile-backend
+    ports:
+      - "3001:3001"  # Expose backend port 3001
+    environment:
+      - NODE_ENV=development
+      # Add other environment variables if necessary

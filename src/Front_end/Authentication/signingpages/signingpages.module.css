@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: url("/home/sravan/Desktop/web/slack clone/slack-clone/src/Front_end/images/pexels-photonova-2872856.jpg");
+  background: url("src/Front_end/images/pexels-photonova-2872856.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   font-family: "montserrat", sans-serif;

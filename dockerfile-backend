@@ -1,0 +1,24 @@
+# Use Node.js LTS version as the base image
+FROM node:lts-alpine
+
+# Set the working directory for the backend in the container
+WORKDIR /app/src/Back_end
+
+# Copy only the backend package.json and lock file initially
+COPY src/Back_end/package.json .
+COPY src/Back_end/package-lock.json .
+
+# Install all dependencies including devDependencies
+RUN npm install --production=false
+
+# Copy the rest of the backend application code
+COPY src/Back_end .
+
+# Copy backend-specific .env file (if needed)
+COPY src/Back_end/.env .
+
+# Expose the port on which the backend server will run
+EXPOSE 3000
+
+# Command to start the backend server
+CMD ["npm", "run", "start"]

@@ -5,7 +5,7 @@
 .body {
   height: 100vh;
   width: 100vw;
-  background: url("/home/sravan/Desktop/web/slack clone/slack-clone/src/Front_end/images/pexels-photonova-2872856.jpg");
+  background: url("src/Front_end/images/pexels-photonova-2872856.jpg");
   display: flex;
   background-repeat: no-repeat;
   background-size: cover;
