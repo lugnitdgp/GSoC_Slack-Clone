@@ -84,7 +84,7 @@ router.get("/googleauth/redirect", async (req, res) => {
     const { tokens } = await client.getToken(code);
     client.setCredentials(tokens);
     req.session.tokens = tokens;
-    res.redirect("http://localhost:5173");
+    res.redirect("http://localhost:5172");
   } catch (error) {
     console.error("Error handling OAuth2 redirect:", error);
     res.status(500).send("Error handling OAuth2 redirect");

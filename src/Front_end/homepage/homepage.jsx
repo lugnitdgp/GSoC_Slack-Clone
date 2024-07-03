@@ -307,7 +307,7 @@ function Home(data) {
       {addchannelmember ? <Addmember /> : <></>}
       {addchannel ? <Addchannel /> : <></>}
       {isLoading ? (
-        <h1>Loading...</h1> // Display loading message while fetching
+        <video src="src/Front_end/loading video/6824-196344457_medium.mp4" autoPlay loop muted className={homepaseCSS.loadvideo}></video>
       ) : (
         <div className={homepaseCSS.whole}>
           <div className={homepaseCSS.box}>
