@@ -289,8 +289,8 @@ export const Channelchats = () => {
               ) {
                 try {
                   const response = await fetch(
-                    `http://localhost:${
-                      import.meta.env.VITE_Backend_Port
+                    `${
+                      import.meta.env.VITE_Backend_URL
                     }/api/sendUserEmail`,
                     {
                       method: "POST",

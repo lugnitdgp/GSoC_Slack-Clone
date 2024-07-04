@@ -313,8 +313,8 @@ const Showmembers = () => {
 
         try {
           const response = await fetch(
-            `http://localhost:${
-              import.meta.env.VITE_Backend_Port
+            `${
+              import.meta.env.VITE_Backend_URL
             }/api/sendUserEmail`,
             {
               method: "POST",
@@ -382,8 +382,8 @@ const Showmembers = () => {
 
         try {
           const response = await fetch(
-            `http://localhost:${
-              import.meta.env.VITE_Backend_Port
+            `${
+              import.meta.env.VITE_Backend_URL
             }/api/sendUserEmail`,
             {
               method: "POST",
@@ -451,8 +451,8 @@ const Showmembers = () => {
         if (memresult) {
           try {
             const response = await fetch(
-              `http://localhost:${
-                import.meta.env.VITE_Backend_Port
+              `${
+                import.meta.env.VITE_Backend_URL
               }/api/sendUserEmail`,
               {
                 method: "POST",

@@ -7,6 +7,7 @@ const { google } = require("googleapis");
 const calendar = google.calendar("v3");
 require("dotenv").config();
 router.use(express.json());
+console.log(process.env.Front_endURL)
 const client = new google.auth.OAuth2(
   process.env.CLIENT_ID,
   process.env.CLIENT_SECRET,
@@ -84,7 +85,7 @@ router.get("/googleauth/redirect", async (req, res) => {
     const { tokens } = await client.getToken(code);
     client.setCredentials(tokens);
     req.session.tokens = tokens;
-    res.redirect("http://localhost:5172");
+    res.redirect(process.env.Front_endURL);
   } catch (error) {
     console.error("Error handling OAuth2 redirect:", error);
     res.status(500).send("Error handling OAuth2 redirect");

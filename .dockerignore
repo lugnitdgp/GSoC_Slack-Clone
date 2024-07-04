@@ -1,2 +1,5 @@
 ./node_modules
 src/Back_end/node_modules
+.env
+src/Back_end/.env
+.git

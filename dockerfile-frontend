@@ -8,19 +8,18 @@ WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
 
-# Install all dependencies including devDependencies
-RUN npm install --production=false
+# Install all dependencies including production only
+RUN npm install --production
 
 # Copy the rest of the frontend application code
 COPY src/Front_end ./src/Front_end
 
 # Copy frontend-specific files
-COPY ./.env .
 COPY vite.config.js .
 COPY index.html .
 
 # Expose the port on which the frontend server will run
-EXPOSE 5172
+EXPOSE 5173
 
 # Command to start the frontend server
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "build"]

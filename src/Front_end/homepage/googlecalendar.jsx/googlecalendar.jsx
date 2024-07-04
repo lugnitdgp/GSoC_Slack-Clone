@@ -89,8 +89,8 @@ const Googlecalendar = () => {
       }
 
       const response = await fetch(
-        `http://localhost:${
-          import.meta.env.VITE_Backend_Port
+        `${
+          import.meta.env.VITE_Backend_URL
         }/api/events?timeMin=${encodeURIComponent(
           timeMin
         )}&timeMax=${encodeURIComponent(timeMax)}`
@@ -112,7 +112,7 @@ const Googlecalendar = () => {
   const handleAddEvent = async (eventData) => {
     try {
       const response = await fetch(
-        `http://localhost:${import.meta.env.VITE_Backend_Port}/api/createEvent`,
+        `${import.meta.env.VITE_Backend_URL}/api/createEvent`,
         {
           method: "POST",
           headers: {
@@ -138,8 +138,8 @@ const Googlecalendar = () => {
   const handleDeleteEvent = async (eventId) => {
     try {
       const response = await fetch(
-        `http://localhost:${
-          import.meta.env.VITE_Backend_Port
+        `${
+          import.meta.env.VITE_Backend_URL
         }/api/eventsdelete/${eventId}`,
         {
           method: "DELETE",

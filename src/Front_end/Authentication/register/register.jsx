@@ -42,7 +42,7 @@ function Register({ settoken }) {
       let { data, error } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
-          redirectTo: window.location.origin + "/update-details", // Redirect to update-details after login
+          redirectTo: "https://slack-clone-3gvixgrvr-pudi-sravans-projects.vercel.app/" + "/update-details", // Redirect to update-details after login
         },
       });
       if (data) {

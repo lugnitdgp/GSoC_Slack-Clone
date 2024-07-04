@@ -239,7 +239,7 @@ function Home(data) {
   const calendarAuth = async () => {
     try {
       const response = await fetch(
-        `http://localhost:${import.meta.env.VITE_Backend_Port}/api/googleauth`,
+        `${import.meta.env.VITE_Backend_URL}/api/googleauth`,
         {
           method: "GET",
           headers: {

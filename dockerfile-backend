@@ -9,16 +9,16 @@ COPY src/Back_end/package.json .
 COPY src/Back_end/package-lock.json .
 
 # Install all dependencies including devDependencies
-RUN npm install --production=false
+RUN npm install --production=true
 
 # Copy the rest of the backend application code
 COPY src/Back_end .
 
 # Copy backend-specific .env file (if needed)
-COPY src/Back_end/.env .
+#COPY src/Back_end/.env .
 
 # Expose the port on which the backend server will run
-EXPOSE 3000
+EXPOSE 10000
 
 # Command to start the backend server
 CMD ["npm", "run", "start"]

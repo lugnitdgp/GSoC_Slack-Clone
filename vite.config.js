@@ -8,4 +8,9 @@ export default defineConfig({
       "/src/main.jsx": "/src/Front_end/main.jsx",
     },
   },
+  server:{
+    host:true,
+    strictPort:true,
+    port:5173
+  }
 });

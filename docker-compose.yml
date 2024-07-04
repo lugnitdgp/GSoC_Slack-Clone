@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   frontend:
+    image: slack-clone/frontend
     build:
       context: .
       dockerfile: dockerfile-frontend
@@ -14,6 +15,7 @@ services:
       - backend
 
   backend:
+    image: slack-clone/backend
     build:
       context: .
       dockerfile: dockerfile-backend
