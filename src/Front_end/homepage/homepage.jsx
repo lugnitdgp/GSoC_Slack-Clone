@@ -79,7 +79,6 @@ function Home(data) {
   const [fetchdmupdate, setFetchdmupdate] = useState(false);
   const [currentuserchannels, setCurrentuserchannels] = useState({});
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const navigate=Navigate()
   useEffect(() => {
     const fetchData = async () => {
       const specific_user = await Getuserdetails(data.data.user.id);
@@ -163,7 +162,7 @@ function Home(data) {
       } else {
         // localStorage.removeItem("token");
         localStorage.removeItem("mailcheck");
-        navigate(import.meta.env.VITE_FRONTEND_URL)
+        window.location.reload()
       }
     } catch (error) {
       console.log(error);

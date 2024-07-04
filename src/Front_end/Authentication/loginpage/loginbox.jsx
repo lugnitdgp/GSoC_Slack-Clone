@@ -21,7 +21,7 @@ function Login({ settoken, setUpdload }) {
       let { data, error } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
-          redirectTo: import.meta.env.VITE_FRONTEND_URL + "/update-details", // Redirect to update-details after login
+          redirectTo: window.location.origin + "/update-details", // Redirect to update-details after login
         },
       });
       if (data) {
