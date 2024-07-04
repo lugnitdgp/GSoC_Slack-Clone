@@ -5,10 +5,11 @@
 .body {
   height: 100vh;
   width: 100vw;
-  background: url("src/Front_end/images/pexels-photonova-2872856.jpg");
+  background: url("");
   display: flex;
   justify-content: center;
   background-size: cover;
+  background: url("../../../../../public/pexels-photonova-2872856.jpg");
   background-repeat: no-repeat;
   align-items: center;
   font-family: "montserrat", sans-serif;
