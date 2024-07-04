@@ -37,6 +37,7 @@ import { SiGooglecalendar } from "react-icons/si";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import { FaPlus } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { Navigate } from "react-router-dom";
 
 function Home(data) {
   const {
@@ -78,7 +79,7 @@ function Home(data) {
   const [fetchdmupdate, setFetchdmupdate] = useState(false);
   const [currentuserchannels, setCurrentuserchannels] = useState({});
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
+  const navigate=Navigate()
   useEffect(() => {
     const fetchData = async () => {
       const specific_user = await Getuserdetails(data.data.user.id);
@@ -162,7 +163,7 @@ function Home(data) {
       } else {
         // localStorage.removeItem("token");
         localStorage.removeItem("mailcheck");
-        window.location.reload();
+        navigate(import.meta.env.VITE_FRONTEND_URL)
       }
     } catch (error) {
       console.log(error);

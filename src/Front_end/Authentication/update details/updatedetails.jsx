@@ -39,7 +39,7 @@ function Update(data, settoken) {
           });
           if (data) {
             alert("update succesful");
-            window.location.reload();
+            navigate(import.meta.env.VITE_FRONTEND_URL)
             navigate("/", { replace: true });
           } else {
             console.log(error);
