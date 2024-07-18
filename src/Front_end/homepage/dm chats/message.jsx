@@ -6,12 +6,8 @@ import { Getuserdetails, fetchUsermessages } from "../../database";
 import { RiChatDeleteLine } from "react-icons/ri";
 import supabase from "../../supabase";
 export const Message = ({ message }) => {
-  const { currentUser } = useContext(Allconvers);
-  const { data } = useContext(Chatcontext);
   const [senderusername, setSenderusername] = useState("");
-  const [messages, setMessages] = useState([]);
   const [senderimg, setSenderimg] = useState("");
-  const [msgupdate, setMsgupdate] = useState(false);
   const sender = Getuserdetails(message?.senderId);
   sender.then((data) => {
     if (Array.isArray(data) && data.length > 0) {
@@ -105,8 +101,22 @@ export const Message = ({ message }) => {
   />*/}
       </div>
       <div className={messageCSS.messageinfo}>
-        <img src={message?.image} alt="" className={messageCSS.img} />
-        <video src={message?.image} alt="" className={messageCSS.img} autoPlay loop muted></video>
+        {message?.image ? (
+          <>
+            {" "}
+            <img src={message?.image} alt="" className={messageCSS.img} />
+            <video
+              src={message?.image}
+              alt=""
+              className={messageCSS.img}
+              autoPlay
+              loop
+              muted
+            ></video>
+          </>
+        ) : (
+          <></>
+        )}
         <span className={messageCSS.date}>{message?.date}</span>
       </div>
       <div className={messageCSS.messagecontent}>

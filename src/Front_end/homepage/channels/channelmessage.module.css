@@ -15,41 +15,50 @@
   position: relative;
   border-radius: 5px;
   margin-left: 7px;
+  overflow: hidden;
 }
 
-.img {
-  max-height: 10%;
-  width: 25%;
+.img,
+.video {
+  max-width: 100%;
+  max-height: 200px;
   border-radius: 5%;
+  object-fit: contain;
 }
+
 .date {
   font-size: 10px;
   position: absolute;
   bottom: 2px;
   right: 5px;
 }
+
 .messageinfo {
   margin-bottom: 3px;
   margin-left: 5px;
 }
+
 .messagecontent {
   max-width: 98%;
-  word-wrap: break-word; /* Allow content to break onto multiple lines */
-  overflow: hidden; /* Hide overflow content */
-  line-height: 1; /* Adjust line height for readability */
+  word-wrap: break-word;
+  overflow: hidden;
+  line-height: 1;
   margin-top: 2px;
   margin-left: 5px;
 }
+
 .sender {
   display: flex;
   margin: 2px;
   align-items: center;
 }
+
 .senderimg {
   height: 25px;
   width: 25px;
   border-radius: 50%;
 }
+
 .sendername {
   font-size: 18px;
   font-weight: 700;

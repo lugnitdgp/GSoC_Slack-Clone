@@ -11,10 +11,11 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.5",
-    "@supabase/supabase-js": "^2.43.1",
+    "@supabase/supabase-js": "^2.44.4",
     "@syncfusion/ej2-react-grids": "^25.2.3",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
     "js-cookie": "^3.0.5",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.4",
@@ -37,7 +38,7 @@
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
-    "supabase": "^1.167.4",
+    "supabase": "^1.183.5",
     "vite": "^5.2.0"
   }
 }

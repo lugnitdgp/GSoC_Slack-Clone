@@ -27,8 +27,26 @@ export const ChannelMessage = ({ message }) => {
         <span className={channelmessageCSS.sendername}>{senderusername}</span>
       </div>
       <div className={channelmessageCSS.messageinfo}>
-        <img src={message?.image} alt="" className={channelmessageCSS.img} />
-        <video src={message?.image} alt="" className={channelmessageCSS.img} loop autoPlay muted></video>
+        {message?.image ? (
+          <>
+            <img
+              src={message?.image}
+              alt=""
+              className={channelmessageCSS.img}
+            />
+            <video
+              src={message?.image}
+              alt=""
+              className={channelmessageCSS.img}
+              loop
+              autoPlay
+              muted
+            ></video>
+          </>
+        ) : (
+          <></>
+        )}
+
         <span className={channelmessageCSS.date}>{message?.date}</span>
       </div>
       <div className={channelmessageCSS.messagecontent}>
