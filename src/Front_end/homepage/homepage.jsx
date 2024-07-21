@@ -31,7 +31,7 @@ import Viewutask from "./ToDo_list/viewusertask";
 import Assigntaskself from "./ToDo_list/mytododlist";
 import TodoListChanges from "../Mailing/mailsender";
 import Totalsearch from "./Totalsearch/totalsearch";
-import Googlecalendar from "./googlecalendar.jsx/googlecalendar";
+import Googlecalendar from "./googlecalendar/googlecalendar";
 import { FaCalendarAlt } from "react-icons/fa";
 import { SiGooglecalendar } from "react-icons/si";
 import { RiArrowDropDownLine } from "react-icons/ri";
@@ -72,7 +72,7 @@ function Home(data) {
   } = useContext(Allconvers);
   const { dispatch } = useContext(Chatcontext);
   const { channel_data, dispatchchannel } = useContext(Channelcontext);
-  const [isLoading, setIsLoading] = useState(true); // Use state to manage loading
+  const [isLoading, setIsLoading] = useState(true); 
   const [name, setName] = useState("");
   const [phno, setPhno] = useState("");
   const [dmcontacts, setDmcontacts] = useState([]);
@@ -244,7 +244,6 @@ function Home(data) {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            // Add additional headers if required by your backend
           },
         }
       );

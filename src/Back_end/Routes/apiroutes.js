@@ -7,7 +7,6 @@ const { google } = require("googleapis");
 const calendar = google.calendar("v3");
 require("dotenv").config();
 router.use(express.json());
-console.log(process.env.Front_endURL)
 const client = new google.auth.OAuth2(
   process.env.CLIENT_ID,
   process.env.CLIENT_SECRET,
@@ -26,7 +25,7 @@ const checkTokensMiddleware = async (req, res, next) => {
       tokens.access_token = newAccessToken;
       req.session.tokens = tokens;
       client.setCredentials(tokens);
-      next();
+      next();//used to continue to the next into the rputes like the middleware continues tghe function
     } catch (error) {
       console.error("Error refreshing tokens:", error);
       res.status(401).json({ error: "Failed to refresh OAuth2 tokens" });
@@ -42,7 +41,6 @@ async function refreshTokens(tokens) {
   const { credentials } = await client.refreshToken(refreshToken);
   const newAccessToken = credentials.access_token;
   const newExpiryDate = credentials.expiry_date;
-
   tokens.access_token = newAccessToken;
   tokens.expiry_date = newExpiryDate;
   return newAccessToken;
