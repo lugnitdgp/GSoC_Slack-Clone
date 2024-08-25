@@ -140,6 +140,7 @@ const Assigntask = () => {
       setFetchDone(true);
     };
     const handleSubmit = async () => {
+      setloader(true)
       try {
         setloader(true);
         // Check if required fields are filled
@@ -150,7 +151,7 @@ const Assigntask = () => {
           !taskDescription
         ) {
           setShowNotification(true);
-          setloader(false);
+          setloader(false)
           // Hide notification after 2.5 seconds
           setTimeout(() => {
             setShowNotification(false);
@@ -162,7 +163,7 @@ const Assigntask = () => {
         const task_id = uuid(); // Generate a random UUID
 
         let todoListData = {};
-
+        setloader(true)
         if (!assignToMember) {
           setloader(true);
           todoListData = [
@@ -178,7 +179,7 @@ const Assigntask = () => {
               assigned_byid: currentUser[0].id,
             },
           ];
-          setloader(false);
+          
           await supabase
             .from("Channel_todolist")
             .update({ todo_list: todoListData })
@@ -199,7 +200,7 @@ const Assigntask = () => {
               assigned_byid: currentUser[0].id,
             },
           ];
-          setloader(false);
+          
           await supabase
             .from("Todo_list")
             .update({ todo_list: todoListData })
@@ -248,8 +249,10 @@ const Assigntask = () => {
         setSearchQuery("");
         setMembers([]);
         setFetchDone(false);
+        setloader(false)
       } catch (error) {
         console.error("Error assigning task:", error.message);
+        setloader(false)
       }
     };
 

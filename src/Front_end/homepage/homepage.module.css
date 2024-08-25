@@ -75,11 +75,11 @@
   font-size: 35px;
   height: 5%;
   width: 100%;
-  background-color: #c5a326; /* Light yellow background */
+  background-color: #ebc747; /* Light yellow background */
   display: flex;
   align-items: center;
   justify-content: baseline;
-  color: rgb(54, 88, 3);
+  color: rgb(94, 95, 11);
 }
 
 .chatbox {
@@ -124,7 +124,7 @@
   overflow: hidden;
   border-radius: 7px 0px 0px 7px;
   position: relative;
-  background-color: #c5a326; /* Light yellow background */
+  background-color: #ebc747; /* Light yellow background */
 }
 
 .userleft {
@@ -225,7 +225,7 @@
 
 .droph31,
 .droph3 {
-  color: #606264;
+  color: #ffffff;
   margin-right: 7px; /* Adjust as needed */
 }
 
@@ -258,12 +258,12 @@
 }
 .schannel:hover,
 .sdmcontact:hover {
-  background-color: #ffae00; /* Light orange background on hover */
+  background-color: #c48a0d; /* Light orange background on hover */
 }
 
 .schannelinfo,
 .sdmcontactinfo {
-  color: #161e2b; /* Dark text color */
+  color: #083469; /* Dark text color */
   display: flex;
   justify-content: center;
   margin-left: 8px;

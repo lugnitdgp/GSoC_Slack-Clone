@@ -298,7 +298,9 @@ export const Channelchats = () => {
         setloader(false);
       } catch (error) {
         console.error("Error removing member:", error);
+        setloader(false)
       }
+      setloader(false)
     };
     useEffect(() => {
       const message = () => {
