@@ -13,7 +13,13 @@ import {
 import { current } from "@reduxjs/toolkit";
 
 const Addmember = () => {
-  const { setaddchannelmember, currentUser } = useContext(Allconvers);
+  const {
+    setaddchannelmember,
+    currentUser,
+    addchannelmember,
+    loader,
+    setloader,
+  } = useContext(Allconvers);
   const [Username, setUsername] = useState("");
   const [user, setUser] = useState(null); // Stores searched user data
   const [channelmem, setchannelmem] = useState([]); // Array of existing channel members
@@ -56,6 +62,7 @@ const Addmember = () => {
     };
 
     const handleUser = async (u) => {
+      setloader(true);
       // Check if user is already in the channel before any actions
       if (
         !channelmem.some((member) =>
@@ -102,12 +109,11 @@ const Addmember = () => {
               newmember
             );
             if (memupdate) {
+              setloader(false);
               console.log("mem update successful");
               try {
                 const response = await fetch(
-                  `${
-                    import.meta.env.VITE_Backend_URL
-                  }/api/sendUserEmail`,
+                  `${import.meta.env.VITE_Backend_URL}/api/sendUserEmail`,
                   {
                     method: "POST",
                     headers: {
@@ -131,11 +137,38 @@ const Addmember = () => {
             }
           }
           console.log("Add user to channel:", u);
+          setloader(false);
         }
       } else {
         console.log("User already exists in the channel");
+        setloader(false);
       }
     };
+    useEffect(() => {
+      const declineup = () => {
+        const decline = supabase
+          .channel("decline")
+          .on(
+            "postgres_changes",
+            {
+              event: "*", //channels are used to listen to real time changes
+              schema: "public", //here we listen to the changes in realtime and update the postgres changes here
+              table: "channels_message",
+              select: "channel_members",
+              filter: `channel_id=eq.${channel_data.channel_id}`,
+            },
+            (payload) => {
+              setrefreshchannel(true);
+            }
+          )
+          .subscribe();
+        return () => {
+          supabase.removeChannel(decline);
+        };
+      };
+      declineup();
+      // Cleanup function to unsubscribe from the channel to avoid data leakage
+    }, [addchannelmember, refreshchannel]);
 
     return (
       <div className={addmemberCSS.body}>

@@ -12,6 +12,8 @@ import {
   fetchUserchannelsbyid,
   Getuserdetails,
   allidsinlist,
+  insertchannelmember,
+  fetchUserchannelmembers,
 } from "../../database.jsx";
 import { Channelcontext } from "../../context api/channelcontext.jsx";
 import { ChannelMessage } from "./channelmessage.jsx";
@@ -20,6 +22,7 @@ import { MdAssignmentAdd } from "react-icons/md";
 import { FaTasks } from "react-icons/fa";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { ImExit } from "react-icons/im";
 
 export const Channelchats = () => {
   const textRef = useRef(""); //usestate didnot work but useref worked to make the input clear after updation
@@ -43,6 +46,8 @@ export const Channelchats = () => {
     assigntask,
     setAssigntask,
     setViewchanneltask,
+    loader,
+    setloader,
   } = useContext(Allconvers);
   const [messages, setMessages] = useState([]);
   const [picurl, setPicurl] = useState("");
@@ -56,6 +61,7 @@ export const Channelchats = () => {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
     useEffect(() => {
+      setloader(true);
       const fetchmessages = async () => {
         setaccepted(false);
         const messagesuptained = await fetchUserchannelmessages(
@@ -64,9 +70,11 @@ export const Channelchats = () => {
         if (messagesuptained) {
           setMessages(messagesuptained);
           console.log(messages);
+          setloader(false);
         }
         if (channel_data.allowshow == true) {
           setaccepted(true);
+          setloader(false);
         }
       };
 
@@ -74,6 +82,7 @@ export const Channelchats = () => {
     }, [channel_data.channel_id]);
     useEffect(() => {
       const fetchmessages = async () => {
+        setloader(true);
         if (msgupdate) {
           const messagesuptained = await fetchUserchannelmessages(
             channel_data.channel_id
@@ -81,6 +90,7 @@ export const Channelchats = () => {
           if (messagesuptained) {
             setMessages(messagesuptained);
             setMsgupdate(false);
+            setloader(false);
           }
         }
       };
@@ -114,6 +124,7 @@ export const Channelchats = () => {
       message();
     }, [channel_data.channel_id]);
     useEffect(() => {
+      setloader(true);
       setaddusericon(false);
       setloadadmincheck(false);
       console.log(loadadmincheck);
@@ -128,23 +139,14 @@ export const Channelchats = () => {
             console.log(admin[1].id === currentUser[0].id);
             setaddusericon(true);
             console.log(addusericon);
+            setloader(false);
           }
         });
       }
+      setloader(false);
     }, [channel_data, loadadmincheck]);
-    useEffect(() => {
-      console.log(allowshow);
-    }, [allowshow]);
-    useEffect(() => {
-      console.log(addusericon);
-    }, [addusericon]);
-    useEffect(() => {
-      console.log(accepted);
-    }, [accepted]);
-    useEffect(() => {
-      console.log(loadadmincheck);
-    }, [loadadmincheck]);
     const handlesend = async () => {
+      setloader(true);
       const img = imgRef.current.files[0];
       const text = textRef.current.value;
       if (img) {
@@ -154,6 +156,7 @@ export const Channelchats = () => {
           .upload(`${path}`, img);
         if (error1) {
           console.log(error1);
+          setloader(false);
         } else if (data1) {
           let url = supabase.storage.from("photos").getPublicUrl(data1.path); //here in the url we habe data in which publicUrl is present
 
@@ -179,11 +182,12 @@ export const Channelchats = () => {
             .select();
           if (data2) {
             setMsgupdate(true);
-
+            setloader(false);
             textRef.current.value = "";
             imgRef.current.value = null;
           } else if (error2) {
             console.log(error2);
+            setloader(false);
           }
         }
       } else {
@@ -206,10 +210,12 @@ export const Channelchats = () => {
           setMsgupdate(true);
           textRef.current.value = "";
           imgRef.current.value = null;
+          setloader(false);
         }
       }
     };
     const acceptinvite = async () => {
+      setloader(true);
       const fetchedchanneldata = await fetchUserchannels(currentUser[0]);
       console.log(fetchedchanneldata);
       fetchedchanneldata.forEach((channel) => {
@@ -227,8 +233,72 @@ export const Channelchats = () => {
       if (userchannelupdate) {
         console.log("channel updated");
         setaccepted(true);
+        setloader(false);
       }
       console.log(fetchedchanneldata);
+    };
+    const Removemember = async () => {
+      setloader(true);
+      try {
+        const userChannels = await fetchUserchannelsbyid(currentUser[0].id);
+        if (userChannels.length > 0) {
+          const updatedchan = userChannels.filter(
+            (channel) => channel.channel_id !== channel_data.channel_id
+          );
+          const updatedUserChannels = await updatechannel(
+            currentUser[0].id,
+            updatedchan
+          );
+        }
+        const members = await fetchUserchannelmembers(channel_data.channel_id);
+        const updatedmem = members.filter(
+          (mem) => mem.member_id != currentUser[0].id
+        );
+        console.log(updatedmem);
+        const memresult = insertchannelmember(
+          channel_data.channel_id,
+          updatedmem
+        );
+        const usmail = await Getuserdetails(channel_data.addedby.adderid);
+        if (memresult) {
+          try {
+            const response = await fetch(
+              `${import.meta.env.VITE_Backend_URL}/api/sendUserEmail`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  to: usmail.email,
+                  subject: `Declined the channel invite`,
+                  message: `The Channel invite for :"${channel_data.channelname}",is declined by "${currentUser[0].username}"`,
+                }),
+              }
+            );
+            if (!response.ok) {
+              throw new Error("Failed to send email");
+            }
+
+            console.log("Email sent successfully");
+          } catch (error) {
+            console.error("Error sending email:", error);
+          }
+        }
+        const channelscurrent = await fetchUserchannelsbyid(currentUser[0].id);
+        console.log(channelscurrent);
+        const updatedchannel = channelscurrent.filter(
+          (channel) => channel.channel_id !== channel_data.channel_id
+        );
+
+        const chanresult = await updatechannel(
+          currentUser[0].id,
+          updatedchannel
+        );
+        setloader(false);
+      } catch (error) {
+        console.error("Error removing member:", error);
+      }
     };
     useEffect(() => {
       const message = () => {
@@ -267,6 +337,7 @@ export const Channelchats = () => {
       message();
     }, [channel_data.channel_id]);
     const Removechannel = async () => {
+      setloader(true);
       try {
         if (
           channel_data.channeladmins.some(
@@ -289,9 +360,7 @@ export const Channelchats = () => {
               ) {
                 try {
                   const response = await fetch(
-                    `${
-                      import.meta.env.VITE_Backend_URL
-                    }/api/sendUserEmail`,
+                    `${import.meta.env.VITE_Backend_URL}/api/sendUserEmail`,
                     {
                       method: "POST",
                       headers: {
@@ -343,6 +412,7 @@ export const Channelchats = () => {
           currentUser[0].id,
           updatedchannel
         );
+        setloader(false);
       } catch (error) {
         console.error("Error removing member:", error);
       }
@@ -385,6 +455,10 @@ export const Channelchats = () => {
                       onClick={() => setaddchannelmember(true)}
                       style={{ cursor: "pointer" }}
                     />
+                    <ImExit
+                      onClick={() => Removemember()}
+                      style={{ cursor: "pointer" }}
+                    />
                     <RiDeleteBin6Fill
                       onClick={() => Removechannel()}
                       style={{ cursor: "pointer" }}
@@ -398,6 +472,10 @@ export const Channelchats = () => {
                     />
                     <IoMdContacts
                       onClick={() => setShowmembers(true)}
+                      style={{ cursor: "pointer" }}
+                    />
+                    <ImExit
+                      onClick={() => Removemember()}
                       style={{ cursor: "pointer" }}
                     />
                   </>
@@ -425,6 +503,13 @@ export const Channelchats = () => {
                     onClick={() => acceptinvite()}
                   >
                     Accept the Invitation
+                  </button>
+
+                  <button
+                    className={ChannelchatCSS.decline}
+                    onClick={() => Removemember()}
+                  >
+                    Decline the Invitation & Leave
                   </button>
                 </div>
               </div>

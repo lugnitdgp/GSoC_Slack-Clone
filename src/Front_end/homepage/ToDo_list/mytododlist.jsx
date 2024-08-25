@@ -3,11 +3,11 @@ import assigntaskselfCSS from "./mytodolist.module.css";
 import { Allconvers } from "../../context api/context";
 import { useContext, useState, useEffect } from "react";
 import { ImCross } from "react-icons/im";
-import { fetchusertodo,insert_taskid } from "../../database.jsx"; // Import your utility functions
+import { fetchusertodo, insert_taskid } from "../../database.jsx"; // Import your utility functions
 import { v4 as uuid } from "uuid";
 
 const Assigntaskself = () => {
-  const { setassigntaskself, currentUser } = useContext(Allconvers);
+  const { setassigntaskself, currentUser, setloader } = useContext(Allconvers);
   const [taskName, setTaskName] = useState("");
   const [dueDateTime, setDueDateTime] = useState("");
   const [noDueDate, setNoDueDate] = useState(false); // State to track if "No Due Date" option is selected
@@ -59,9 +59,11 @@ const Assigntaskself = () => {
 
   const handleSubmit = async () => {
     try {
+      setloader(true);
       // Check if required fields are filled
       if (!taskName || (!noDueDate && !dueDateTime) || !taskDescription) {
         setShowNotification(true);
+        setloader(false);
         // Hide notification after 2.5 seconds
         setTimeout(() => {
           setShowNotification(false);
@@ -92,8 +94,8 @@ const Assigntaskself = () => {
         .from("Todo_list")
         .update({ todo_list: todoListData })
         .eq("id", currentUser[0].id);
-        await insert_taskid(task_id)
-
+      await insert_taskid(task_id);
+      setloader(false);
       // Clear input fields and reset states after successful submission
       setTaskName("");
       setDueDateTime("");
@@ -104,8 +106,10 @@ const Assigntaskself = () => {
       setTimeout(() => {
         setShowSuccessNotification(false);
       }, 3000);
+      setloader(false);
     } catch (error) {
       console.error("Error assigning task:", error.message);
+      setloader(false);
     }
   };
 

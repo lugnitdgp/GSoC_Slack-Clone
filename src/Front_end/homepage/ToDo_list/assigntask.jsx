@@ -14,7 +14,7 @@ import {
 import { v4 as uuid } from "uuid";
 
 const Assigntask = () => {
-  const { setAssigntask, currentUser } = useContext(Allconvers);
+  const { setAssigntask, currentUser, setloader } = useContext(Allconvers);
   const { channel_data } = useContext(Channelcontext);
   const [assignToMember, setAssignToMember] = useState(true);
   const [selectedMemberId, setSelectedMemberId] = useState(null); // State to store selected member ID
@@ -139,11 +139,9 @@ const Assigntask = () => {
       setMembers(detailedMembers.filter(Boolean));
       setFetchDone(true);
     };
-
-    // Function to handle form submission
-    // Function to handle form submission
     const handleSubmit = async () => {
       try {
+        setloader(true);
         // Check if required fields are filled
         if (
           !taskName ||
@@ -152,6 +150,7 @@ const Assigntask = () => {
           !taskDescription
         ) {
           setShowNotification(true);
+          setloader(false);
           // Hide notification after 2.5 seconds
           setTimeout(() => {
             setShowNotification(false);
@@ -165,6 +164,7 @@ const Assigntask = () => {
         let todoListData = {};
 
         if (!assignToMember) {
+          setloader(true);
           todoListData = [
             ...channel_todo,
             {
@@ -178,13 +178,14 @@ const Assigntask = () => {
               assigned_byid: currentUser[0].id,
             },
           ];
-
+          setloader(false);
           await supabase
             .from("Channel_todolist")
             .update({ todo_list: todoListData })
             .eq("id", channel_data.channel_id);
           await insert_taskid(task_id);
         } else {
+          setloader(true);
           todoListData = [
             ...user_todo,
             {
@@ -198,7 +199,7 @@ const Assigntask = () => {
               assigned_byid: currentUser[0].id,
             },
           ];
-
+          setloader(false);
           await supabase
             .from("Todo_list")
             .update({ todo_list: todoListData })
@@ -206,9 +207,7 @@ const Assigntask = () => {
           await insert_taskid(task_id);
           try {
             const response = await fetch(
-              `${
-                import.meta.env.VITE_Backend_URL
-              }/api/sendUserEmail`,
+              `${import.meta.env.VITE_Backend_URL}/api/sendUserEmail`,
               {
                 method: "POST",
                 headers: {

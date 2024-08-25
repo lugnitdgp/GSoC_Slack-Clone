@@ -13,7 +13,8 @@ import { v4 as uuid } from "uuid";
 import { Channelcontext } from "../../context api/channelcontext.jsx";
 
 const Addchannel = () => {
-  const { addchannel, setAddchannel, currentUser } = useContext(Allconvers);
+  const { addchannel, setAddchannel, currentUser, loader, setloader } =
+    useContext(Allconvers);
   const { dispatchchannel } = useContext(Channelcontext);
   const [currentuserchannels, setCurrentuserchannels] = useState({});
   const channel = useRef("");
@@ -44,6 +45,7 @@ const Addchannel = () => {
     const insertionlist = await insertchanneldolistid(id);
 
     if (creation && insertionlist) {
+      setloader(true);
       const checkIdExists = (channels) =>
         channels.some((channel) => channel.channel_id === id);
 
@@ -100,10 +102,12 @@ const Addchannel = () => {
               },
             });
           }
+          setloader(false);
         } catch (error) {
           console.error("Error creating channel:", error);
         } finally {
           setAddchannel(false);
+          setloader(false);
         }
       }
     }

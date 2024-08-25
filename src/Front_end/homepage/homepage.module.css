@@ -14,7 +14,7 @@
   align-items: center;
   justify-content: center;
 }
-.loadvideo{
+.loadvideo {
   width: 100vw;
   height: 100vh;
   object-fit: cover;
@@ -75,7 +75,7 @@
   font-size: 35px;
   height: 5%;
   width: 100%;
-  background-color: #fed330; /* Light yellow background */
+  background-color: #c5a326; /* Light yellow background */
   display: flex;
   align-items: center;
   justify-content: baseline;
@@ -111,7 +111,10 @@
   min-width: 40px;
   width: 12%;
   height: 100%;
-  background-color: #ffae00; /* Orange background */
+  background-color: #ffae00;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .right {
@@ -121,7 +124,7 @@
   overflow: hidden;
   border-radius: 7px 0px 0px 7px;
   position: relative;
-  background-color: #fed330; /* Light yellow background */
+  background-color: #c5a326; /* Light yellow background */
 }
 
 .userleft {

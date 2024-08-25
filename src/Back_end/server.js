@@ -5,8 +5,8 @@ const apiRouter = require("./Routes/apiroutes");
 require("dotenv").config();
 
 const app = express();
-const port = process.env.Port;
-console.log(port);
+const Port = process.env.Port;
+console.log(Port);
 
 // Middleware to parse JSON bodies and enable CORS
 app.use(express.json());
@@ -16,6 +16,6 @@ app.use(cors());
 app.use("/api", apiRouter);
 
 // Start the Express server
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+app.listen(Port, () => {
+  console.log(`Server is running at http://localhost:${Port}`);
 });

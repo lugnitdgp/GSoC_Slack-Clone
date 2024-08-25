@@ -12,7 +12,7 @@ export const Chats = () => {
   const textRef = useRef(""); //usestate didnot work but useref worked to make the input clear after updation
   const imgRef = useRef(null);
   const { data } = useContext(Chatcontext);
-  const { currentUser } = useContext(Allconvers);
+  const { currentUser, setloader } = useContext(Allconvers);
   const [messages, setMessages] = useState([]);
   const [picurl, setPicurl] = useState("");
   const messagesEndRef = useRef(null);
@@ -78,22 +78,28 @@ export const Chats = () => {
   }, [messages]);
   useEffect(() => {
     const fetchmessages = async () => {
+      setloader(true);
       const messagesuptained = await fetchUsermessages(data.chatId);
       if (messagesuptained) {
         setMessages(messagesuptained);
+        setloader(false);
       }
+      setloader(false);
     };
     fetchmessages();
   }, [data.chatId]);
   useEffect(() => {
     const fetchmessages = async () => {
       if (msgupdate) {
+        setloader(true);
         const messagesuptained = await fetchUsermessages(data.chatId);
         if (messagesuptained) {
           setMessages(messagesuptained);
           setMsgupdate(false);
+          setloader(false);
         }
       }
+      setloader(false);
     };
     fetchmessages();
   }, [msgupdate]);
@@ -128,6 +134,7 @@ export const Chats = () => {
   }, [data.chatId]);
 
   const handlesend = async () => {
+    setloader(true);
     const img = imgRef.current.files[0];
     const text = textRef.current.value;
     if (img) {
@@ -136,6 +143,7 @@ export const Chats = () => {
         .from("photos")
         .upload(`${path}`, img);
       if (error1) {
+        setloader(false);
         console.log(error1);
       } else if (data1) {
         let url = supabase.storage.from("photos").getPublicUrl(data1.path); //here in the url we habe data in which publicUrl is present
@@ -160,14 +168,17 @@ export const Chats = () => {
           })
           .eq("id", data.chatId)
           .select();
+
         if (data2) {
           setMsgupdate(true);
           setchatshow(true);
           setchatshow2(true);
           textRef.current.value = "";
           imgRef.current.value = null;
+          setloader(false);
         } else if (error2) {
           console.log(error2);
+          setloader(false);
         }
       }
     } else {
@@ -192,6 +203,7 @@ export const Chats = () => {
         setchatshow2(true);
         textRef.current.value = "";
         imgRef.current.value = null;
+        setloader(false);
       }
     }
   };

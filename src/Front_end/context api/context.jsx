@@ -21,7 +21,9 @@ export const AllconversProvider = ({ children }) => {
   const [viewchanneltasks, setViewchanneltask] = useState(false);
   const [viewtask, setViewtask] = useState(false);
   const [assigntaskself, setassigntaskself] = useState(false);
-  const[opencalendarevents,setopencalendarevents]=useState(false)
+  const [opencalendarevents, setopencalendarevents] = useState(false);
+  const [profile, setprofile] = useState(false);
+  const [loader, setloader] = useState(false);
   // Fetch user data once on component mount
   useEffect(() => {
     const fetchUserData = async () => {
@@ -32,7 +34,6 @@ export const AllconversProvider = ({ children }) => {
           if (user && user.length > 0) {
             console.log("Fetched User ID:", user[0].id);
             setCurrentUser(user);
-            
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -49,8 +50,6 @@ export const AllconversProvider = ({ children }) => {
   useEffect(() => {
     console.log("Current User State Updated:", currentUser);
   }, [currentUser]);
-
- 
 
   // All values to child components
   const contextValues = {
@@ -87,7 +86,12 @@ export const AllconversProvider = ({ children }) => {
     setViewtask,
     assigntaskself,
     setassigntaskself,
-    opencalendarevents,setopencalendarevents
+    opencalendarevents,
+    setopencalendarevents,
+    profile,
+    setprofile,
+    loader,
+    setloader,
   };
 
   return (

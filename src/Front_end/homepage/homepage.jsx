@@ -38,9 +38,14 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import { FaPlus } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Navigate } from "react-router-dom";
-
+import { CiLogout } from "react-icons/ci";
+import { CgProfile } from "react-icons/cg";
+import Profile from "./profile";
+import Loader from "../loader";
 function Home(data) {
   const {
+    profile,
+    setprofile,
     setUserId,
     currentUser,
     userId,
@@ -69,10 +74,12 @@ function Home(data) {
     setassigntaskself,
     opencalendarevents,
     setopencalendarevents,
+    loader,
+    setloader,
   } = useContext(Allconvers);
   const { dispatch } = useContext(Chatcontext);
   const { channel_data, dispatchchannel } = useContext(Channelcontext);
-  const [isLoading, setIsLoading] = useState(true); 
+  const [isLoading, setIsLoading] = useState(true);
   const [name, setName] = useState("");
   const [phno, setPhno] = useState("");
   const [dmcontacts, setDmcontacts] = useState([]);
@@ -143,9 +150,11 @@ function Home(data) {
 
   useEffect(() => {
     const insertdm = async () => {
+      setloader(true);
       const idm0 = await idm(userId);
       const idforchanneldata = await insertidforchannel(userId);
       const todoidinsert = await insert_todoid(userId);
+      setloader(false);
       console.log(idm0);
       console.log(idforchanneldata);
       console.log(todoidinsert);
@@ -155,14 +164,16 @@ function Home(data) {
 
   async function signout() {
     try {
+      setloader(true);
       let { error } = await supabase.auth.signOut();
 
       if (error) {
         console.log(error);
       } else {
+        setloader(false);
         // localStorage.removeItem("token");
         localStorage.removeItem("mailcheck");
-        window.location.reload()
+        window.location.reload();
       }
     } catch (error) {
       console.log(error);
@@ -227,10 +238,14 @@ function Home(data) {
   }, [data.data.user.id]);
 
   const handlechatselect = (u) => {
+    setloader(true);
     dispatch({ type: "Change_user", payload: u }); //we change the reducer state
+    setloader(false);
   };
   const handlechannelselect = (u) => {
+    setloader(true);
     dispatchchannel({ type: "Change_channel", payload: u }); //we change the reducer state
+    setloader(false);
   };
   useEffect(() => {
     console.log(currentuserchannels);
@@ -238,6 +253,7 @@ function Home(data) {
 
   const calendarAuth = async () => {
     try {
+      setloader(true);
       const response = await fetch(
         `${import.meta.env.VITE_Backend_URL}/api/googleauth`,
         {
@@ -250,40 +266,50 @@ function Home(data) {
       if (response.ok) {
         const data = await response.json();
         console.log("OAuth Response:", data);
+        setloader(false);
         window.location.href = data.url; // Redirect to OAuth2 authentication URL
       } else {
         console.error("Failed to initiate OAuth:", response.statusText);
+        alert("Error:try again");
+        setloader(false);
       }
     } catch (error) {
       console.error("Error initiating OAuth:", error);
     }
   };
   const toggleDropdown = () => {
+    setloader(true);
     setDropdownOpen(!dropdownOpen);
+    setloader(false);
   };
 
   const handleDMClick = (contact) => {
+    setloader(true);
     console.log(contact.userinfo);
     handlechatselect(contact.userinfo);
     setchat(true);
     setConformdm(false);
     setDm(false);
     setChannelchat(false);
+    setloader(false);
     //  setDropdownOpen(false);
   };
   const [addChannelOpen, setAddChannelOpen] = useState(false);
 
   const toggleAddChannel = () => {
+    setloader(true);
     setAddChannelOpen(!addChannelOpen);
+    setloader(false);
   };
 
   const handleChannelClick = (channel) => {
+    setloader(true);
     handlechannelselect(channel);
-
     setchat(false);
     setConformdm(false);
     setDm(false);
     setChannelchat(true);
+    setloader(false);
   };
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const sidebarRef = useRef(null);
@@ -305,8 +331,10 @@ function Home(data) {
       {opencalendarevents ? <Googlecalendar /> : <></>}
       {addchannelmember ? <Addmember /> : <></>}
       {addchannel ? <Addchannel /> : <></>}
+      {profile ? <Profile /> : <></>}
+      {loader ? <Loader /> : <></>}
       {isLoading ? (
-        <video src="src/Front_end/loading video/6824-196344457_medium.mp4" autoPlay loop muted className={homepaseCSS.loadvideo}></video>
+        <></>
       ) : (
         <div className={homepaseCSS.whole}>
           <div className={homepaseCSS.box}>
@@ -454,7 +482,7 @@ function Home(data) {
                 </div>
                 <div className={homepaseCSS.left}>
                   <div className={homepaseCSS.allcom}>
-                    <FaPowerOff
+                    <CiLogout
                       className={homepaseCSS.sidebaricons}
                       onClick={() => signout()}
                     />
@@ -475,6 +503,12 @@ function Home(data) {
                       onClick={() => setopencalendarevents(true)}
                     />
                   </div>
+                  <CgProfile
+                    onClick={() => setprofile(true)}
+                    size={30}
+                    color="white"
+                    style={{ margin: "8px", cursor: "pointer" }}
+                  />
                 </div>
               </div>
 

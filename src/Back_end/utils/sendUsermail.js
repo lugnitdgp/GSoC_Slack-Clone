@@ -24,7 +24,7 @@ async function sendUserEmail(to, subject, text) {
     console.log("Message sent: %s", info.messageId);
   } catch (error) {
     console.error("Error sending email:", error);
-    throw error; // Propagate the error up if needed
+    throw error; 
   }
 }
 module.exports = { sendUserEmail };

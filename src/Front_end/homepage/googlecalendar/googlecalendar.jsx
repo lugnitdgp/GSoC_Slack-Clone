@@ -5,7 +5,8 @@ import { ImCross } from "react-icons/im";
 
 const Googlecalendar = () => {
   const [events, setEvents] = useState([]);
-  const { opencalendarevents, setopencalendarevents } = useContext(Allconvers);
+  const { opencalendarevents, setopencalendarevents, setloader } =
+    useContext(Allconvers);
   const [selectedTimePeriod, setSelectedTimePeriod] = useState("today"); // State to track selected time period
   const [refresh, setrefresh] = useState(false);
 
@@ -16,15 +17,18 @@ const Googlecalendar = () => {
   }, [selectedTimePeriod]);
   useEffect(() => {
     if (refresh) {
+      setloader(true);
       fetchEvents(selectedTimePeriod);
       console.log(refresh);
       setrefresh(false);
+      setloader(false);
     } // Fetch events for the initial selected time period when component mounts
   }, [refresh]);
 
   // Function to fetch events from Google Calendar based on time period
   const fetchEvents = async (timePeriod) => {
     try {
+      setloader(true);
       let timeMin, timeMax;
 
       switch (timePeriod) {
@@ -100,17 +104,21 @@ const Googlecalendar = () => {
         const data = await response.json();
         setEvents(data);
         setSelectedTimePeriod(timePeriod); // Update selected time period state
+        setloader(false);
       } else {
         console.error("Failed to fetch events:", response.statusText);
+        setloader(false);
       }
     } catch (error) {
       console.error("Error fetching events:", error);
+      setloader(false);
     }
   };
 
   // Function to handle adding a new event
   const handleAddEvent = async (eventData) => {
     try {
+      setloader(true);
       const response = await fetch(
         `${import.meta.env.VITE_Backend_URL}/api/createEvent`,
         {
@@ -123,24 +131,26 @@ const Googlecalendar = () => {
       );
 
       if (response.ok) {
+        setloader(false);
         // After adding the event successfully, update the refresh state to trigger a re-fetch
         setrefresh(true);
         console.log("Refresh state after event addition:", refresh); // This should log 'true' after event addition
       } else {
         console.log("Failed to add event:", response.statusText);
+        setloader(false);
       }
     } catch (error) {
       console.error("Error adding event:", error);
+      setloader(false);
     }
   };
 
   // Function to handle deleting an event
   const handleDeleteEvent = async (eventId) => {
     try {
+      setloader(true);
       const response = await fetch(
-        `${
-          import.meta.env.VITE_Backend_URL
-        }/api/eventsdelete/${eventId}`,
+        `${import.meta.env.VITE_Backend_URL}/api/eventsdelete/${eventId}`,
         {
           method: "DELETE",
         }
@@ -149,12 +159,15 @@ const Googlecalendar = () => {
       if (response.ok) {
         console.log("Event deleted successfully!");
         const updatedEvents = events.filter((event) => event.id !== eventId); // Assuming event.id is used for comparison
+        setloader(false);
         setEvents(updatedEvents);
       } else {
         console.error("Failed to delete event:", response.statusText);
+        setloader(false);
       }
     } catch (error) {
       console.error("Error deleting event:", error);
+      setloader(false);
     }
   };
 

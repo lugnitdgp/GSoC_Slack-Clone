@@ -96,6 +96,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: row;
 }
 .decline,
 .accept {
@@ -106,8 +107,15 @@
   background-color: rgb(99, 204, 99);
   cursor: pointer;
 }
+.decline {
+  margin-left: 7px;
+  background-color: red;
+}
 .accept:hover {
   background-color: rgb(98, 202, 98);
+}
+.decline:hover {
+  background-color: rgb(219, 77, 67);
 }
 @media (max-height: 700px) {
   .chatinfo {
@@ -131,6 +139,12 @@
   }
 }
 @media (max-width: 500px) {
+  .acceptance {
+    flex-direction: column;
+  }
+  .decline {
+    margin-left: 0px;
+  }
   .textinput {
     width: 75%;
   }

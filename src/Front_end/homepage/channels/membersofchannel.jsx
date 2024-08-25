@@ -31,6 +31,7 @@ const Showmembers = () => {
     setDm,
     setaddchannelmember,
     setChannelchat,
+    setloader,
   } = useContext(Allconvers);
   const [members, setMembers] = useState([]);
   const [refreshmem, setrefreshmem] = useState(false);
@@ -62,6 +63,7 @@ const Showmembers = () => {
 
   if (channel_data?.channel_id) {
     useEffect(() => {
+      setloader(true);
       const fetchMemAndDetails = async () => {
         const members = await fetchchannelmember(channel_data.channel_id);
         const memberIds = members[0].channel_members;
@@ -79,6 +81,7 @@ const Showmembers = () => {
         );
         setMembers(detailedMembers.filter(Boolean));
         setrefreshmem(false);
+        setloader(false);
         setfetchdone(true);
       };
 
@@ -88,6 +91,7 @@ const Showmembers = () => {
     useEffect(() => {
       const fetch = async () => {
         if (fetchchannelupdate) {
+          setloader(true);
           try {
             const updchannel = await fetchUserchannels(currentUser[0]);
             console.log(updchannel);
@@ -110,15 +114,18 @@ const Showmembers = () => {
                 )
               ) {
                 setIsAdmin(true);
+                setloader(false);
                 setaddusericon(true);
               } else {
                 setIsAdmin(false);
                 setaddusericon(false);
+                setloader(false);
               }
             }
           } catch (error) {
             console.log(error);
           }
+          setloader(false);
           setFetchchannelupdate(false);
         }
       };
@@ -246,7 +253,7 @@ const Showmembers = () => {
     };
     const handleSearch = async () => {
       setfetchdone(false); // Start fetching
-
+      setloader(true);
       try {
         const currentMembers = await fetchchannelmember(
           channel_data.channel_id
@@ -268,12 +275,13 @@ const Showmembers = () => {
             }
           })
         );
-
+        setloader(false);
         setMembers(detailedMembers.filter(Boolean));
         setfetchdone(true); // Fetching done
       } catch (error) {
         console.error("Error fetching data:", error);
         setfetchdone(true); // Ensure to set fetch status to true even on error
+        setloader(false);
       }
     };
 
@@ -283,6 +291,7 @@ const Showmembers = () => {
 
     const addasadmin = async (memberid, email) => {
       try {
+        setloader(true);
         const allids = await allidsinlist();
         for (const Id of allids) {
           const userChannels = await fetchUserchannelsbyid(Id.id);
@@ -307,15 +316,14 @@ const Showmembers = () => {
                 "Updated userChannels in database:",
                 updatedUserChannels
               );
+              setloader(false);
             }
           }
         }
 
         try {
           const response = await fetch(
-            `${
-              import.meta.env.VITE_Backend_URL
-            }/api/sendUserEmail`,
+            `${import.meta.env.VITE_Backend_URL}/api/sendUserEmail`,
             {
               method: "POST",
               headers: {
@@ -342,10 +350,11 @@ const Showmembers = () => {
 
     const deleteasadmin = async (memberid, email) => {
       try {
-        if (memberid === channel_data.channelinfo.createdbyid) {
+        setloader(true);
+        /*if (memberid === channel_data.channelinfo.createdbyid) {
           console.log("Cannot delete the creator as admin.");
           return;
-        }
+        }*/
         const allids = await allidsinlist();
 
         for (const Id of allids) {
@@ -375,6 +384,7 @@ const Showmembers = () => {
               );
               if (updatedUserChannels) {
                 setdeletesuccess(true);
+                setloader(false);
               }
             }
           }
@@ -382,9 +392,7 @@ const Showmembers = () => {
 
         try {
           const response = await fetch(
-            `${
-              import.meta.env.VITE_Backend_URL
-            }/api/sendUserEmail`,
+            `${import.meta.env.VITE_Backend_URL}/api/sendUserEmail`,
             {
               method: "POST",
               headers: {
@@ -411,6 +419,7 @@ const Showmembers = () => {
 
     const Removemember = async (memberid, email) => {
       try {
+        setloader(true);
         if (channel_data.channeladmins.some((admin) => admin.id === memberid)) {
           const allids = await allidsinlist();
           for (const Id of allids) {
@@ -438,6 +447,7 @@ const Showmembers = () => {
                   "Updated userChannels in database:",
                   updatedUserChannels
                 );
+                setloader(false);
               }
             }
           }
@@ -451,9 +461,7 @@ const Showmembers = () => {
         if (memresult) {
           try {
             const response = await fetch(
-              `${
-                import.meta.env.VITE_Backend_URL
-              }/api/sendUserEmail`,
+              `${import.meta.env.VITE_Backend_URL}/api/sendUserEmail`,
               {
                 method: "POST",
                 headers: {
@@ -508,6 +516,7 @@ const Showmembers = () => {
         setcombinedId(combinedid);
 
         (async () => {
+          setloader(true);
           setIsUpdating(true); // Set update flag to true
           try {
             const currdmchat = await fetchUserDmChats(currentUser[0]);
@@ -516,14 +525,17 @@ const Showmembers = () => {
             setuserdm_chats(usdmchat);
           } catch (error) {
             console.error("Error fetching dm chats:", error);
+            setloader(false);
           } finally {
             setIsUpdating(false); // Set update flag to false after fetching
+            setloader(false);
           }
         })();
       }
     }, [clickeduserdm]);
     useEffect(() => {
       if (combinedId && !isUpdating) {
+        setloader(true);
         const checkCombinedIdExists = (chats) =>
           chats.some((chat) => chat.combinedId === combinedId);
 
@@ -541,6 +553,7 @@ const Showmembers = () => {
               setaddchannelmember(false);
               setChannelchat(false);
               setchat(true);
+              setloader(false);
             }
           });
         }
@@ -726,10 +739,10 @@ const Showmembers = () => {
                                       >
                                         <p>Remove</p>
                                       </div>
-                                    </>
-                                  ) : channel_data.channelinfo.createdbyid ===
+                                    </> /*: channel_data.channelinfo.createdbyid ===
                                     member[0].id ? (
                                     <></>
+                                  )*/
                                   ) : (
                                     <>
                                       <div
