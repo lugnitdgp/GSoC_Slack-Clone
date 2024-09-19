@@ -265,6 +265,7 @@ const Assigntask = () => {
               setAssigntask(false);
             }}
             className={assigntaskCSS.closeIcon}
+            aria-label="Close"
           />
           <div className={assigntaskCSS.head}>
             <h1>Assign a Task</h1>
