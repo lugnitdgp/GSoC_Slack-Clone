@@ -45,6 +45,16 @@
   margin: 8px 15px;
   position: relative;
 }
+.FaIcons {
+  margin-right: 10px;
+}
+.forgot {
+  display: block;
+  margin: 0px 0px 0px 90px; 
+  font-size: 11px;
+  color: grey;
+  text-decoration: none;
+}
 .input {
   background: #eee;
   padding: 12px 15px;
@@ -61,6 +71,8 @@
   font-weight: bold;
   padding: 12px 55px;
   margin: 20px;
+  border-radius: 20px;
+  box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 20px 10px -15px;
   border: 1px solid #fdcf03;
   outline: none;
   letter-spacing: 1px;

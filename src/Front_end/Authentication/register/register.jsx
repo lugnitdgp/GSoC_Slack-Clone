@@ -173,7 +173,7 @@ function Register({ settoken }) {
       </div>
       <p className={registerCSS.p}>Or use your E-Mail</p>
       <div className={registerCSS.inputout}>
-        <span>
+        <span className={registerCSS.FaIcons}>
           <FaUserAlt />
         </span>
         <input
@@ -184,7 +184,7 @@ function Register({ settoken }) {
         />
       </div>
       <div className={registerCSS.inputout}>
-        <span>
+        <span className={registerCSS.FaIcons}>
           <IoMdMail />
         </span>
         <input
@@ -195,7 +195,7 @@ function Register({ settoken }) {
         />
       </div>
       <div className={registerCSS.inputout}>
-        <span>
+        <span className={registerCSS.FaIcons}>
           <FaPhoneAlt />
         </span>
         <input
@@ -208,11 +208,11 @@ function Register({ settoken }) {
       </div>
       <div className={registerCSS.inputout}>
         {passwordVisible ? (
-          <span onClick={togglePasswordVisibility}>
+          <span onClick={togglePasswordVisibility}className={registerCSS.FaIcons}>
             <FaRegEye />
           </span>
         ) : (
-          <span onClick={togglePasswordVisibility}>
+          <span onClick={togglePasswordVisibility}className={registerCSS.FaIcons}>
             <FaEyeSlash />
           </span>
         )}
@@ -228,11 +228,11 @@ function Register({ settoken }) {
       </div>
       <div className={registerCSS.inputout}>
         {passwordVisible2 ? (
-          <span onClick={togglePasswordVisibility2}>
+          <span onClick={togglePasswordVisibility2}className={registerCSS.FaIcons}>
             <FaRegEye />
           </span>
         ) : (
-          <span onClick={togglePasswordVisibility2}>
+          <span onClick={togglePasswordVisibility2}className={registerCSS.FaIcons}>
             <FaEyeSlash />
           </span>
         )}

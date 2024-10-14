@@ -49,19 +49,34 @@
   z-index: 101;
   opacity: 0;
   min-height: 460px; /* Minimum height for sign_up */
+  
 }
 
-.signin,
-.signup {
+.signin,.signup {
   margin: 15px;
-  background-color: transparent;
-  border: 2px solid #2b2a2a;
+  background-color: #fcf414;
+  border: none;
   height: 50px;
   width: 230px;
   border-radius: 50px;
+  box-shadow: rgba(215, 200, 133, 0.878) 0px 20px 10px -15px;
   cursor: pointer;
   color: #2b2a2a;
   font-size: 18px;
+  font-weight: 150;
+  transition: all 0.2s ease-in-out;
+  border: 3px solid #fcec14;
+}
+.signin:hover,.signup:hover {
+  background: #fcec14;
+  font: bold;
+  font-size: 21px;
+}
+
+.signin:active,.signup:active {
+  background-color: #fcf414;
+  box-shadow: none;
+  transform: translateY(4px);
 }
 
 .container.right_panel_active .sign_in {
