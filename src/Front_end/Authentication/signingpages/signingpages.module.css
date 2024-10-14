@@ -65,11 +65,11 @@
   font-size: 18px;
   font-weight: 150;
   transition: all 0.2s ease-in-out;
-  border: 3px solid #fcec14;
+  border: 3px solid white;
 }
 .signin:hover,.signup:hover {
-  background: #fcec14;
-  font: bold;
+  background: white;
+  font: bolder;
   font-size: 21px;
 }
 
