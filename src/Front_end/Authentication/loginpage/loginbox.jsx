@@ -93,7 +93,7 @@ function Login({ settoken, setUpdload }) {
       </div>
       <p className={loginboxCSS.p}>Or use your E-Mail</p>
       <div className={loginboxCSS.inputout}>
-        <span>
+        <span className={loginboxCSS.FaIcons}>
           <FaUserAlt />
         </span>
         <input
@@ -105,11 +105,11 @@ function Login({ settoken, setUpdload }) {
       </div>
       <div className={loginboxCSS.inputout}>
         {passwordVisible ? (
-          <span onClick={togglePasswordVisibility}>
+          <span onClick={togglePasswordVisibility} className={loginboxCSS.FaIcons}>
             <FaRegEye />
           </span>
         ) : (
-          <span onClick={togglePasswordVisibility}>
+          <span onClick={togglePasswordVisibility} className={loginboxCSS.FaIcons}>
             <FaEyeSlash />
           </span>
         )}
@@ -122,7 +122,7 @@ function Login({ settoken, setUpdload }) {
       </div>
       <div className={loginboxCSS.forgot}>
         <p>
-          <Link to="/fpassuser">Forgot Password</Link>
+          <Link to="/fpassuser" className={loginboxCSS.forgot} >Forgot Password?</Link>
         </p>
       </div>
       <button type="submit" className={loginboxCSS.enter}>

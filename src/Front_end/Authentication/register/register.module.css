@@ -9,7 +9,7 @@
   text-align: center;
 }
 .h1 {
-  margin: 0px;
+  margin-top: 10px;
   font-weight: bold;
 }
 .p {
@@ -55,12 +55,14 @@
   outline: none;
 }
 .enter {
-  color: #2b2929;
+  color: #141414;
   background: #fc9917;
   font-size: 12px;
   font-weight: bold;
   padding: 12px 55px;
-  margin: 14px;
+  margin: 20px;
+  border-radius: 20px;
+  box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 20px 10px -15px;
   border: 1px solid #fc9917;
   outline: none;
   letter-spacing: 1px;
@@ -72,7 +74,8 @@
   transform: scale(0.9);
 }
 .enter:hover {
-  background: #ff9101;
+  background: #fda42f;
+  border: 1px solid #fda42f;
 }
 @media (max-width: 849px) {
   .form {
@@ -107,4 +110,7 @@
     padding: 12px 38px;
     margin: 6px;
   }
+}
+.FaIcons {
+  margin-right: 10px;
 }
