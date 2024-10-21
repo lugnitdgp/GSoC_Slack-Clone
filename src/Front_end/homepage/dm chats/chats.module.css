@@ -1,10 +1,10 @@
 * {
   box-sizing: border-box;
 }
+
 .chat {
   height: 100%;
   width: 100%;
-  background-color: rgb(252, 251, 250);
   display: flex;
   flex-direction: column;
   position: relative;
@@ -12,19 +12,20 @@
 .chatinfo {
   display: flex;
   justify-content: left;
-  padding: 10px;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  padding: 15px 10px;
   align-items: center;
   font-size: 30px;
-  font-weight: bolder;
+  font-weight: 600;
   height: 5%;
   width: 100%;
-  background-color: rgb(252, 251, 250);
   border-bottom: 1px rgb(145, 141, 141) solid;
 }
 .messages {
   height: 85%;
   width: 100%;
-  background-color: rgb(252, 251, 250);
+  background-image: url("./chats-bg.png");
+  background-size: cover;
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
@@ -32,7 +33,6 @@
 .chatinput {
   height: 10%;
   width: 100%;
-  background-color: rgb(252, 251, 250);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -40,7 +40,7 @@
   position: relative;
 }
 .textinput {
-  height: 90%;
+  height: 80%;
   width: 90%;
   border-radius: 5px;
   font-size: 20px;
@@ -53,14 +53,20 @@
   cursor: pointer;
   height: 42px;
   width: 34px;
+  margin-left: 15px;
+  margin-right: -7px;
 }
 .sendbutton {
-  height: 45px;
-  width: 55px;
-  background-color: antiquewhite;
-  border: thin black solid;
-  border-radius: 10px;
+  height: 40px;
+  width: 40px;
+  border: none;
+  background-color: white;
+  border-radius: 50%;
   cursor: pointer;
+}
+.sendbutton:hover {
+  color: rgb(100, 97, 97);
+  
 }
 @media (max-width: 1282px) {
   .sendbutton {
