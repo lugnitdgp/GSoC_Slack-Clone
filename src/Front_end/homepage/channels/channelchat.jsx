@@ -23,6 +23,8 @@ import { FaTasks } from "react-icons/fa";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { ImExit } from "react-icons/im";
+import { IoIosSend } from "react-icons/io";
+
 
 export const Channelchats = () => {
   const textRef = useRef(""); //usestate didnot work but useref worked to make the input clear after updation
@@ -55,6 +57,8 @@ export const Channelchats = () => {
   const [msgupdate, setMsgupdate] = useState(false);
   const [allowshow, setallowshow] = useState(false);
   const [accepted, setaccepted] = useState(false);
+  const [selectedFileName, setSelectedFileName] = useState("");
+
   if (channel_data?.channel_id) {
     useEffect(() => {
       // Scroll to bottom whenever messages change
@@ -534,19 +538,27 @@ export const Channelchats = () => {
                 <div className={ChannelchatCSS.send}>
                   <label htmlFor="file">
                     <IoMdAttach className={ChannelchatCSS.attachIcon} />
+                    {selectedFileName && (
+                      <div className={ChannelchatCSS.filePopup}>{selectedFileName}</div>
+                    )}
                   </label>
                   <input
                     type="file"
                     id="file"
                     ref={imgRef}
                     style={{ display: "none" }} // hide the file input
+                    onChange={(e) => {
+                      if (e.target.files.length > 0) {
+                        setSelectedFileName(e.target.files[0].name);  // Set file name
+                      }
+                    }}
                   />
                 </div>
                 <button
                   className={ChannelchatCSS.sendbutton}
                   onClick={handlesend}
                 >
-                  Send
+                  <IoIosSend size={28}/>
                 </button>
               </div>
             </>

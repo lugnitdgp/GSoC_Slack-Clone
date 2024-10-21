@@ -21,37 +21,38 @@ export const ChannelMessage = ({ message }) => {
     }
   });
   return (
-    <div className={channelmessageCSS.message}>
-      <div className={channelmessageCSS.sender}>
-        <img src={senderimg} alt="" className={channelmessageCSS.senderimg} />
-        <span className={channelmessageCSS.sendername}>{senderusername}</span>
+    <div className={channelmessageCSS.messageCont}>
+      <div className={channelmessageCSS.senderimgCont}>
+        <img src={senderimg} alt="" className={channelmessageCSS.senderimg}/>
       </div>
-      <div className={channelmessageCSS.messageinfo}>
-        {message?.image ? (
-          <>
-            <img
-              src={message?.image}
-              alt=""
-              className={channelmessageCSS.img}
-            />
-            <video
-              src={message?.image}
-              alt=""
-              className={channelmessageCSS.img}
-              loop
-              autoPlay
-              muted
-            ></video>
-          </>
-        ) : (
-          <></>
-        )}
-
-        <span className={channelmessageCSS.date}>{message?.date}</span>
+      <div className={channelmessageCSS.message}>
+        <div className={channelmessageCSS.sender}> 
+          <span className={channelmessageCSS.sendername}>{senderusername}</span>
+        </div>
+        <div className={channelmessageCSS.messageinfo}>
+          {message?.image ? (
+            <>
+              {" "}
+              <img src={message?.image} alt="" className={channelmessageCSS.img} />
+              <video
+                src={message?.image}
+                alt=""
+                className={channelmessageCSS.img}
+                autoPlay
+                loop
+                muted
+              ></video>
+            </>
+          ) : (
+            <></>
+          )}
+            
+        </div>
+        <div className={channelmessageCSS.messagecontent}>
+          <p className={channelmessageCSS.content}>{message?.text}</p>
+        </div>
       </div>
-      <div className={channelmessageCSS.messagecontent}>
-        <p className={channelmessageCSS.content}>{message?.text}</p>
-      </div>
+      <span className={channelmessageCSS.date}>{message?.date}</span>
     </div>
   );
 };
