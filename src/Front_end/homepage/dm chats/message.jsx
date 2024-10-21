@@ -91,37 +91,42 @@ export const Message = ({ message }) => {
     }
   };*/
   return (
-    <div className={messageCSS.message}>
-      <div className={messageCSS.sender}>
-        <img src={senderimg} alt="" className={messageCSS.senderimg} />
-        <span className={messageCSS.sendername}>{senderusername}</span>
-        {/* <RiChatDeleteLine
-          style={{ cursor: "pointer" }}
-          onClick={() => deletemsg(message.id)}
-  />*/}
+    <div className={messageCSS.messageCont}>
+      <div className={messageCSS.senderimgCont}>
+        <img src={senderimg} alt="" className={messageCSS.senderimg}/>
       </div>
-      <div className={messageCSS.messageinfo}>
-        {message?.image ? (
-          <>
-            {" "}
-            <img src={message?.image} alt="" className={messageCSS.img} />
-            <video
-              src={message?.image}
-              alt=""
-              className={messageCSS.img}
-              autoPlay
-              loop
-              muted
-            ></video>
-          </>
-        ) : (
-          <></>
-        )}
-        <span className={messageCSS.date}>{message?.date}</span>
+      <div className={messageCSS.message}>
+        <div className={messageCSS.sender}> 
+          <span className={messageCSS.sendername}>{senderusername}</span>
+          {/* <RiChatDeleteLine
+            style={{ cursor: "pointer" }}
+            onClick={() => deletemsg(message.id)}
+    />*/}
+        </div>
+        <div className={messageCSS.messageinfo}>
+          {message?.image ? (
+            <>
+              {" "}
+              <img src={message?.image} alt="" className={messageCSS.img} />
+              <video
+                src={message?.image}
+                alt=""
+                className={messageCSS.img}
+                autoPlay
+                loop
+                muted
+              ></video>
+            </>
+          ) : (
+            <></>
+          )}
+            
+        </div>
+        <div className={messageCSS.messagecontent}>
+          <p className={messageCSS.content}>{message?.text}</p>
+        </div>
       </div>
-      <div className={messageCSS.messagecontent}>
-        <p className={messageCSS.content}>{message?.text}</p>
-      </div>
+      <span className={messageCSS.date}>{message?.date}</span>
     </div>
   );
 };

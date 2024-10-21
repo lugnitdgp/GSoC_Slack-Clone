@@ -7,6 +7,7 @@ import { Message } from "./message.jsx";
 import { Allconvers } from "../../context api/context.jsx";
 import { v4 as uuid } from "uuid";
 import { fetchUsermessages, fetchUserDmChatsid } from "../../database.jsx";
+import { IoIosSend } from "react-icons/io";
 
 export const Chats = () => {
   const textRef = useRef(""); //usestate didnot work but useref worked to make the input clear after updation
@@ -237,7 +238,7 @@ export const Chats = () => {
           />
         </div>
         <button className={ChatsCSS.sendbutton} onClick={handlesend}>
-          Send
+          <IoIosSend size={28}/>
         </button>
       </div>
     </div>
