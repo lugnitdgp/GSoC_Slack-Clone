@@ -29,16 +29,25 @@
 }
 
 .additional_options {
-  height: 38px;
   position: absolute;
+  display: flex;
+  flex-direction: column;
   top: 100%;
-  bottom: 0; /* Adjust based on your design */
-  right: 10px; /* Adjust based on your design */
+  right: 5px; 
   background-color: #fff;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 5px;
+  border-radius: 0 0 7px 7px;
+  padding: 5px 10px;
   z-index: 1; /* Ensure it's above other content */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+.additional_options>div{
+  margin: 0;
+}
+.txt{
+  font-size: 17px;
+  display: inline;
+  margin-left: 10px;
 }
 .messages {
   height: 85%;
