@@ -445,51 +445,88 @@ export const Channelchats = () => {
                 {/* Icons for main actions */}
                 {addusericon && allowshow && accepted ? (
                   <>
-                    <FaTasks
-                      onClick={() => setViewchanneltask(true)}
-                      style={{ cursor: "pointer" }}
-                    />
+                    <div className={ChannelchatCSS.listEl}>
+                      <FaTasks
+                        onClick={() => setViewchanneltask(true)}
+                        style={{ cursor: "pointer" }}
+                        size={21}
+                      />
+                    </div>
+                    <hr width="100%"/>
+                    <div className={ChannelchatCSS.listEl}>
                     <MdAssignmentAdd
                       onClick={() => setAssigntask(true)}
                       style={{ cursor: "pointer" }}
+                      size={21}
                     />
+                    </div>
+                    <hr width="100%"/>
+                    <div className={ChannelchatCSS.listEl}>
                     <IoMdContacts
                       onClick={() => setShowmembers(true)}
                       style={{ cursor: "pointer" }}
+                      size={21}
                     />
+                    </div>
+                    <hr width="100%"/>
+                    <div className={ChannelchatCSS.listEl}>
                     <IoMdPersonAdd
                       onClick={() => setaddchannelmember(true)}
                       style={{ cursor: "pointer" }}
+                      size={21}
                     />
+                    </div>
+                    <hr width="100%"/>
+                    <div className={ChannelchatCSS.listEl}>
                     <ImExit
                       onClick={() => Removemember()}
                       style={{ cursor: "pointer" }}
+                      size={21}
                     />
+                    </div>
+                    <hr width="100%"/>
+                    <div className={ChannelchatCSS.listEl}>
                     <RiDeleteBin6Fill
                       onClick={() => Removechannel()}
                       style={{ cursor: "pointer" }}
+                      size={21}
                     />
+                    </div>
                   </>
                 ) : allowshow && accepted ? (
                   <>
+                    <div className={ChannelchatCSS.listEl}>
                     <FaTasks
                       onClick={() => setViewchanneltask(true)}
                       style={{ cursor: "pointer" }}
+                      size={21}
                     />
+                    </div>
+                    <hr width="100%"/>
+                    <div className={ChannelchatCSS.listEl}>
                     <IoMdContacts
                       onClick={() => setShowmembers(true)}
                       style={{ cursor: "pointer" }}
+                      size={21}
                     />
+                    </div>
+                    <hr width="100%"/>
+                    <div className={ChannelchatCSS.listEl}>
                     <ImExit
                       onClick={() => Removemember()}
                       style={{ cursor: "pointer" }}
+                      size={21}
                     />
+                    </div>
                   </>
                 ) : (
-                  <IoMdContacts
-                    onClick={() => setShowmembers(true)}
-                    style={{ cursor: "pointer" }}
-                  />
+                  <div className={ChannelchatCSS.listEl}>
+                    <IoMdContacts
+                      onClick={() => setShowmembers(true)}
+                      style={{ cursor: "pointer" }}
+                      size={21}
+                    />
+                    </div>
                 )}
               </div>
             )}

@@ -63,13 +63,13 @@
   width: 40px;
   border-radius: 25%;
   overflow: hidden;
+  margin-left: 10px;
 }
 .senderimg {
   height: 40px;
   width: 40px;
   margin: auto;
 }
-
 .sendername {
   font-size: 18px;
   font-weight: 600;

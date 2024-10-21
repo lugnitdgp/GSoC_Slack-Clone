@@ -20,6 +20,7 @@ export const Chats = () => {
   const [msgupdate, setMsgupdate] = useState(false);
   const [chatshow, setchatshow] = useState(false);
   const [chatshow2, setchatshow2] = useState(false);
+  const [selectedFileName, setSelectedFileName] = useState("");
 
   useEffect(() => {
     const fetchchat = async () => {
@@ -234,7 +235,12 @@ export const Chats = () => {
             type="file"
             id="file"
             ref={imgRef}
-            style={{ display: "none" }} // hide the file input
+            style={{ display: "none" }}
+            onChange={(e) => {
+              if (e.target.files.length > 0) {
+                setSelectedFileName(e.target.files[0].name);  // Set file name
+              }
+            }}
           />
         </div>
         <button className={ChatsCSS.sendbutton} onClick={handlesend}>
