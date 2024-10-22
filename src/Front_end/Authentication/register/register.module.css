@@ -13,11 +13,13 @@
   font-weight: bold;
 }
 .p {
-  font-size: 14px;
-  font-weight: 100;
-  line-height: 20px;
-  letter-spacing: 0.5px;
-  margin: 8px 0px 10px;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 24px;
+  letter-spacing: 1.2px;
+  margin: 20px 0px;
+  font-family: 'Times New Roman', Times, serif;
+  color: #555;
 }
 .social {
   margin: 15px 0px 0px 0px;

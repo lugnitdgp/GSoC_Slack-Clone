@@ -178,7 +178,7 @@ function Register({ settoken }) {
         </span>
         <input
           type="text"
-          placeholder="username"
+          placeholder="Username"
           ref={usernameRef}
           className={registerCSS.input}
         />
@@ -189,7 +189,7 @@ function Register({ settoken }) {
         </span>
         <input
           type="text"
-          placeholder="E-Mail I.D"
+          placeholder="E-mail Id"
           ref={emailRef}
           className={registerCSS.input}
         />

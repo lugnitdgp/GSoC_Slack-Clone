@@ -1,122 +1,172 @@
 .form {
   background: #fff;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  padding: 0px 50px;
+  padding: 30px;
   height: 100%;
   text-align: center;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  transition: box-shadow 0.3s ease;
 }
+
+.form:hover {
+  box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.15);
+}
+
 .h1 {
   margin: 0px;
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 28px;
+  color: #333;
 }
+
 .p {
-  font-size: 14px;
-  font-weight: 100;
-  line-height: 20px;
-  letter-spacing: 0.5px;
-  margin: 15px 0px 20px;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 24px;
+  letter-spacing: 1.2px;
+  margin: 20px 0px;
+  font-family: 'Times New Roman', Times, serif;
+  color: #555;
 }
+
 .social {
-  margin: 15px 0px 0px 0px;
+  margin: 20px 0px 0px;
 }
+
 .media {
-  height: 40px;
-  width: 40px;
-  margin: 0px 5px;
+  height: 45px;
+  width: 45px;
+  margin: 0px 10px;
   display: inline-flex;
   justify-content: center;
   align-items: center;
   border: 1px solid #ccc;
   border-radius: 50%;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .media:hover {
-  background-color: #dad8d8;
+  background-color: #f0f0f0;
+  transform: scale(1.1);
 }
+
 .inputout {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 8px 15px;
+  margin: 10px 0px;
   position: relative;
 }
+
 .FaIcons {
   margin-right: 10px;
+  color: #888;
+  font-size: 18px;
 }
+
 .forgot {
   display: block;
-  margin: 0px 0px 0px 90px; 
-  font-size: 11px;
+  margin-top: 10px;
+  font-size: 12px;
   color: grey;
   text-decoration: none;
+  transition: color 0.3s ease;
 }
+
+.forgot:hover {
+  color: red;
+  text-decoration: underline;
+}
+
 .input {
-  background: #eee;
-  padding: 12px 15px;
+  background: #f7f7f7;
+  padding: 15px;
   width: 100%;
-  height: 90%;
-  border-radius: 5px;
-  border: none;
+  border-radius: 8px;
+  border: 1px solid #ddd;
   outline: none;
+  font-size: 14px;
+  color: #555;
+  transition: border 0.3s ease;
 }
+
+.input:focus {
+  border: 1px solid #fdcf03;
+}
+
 .enter {
   color: #141414;
   background: #fdcf03;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
-  padding: 12px 55px;
+  padding: 15px 60px;
   margin: 20px;
-  border-radius: 20px;
-  box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 20px 10px -15px;
+  border-radius: 25px;
+  box-shadow: rgba(133, 189, 215, 0.5) 0px 20px 20px -10px;
   border: 1px solid #fdcf03;
   outline: none;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
   text-transform: uppercase;
-  transition: transform 80ms ease-in;
+  transition: background 0.3s ease, transform 0.1s ease;
   cursor: pointer;
 }
-.enter:active {
-  transform: scale(0.9);
-}
+
 .enter:hover {
-  background: #e4ba02;
+  background: #e5b700;
 }
+
+.enter:active {
+  transform: scale(0.95);
+}
+
 @media (max-width: 849px) {
   .form {
-    padding: 10px;
-    height: 100%;
+    padding: 20px;
+    height: auto;
     width: 100%;
+    box-shadow: none;
+    border-radius: 0px;
   }
+
+  .h1 {
+    font-size: 22px;
+  }
+
   .p {
-    font-size: 10px;
-    line-height: 5px;
-    margin: 8px 0px 10px;
+    font-size: 12px;
+    line-height: 16px;
+    margin: 10px 0px;
   }
+
   .social {
-    margin: 8px 0px 0px 0px;
+    margin: 10px 0px;
   }
+
   .media {
-    height: 30px;
-    width: 30px;
-    margin: 0px 2px;
+    height: 35px;
+    width: 35px;
+    margin: 0px 5px;
   }
+
   .inputout {
     width: 100%;
-    margin: 6px 5px;
+    margin: 8px 0px;
   }
+
   .input {
-    padding: 12px 15px;
-    width: 100%;
-    height: 90%;
+    padding: 12px;
+    font-size: 13px;
   }
+
   .enter {
-    font-size: 10px;
-    padding: 12px 38px;
-    margin: 10px;
+    font-size: 12px;
+    padding: 12px 40px;
+    margin: 15px;
   }
 }
