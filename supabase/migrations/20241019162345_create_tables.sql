@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS user_data (
     avatar_url text,
     email text NOT NULL,
     phone text,
-    hashed_password text NOT NULL
+    hashed_password text -- Allow NULL to avoid trigger failure if not set initially
 );
 
 -- Disable RLS and Enable Realtime for user_data
@@ -40,7 +40,7 @@ ALTER TABLE chats_dm DISABLE ROW LEVEL SECURITY;
 
 -- Table: channels_messages
 CREATE TABLE IF NOT EXISTS channels_messages (
-    channel_id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     messages jsonb NOT NULL,
     channel_name text NOT NULL,
@@ -100,13 +100,14 @@ ALTER TABLE channels_todolist DISABLE ROW LEVEL SECURITY;
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public.user_data (id, username, avatar_url, email, phone)
+  INSERT INTO public.user_data (id, username, avatar_url, email, phone, hashed_password)
   VALUES (
     NEW.id,
     NEW.raw_user_meta_data->>'username',
     NEW.raw_user_meta_data->>'avatar_url',
     NEW.email,
-    NEW.raw_user_meta_data->>'phone'
+    NEW.raw_user_meta_data->>'phone',
+    'default_password_hash' -- Placeholder value to avoid NULL issues
   );
   RETURN NEW;
 END;
@@ -125,7 +126,10 @@ BEGIN
   SET channels = jsonb_set(
     channels_list.channels,
     '{members}',
-    coalesce(channels_list.channels->'members', '[]'::jsonb) || to_jsonb(NEW)
+    coalesce(
+      channels_list.channels->'members',
+      '[]'::jsonb
+    ) || to_jsonb(NEW)
   )
   WHERE id = NEW.channel_id;
   RETURN NEW;
