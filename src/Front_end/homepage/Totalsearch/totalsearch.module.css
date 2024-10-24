@@ -15,10 +15,39 @@
 .input {
   width: 100%;
   padding: 10px;
-  font-size: 15px;
   height: 85%;
-  border-radius: 5px;
+  background-color: #481349;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgb(156, 150, 150);
+  border-radius: 10px;
 }
+.inputBox {
+  width: 90%;
+  height: 85%;
+  padding: 10px;
+  font-size: 15px;
+  text-align: center;
+  color: white;
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+.inputSearch {
+  color: #7a7474;
+  margin-right: 10px;
+  position: absolute; /* So that it stays in place when input grows */
+  left: 10px; /* Adjust positioning according to your preference */
+}
+
+/* Hide the search icon when typing */
+.inputBox:focus ~ .inputSearch {
+  display: none;
+}
+
 
 .results {
   width: 100%;

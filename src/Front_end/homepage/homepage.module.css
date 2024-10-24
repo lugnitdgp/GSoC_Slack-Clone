@@ -1,11 +1,16 @@
 * {
-  padding: 0px;
-  margin: 0px;
-  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Ensures padding doesn't affect element width/height */
 }
-
+.right span{
+  color: #f2f8f8 ;
+}
+.right svg{
+  color: #fdfdfd !important;
+}
 .whole {
-  background-color: #ffae00; /* Orange background */
+  background-color: #481349; /* Orange background */
   position: relative;
   height: 100vh;
   width: 100vw;
@@ -14,6 +19,7 @@
   align-items: center;
   justify-content: center;
 }
+
 .loadvideo {
   width: 100vw;
   height: 100vh;
@@ -22,7 +28,6 @@
 .box {
   height: 100vh;
   width: 100vw;
-  border-radius: 25px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -30,7 +35,7 @@
 
 .top {
   min-height: 45px;
-  background-color: #ffae00; /* Orange background */
+  background-color: #481349; /* Orange background */
   width: 100%;
   height: 5%;
   position: relative;
@@ -51,17 +56,18 @@
   display: none;
 }
 .bottom {
-  height: 95%;
+  height: 96%;
   width: 100%;
-  background-color: #ffae00; /* Orange background */
+  background-color: #f8f6f3; /* Orange background */
   display: flex;
   position: relative;
+  background-color: #481349;
 }
 
 .sidebar {
   height: 100%;
   width: 20%;
-  background-color: #ffae00; /* Orange background */
+  background-color: #5E2C5F; /* Orange background */
   position: relative;
   display: flex;
   flex-direction: row-reverse;
@@ -69,18 +75,20 @@
 }
 
 .userdetails {
-  overflow: hidden;
   padding: 8px;
   min-height: 43px;
-  font-size: 35px;
-  height: 5%;
+  font-size: 25px;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  height: 6%;
   width: 100%;
-  background-color: #ebc747; /* Light yellow background */
+  background-color: #5E2C5F; /* Light yellow background */
   display: flex;
   align-items: center;
   justify-content: baseline;
-  color: rgb(94, 95, 11);
+  color: rgb(235, 235, 233);
+  border-bottom: 1px solid rgb(90, 89, 89);
 }
+
 
 .chatbox {
   width: 79.5%;
@@ -109,22 +117,23 @@
 .left {
   padding-top: 10px;
   min-width: 40px;
-  width: 12%;
+  width: 20%;
   height: 100%;
-  background-color: #ffae00;
+  background-color: #371349;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
 .right {
-  min-width: 250px;
-  width: 88%;
+  min-width: 257px;
+  width: 96%;
   height: 99.5%;
+  height: 95%;
   overflow: hidden;
   border-radius: 7px 0px 0px 7px;
   position: relative;
-  background-color: #ebc747; /* Light yellow background */
+  background-color: #5E2C5F; /* Light yellow background */
 }
 
 .userleft {
@@ -150,11 +159,9 @@
   cursor: pointer;
 }
 .sidebaricons {
-  height: 25px;
-  width: 25px;
   color: white;
   cursor: pointer;
-  margin-bottom: 15px; /* Icon color */
+  margin-bottom: 30px; /* Icon color */
 }
 
 .allcom {
@@ -162,6 +169,8 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  margin-top: 30px;
+  gap: 30px;
 }
 
 .community {
@@ -175,11 +184,6 @@
   justify-content: center;
   align-items: center;
   position: relative; /* Ensure icons are positioned relative to their container */
-}
-
-.droph31,
-.droph3 {
-  margin-right: 10px; /* Adjust as needed */
 }
 
 .rotateIcon {
@@ -196,17 +200,20 @@
 
 .addChannels,
 .directMessages {
+  margin-top: 10px;
   margin-bottom: 2px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   align-items: center; /* Spacing between sections */
   position: relative;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: 1.35rem;
 }
 
 .dropdown1,
 .dropdown {
-  padding: 0 10px 0 8px;
+  padding: 0 10px;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -221,12 +228,13 @@
   justify-content: center;
   align-items: center;
   position: relative; /* Ensure icons are positioned relative to their container */
+  margin-left: -12px;
 }
 
 .droph31,
 .droph3 {
   color: #ffffff;
-  margin-right: 7px; /* Adjust as needed */
+  margin-right: 10px; /* Adjust as needed */
 }
 
 .rotateIcon {
@@ -244,21 +252,23 @@
 
 .schannel,
 .sdmcontact {
-  height: 40px;
-  width: 100%;
+  height: 60px;
+  width: 94%;
+  border-radius: 22px;
   display: flex;
   cursor: pointer;
-  margin-bottom: 2px;
+  margin: 4px 0 2px 9px;
   display: flex;
   align-items: center;
   overflow: hidden;
+  
 }
 .sdmcontact {
-  padding-left: 5px;
+  padding: 10px 7px;
 }
 .schannel:hover,
 .sdmcontact:hover {
-  background-color: #c48a0d; /* Light orange background on hover */
+  background-color: #4d1e4f; /* Light orange background on hover */
 }
 
 .schannelinfo,
@@ -307,13 +317,13 @@
     z-index: 2;
     width: 20%; /* Adjust width as needed */
     height: 100%;
-    background-color: #ffae00; /* Orange background */
+    background-color: #5E2C5F; /* Orange background */
     transform: translateX(0); /* Start from the fully visible position */
     transition: transform 0.5s ease; /* Smooth animation for sliding effect */
   }
 
   .sidebar {
-    border-radius: 0 15px 15px 0;
+    border-radius: 0 10px 10px 0;
     overflow: hidden;
     position: absolute;
     top: 0;
@@ -321,9 +331,12 @@
     z-index: 2;
     width: 20%; /* Adjust width as needed */
     height: 100%;
-    background-color: #ffae00; /* Orange background */
+    background-color: #5E2C5F; /* Orange background */
     transform: translateX(-100%); /* Initially hide the sidebar off-screen */
     transition: transform 0.5s ease; /* Smooth animation for sliding effect */
+  }
+  .whole{
+    background-color:#481349 ;
   }
 }
 @media (max-width: 700px) {

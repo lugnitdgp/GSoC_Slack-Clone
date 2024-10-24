@@ -5,6 +5,7 @@ import { Allconvers } from "../../context api/context";
 import { Channelcontext } from "../../context api/channelcontext.jsx";
 import { Chatcontext } from "../../context api/chatcontext";
 import supabase from "../../supabase.jsx";
+import { FaSearch } from "react-icons/fa";
 
 const Totalsearch = () => {
   const { currentUser, setDm, setChannelchat, setConformdm, setchat } =
@@ -156,15 +157,20 @@ const Totalsearch = () => {
 
     return (
       <div className={totalsearchCSS.container}>
-        <input
-          type="text"
-          value={search}
-          onChange={handleInput}
-          onClick={() => setSearchResults([])}
-          onBlur={handleBlur}
-          placeholder="Search a Channel or Contact...."
-          className={totalsearchCSS.input}
-        />
+        <div className={totalsearchCSS.input}>
+          {search === '' && ( // Only show icon when input is empty
+            <FaSearch className={totalsearchCSS.inputSearch} />
+          )}
+          <input
+            type="text"
+            value={search}
+            onChange={handleInput}
+            onClick={() => setSearchResults([])}
+            onBlur={handleBlur}
+            placeholder={search === '' ? 'Search a Channel or Contact...' : ''} // Placeholder disappears when typing
+            className={totalsearchCSS.inputBox}
+          />
+        </div>
         {search.trim() !== "" && (
           <div className={totalsearchCSS.results}>
             {searchResults.map((result, index) => (
