@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-.body {
+body {
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -13,19 +13,21 @@
   background: url("../../../../public/pexels-photonova-2872856.jpg");
   background-repeat: no-repeat;
   background-size: cover;
-  font-family: "montserrat", sans-serif;
+  font-family: "Montserrat", sans-serif;
+  margin: 0;
 }
 
 .container {
   position: relative;
-  width: 768px;
+  width: 850px;
   max-width: 100%;
   background: #fff;
-  min-height: 480px;
-  border-radius: 10px;
+  min-height: 520px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0px 14px 28px rgba(0, 0, 0, 0.25),
-    0px 10px 10px rgba(0, 0, 0, 0.22);
+  box-shadow: 0px 16px 30px rgba(0, 0, 0, 0.2),
+    0px 12px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.5s ease-in-out;
 }
 
 .sign_in {
@@ -33,10 +35,10 @@
   top: 0px;
   left: 0px;
   height: 100%;
-  transition: all 0.6s ease-in-out;
   width: 50%;
   z-index: 102;
-  min-height: 460px; /* Minimum height for sign_in */
+  min-height: 500px;
+  transition: all 0.6s ease-in-out;
 }
 
 .sign_up {
@@ -44,52 +46,42 @@
   top: 0px;
   left: 0px;
   height: 100%;
-  transition: all 0.6s ease-in-out;
   width: 50%;
   z-index: 101;
   opacity: 0;
-  min-height: 460px; /* Minimum height for sign_up */
-  
+  min-height: 500px;
+  transition: all 0.6s ease-in-out;
 }
 
-.signin {
+.signin, .signup {
   margin: 15px;
-  background-color: #F0A202;
+  background-color: #f0a202;
   border: none;
-  height: 50px;
-  width: 230px;
+  height: 55px;
+  width: 260px;
   border-radius: 50px;
   box-shadow: rgba(215, 200, 133, 0.878) 0px 20px 10px -15px;
   cursor: pointer;
   color: #2b2a2a;
   font-size: 18px;
-  font-weight: 150;
-  transition: all 0.2s ease-in-out;
+  font-weight: bold;
+  letter-spacing: 1px;
+  transition: all 0.3s ease-in-out;
   border: 3px solid white;
 }
+
 .signup {
-  margin: 15px;
-  background-color: #fcf414;
-  border: none;
-  height: 50px;
-  width: 230px;
-  border-radius: 50px;
-  box-shadow: rgba(215, 200, 133, 0.878) 0px 20px 10px -15px;
-  cursor: pointer;
-  color: #2b2a2a;
-  font-size: 18px;
-  font-weight: 150;
-  transition: all 0.2s ease-in-out;
-  border: 3px solid white;
-}
-.signin:hover,.signup:hover {
-  background: white;
-  font: bolder;
-  font-size: 21px;
+  background-color: #ffee00;
 }
 
-.signin:active,.signup:active {
-  background-color: #fcf414;
+.signin:hover, .signup:hover {
+  background: white;
+  font-size: 20px;
+  transform: scale(1.05);
+}
+
+.signin:active, .signup:active {
+  background-color: #f0a202;
   box-shadow: none;
   transform: translateY(4px);
 }
@@ -121,12 +113,10 @@
 
 .overlay {
   position: relative;
-  color: #181818;
   left: -100%;
   height: 100%;
   width: 200%;
   background: linear-gradient(to right, #ff7300, #ffee00);
-  transform: translateX(0);
   transition: transform 0.6s ease-in-out;
 }
 
@@ -134,8 +124,7 @@
   transform: translateX(50%);
 }
 
-.overlay_right,
-.overlay_left {
+.overlay_right, .overlay_left {
   position: absolute;
   display: flex;
   justify-content: center;
@@ -146,7 +135,6 @@
   top: 0px;
   height: 100%;
   width: 50%;
-  transform: translateX(0);
   transition: transform 0.6s ease-in-out;
 }
 
@@ -157,35 +145,46 @@
 .overlay_right {
   right: 0px;
 }
+
 .overlayheadings {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
+}
+
+.h1 {
+  font-size: 26px;
+  color: #333;
+}
+
+.p {
+  font-size: 16px;
+  line-height: 22px;
+  color: #666;
 }
 
 @media (max-width: 849px) {
   .container {
-    width: 370px;
-    min-height: 600px; /* Increased to accommodate minimum height */
+    width: 90%;
+    min-height: 600px;
     display: flex;
     flex-direction: column;
   }
 
-  .sign_in,
-  .sign_up {
+  .sign_in, .sign_up {
     top: 0%;
     left: 0;
     height: 50%;
-    width: 100%; /* Minimum height for smaller screens */
-    transform: translateY(0); /* Reset transform for vertical layout */
+    width: 100%;
+    transform: translateY(0);
   }
 
-  .signin,
-  .signup {
+  .signin, .signup {
     margin: 15px;
-    width: 175px;
-    font-size: 14px;
+    width: 190px;
+    font-size: 16px;
   }
 
   .container.right_panel_active .sign_in {
@@ -199,10 +198,10 @@
   .overlaycon {
     left: 0px;
     top: 50%;
-    height: 50%; /* Remaining height for overlay */
+    height: 50%;
     width: 100%;
     z-index: 100;
-    transform: translateY(0); /* No vertical transformation for overlay */
+    transform: translateY(0);
   }
 
   .container.right_panel_active .overlaycon {
@@ -211,9 +210,9 @@
 
   .overlay {
     left: 0;
-    top: 50%; /* Position overlay above the container */
+    top: 50%;
     width: 100%;
-    height: 100%; /* Double height to cover entire container */
+    height: 100%;
     transform: translateY(0);
   }
 
@@ -221,14 +220,11 @@
     transform: translateY(-100%);
   }
 
-  .overlay_right,
-  .overlay_left {
+  .overlay_right, .overlay_left {
     flex-direction: row;
     padding: 0px 10px;
-    left: 0px;
     width: 100%;
     height: 50%;
-    transform: translateY(0);
   }
 
   .overlay_left {
@@ -238,10 +234,12 @@
   .overlay_right {
     top: 0%;
   }
+
   .h1 {
-    font-size: 24px;
+    font-size: 22px;
   }
 }
+
 @media (max-width: 395px) {
   .container {
     width: 340px;
