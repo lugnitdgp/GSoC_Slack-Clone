@@ -39,6 +39,7 @@ import { FaPlus } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Navigate } from "react-router-dom";
 import { CiLogout } from "react-icons/ci";
+import { FiLogOut } from "react-icons/fi";
 import { CgProfile } from "react-icons/cg";
 import Profile from "./profile";
 import Loader from "../loader";
@@ -375,14 +376,15 @@ function Home(data) {
                             toggleAddChannel();
                           }}
                         >
-                          <h3 className={homepaseCSS.droph31}>Channels</h3>
                           <RiArrowDropDownLine
                             style={{ color: "#36393b", cursor: "pointer" }}
                             className={
                               addChannelOpen ? "" : homepaseCSS.rotateIcon
                             }
-                            size={30}
+                            size={37}
                           />
+                          <h3 className={homepaseCSS.droph31}>Channels</h3>
+                          
                         </div>
                         <FaPlus
                           onClick={() => {
@@ -423,14 +425,14 @@ function Home(data) {
                           className={homepaseCSS.dropmenu}
                           onClick={toggleDropdown}
                         >
-                          <h3 className={homepaseCSS.droph3}>Direct message</h3>
                           <RiArrowDropDownLine
                             style={{ color: "#36393b", cursor: "pointer" }}
                             className={
                               dropdownOpen ? "" : homepaseCSS.rotateIcon
                             }
-                            size={30}
+                            size={37}
                           />
+                          <h3 className={homepaseCSS.droph3}>Direct message</h3>
                         </div>
                         <FaPlus
                           onClick={() => {
@@ -482,32 +484,38 @@ function Home(data) {
                 </div>
                 <div className={homepaseCSS.left}>
                   <div className={homepaseCSS.allcom}>
-                    <CiLogout
+                    <FiLogOut
                       className={homepaseCSS.sidebaricons}
                       onClick={() => signout()}
+                      size={30}
+                      style = {{transform: 'rotate(180deg)' }}
                     />
                     <FaTasks
                       className={homepaseCSS.sidebaricons}
                       onClick={() => setViewtask(true)}
+                      size={30}
                     />
                     <MdAssignmentAdd
                       className={homepaseCSS.sidebaricons}
                       onClick={() => setassigntaskself(true)}
+                      size={30}
                     />
                     <SiGooglecalendar
                       className={homepaseCSS.sidebaricons}
                       onClick={calendarAuth}
+                      size={30}
                     />
                     <FaCalendarAlt
                       className={homepaseCSS.sidebaricons}
                       onClick={() => setopencalendarevents(true)}
+                      size={30}
                     />
                   </div>
                   <CgProfile
                     onClick={() => setprofile(true)}
-                    size={30}
+                    size={35}
                     color="white"
-                    style={{ margin: "8px", cursor: "pointer" }}
+                    style={{margin: "0 0 30px 16% ", cursor: "pointer" }}
                   />
                 </div>
               </div>

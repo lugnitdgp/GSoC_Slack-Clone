@@ -20,6 +20,7 @@
   height: 5%;
   width: 100%;
   border-bottom: 1px rgb(145, 141, 141) solid;
+  border-radius: 0 0 14px 14px;
 }
 .messages {
   height: 85%;
