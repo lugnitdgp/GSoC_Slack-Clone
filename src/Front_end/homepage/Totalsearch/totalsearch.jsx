@@ -165,6 +165,8 @@ const Totalsearch = () => {
             type="text"
             value={search}
             onChange={handleInput}
+            onClick={() => setSearchResults([])}
+            onBlur={handleBlur}
             placeholder={search === '' ? 'Search a Channel or Contact...' : ''} // Placeholder disappears when typing
             className={totalsearchCSS.inputBox}
           />
