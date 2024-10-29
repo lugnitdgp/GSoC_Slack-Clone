@@ -5,6 +5,7 @@ const { sendUserEmail } = require("../utils/sendUsermail");
 const session = require("express-session");
 const { google } = require("googleapis");
 const calendar = google.calendar("v3");
+const { createClient } = require("@supabase/supabase-js");
 require("dotenv").config();
 router.use(express.json());
 const client = new google.auth.OAuth2(
@@ -12,6 +13,12 @@ const client = new google.auth.OAuth2(
   process.env.CLIENT_SECRET,
   process.env.REDIRECT_URL
 );
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
+);
+
 const checkTokensMiddleware = async (req, res, next) => {
   //even though this function is not called still using the express sessions if the request exits in the session
   const tokens = req.session.tokens; //then the fetching data when expiry occurs still happens
@@ -25,7 +32,7 @@ const checkTokensMiddleware = async (req, res, next) => {
       tokens.access_token = newAccessToken;
       req.session.tokens = tokens;
       client.setCredentials(tokens);
-      next();//used to continue to the next into the rputes like the middleware continues tghe function
+      next(); //used to continue to the next into the rputes like the middleware continues tghe function
     } catch (error) {
       console.error("Error refreshing tokens:", error);
       res.status(401).json({ error: "Failed to refresh OAuth2 tokens" });
@@ -57,6 +64,28 @@ router.use(
 
 router.use(cors());
 
+// Route to update user's online status
+async function updateUserStatus(userId, status) {
+  const { error } = await supabase
+    .from("user_data")
+    .update({ online_status: status })
+    .eq("id", userId);
+
+  if (error) {
+    console.error("Error updating online status:", error);
+    throw error;
+  }
+}
+
+// Route to handle session expiration and set online status to false
+router.use(async (req, res, next) => {
+  const sessionUser = req.session.userId;
+  if (!sessionUser) {
+    await updateUserStatus(sessionUser, false);
+  }
+  next();
+});
+
 router.post("/sendUserEmail", async (req, res) => {
   try {
     const { to, subject, message } = req.body;
@@ -83,6 +112,13 @@ router.get("/googleauth/redirect", async (req, res) => {
     const { tokens } = await client.getToken(code);
     client.setCredentials(tokens);
     req.session.tokens = tokens;
+
+    // Retrieve user info and update status
+    const oauth2 = google.oauth2({ auth: client, version: "v2" });
+    const userInfo = await oauth2.userinfo.get();
+    const userId = userInfo.data.id;
+
+    await updateUserStatus(userId, true); // Mark user as online
     res.redirect(process.env.Front_endURL);
   } catch (error) {
     console.error("Error handling OAuth2 redirect:", error);

@@ -74,6 +74,18 @@
   min-width: 300px;
 }
 
+
+.indicatorDot {
+  width: 15px;
+  height: 15px;
+  background-color: #3ba55d;
+  border-radius: 50%;
+  margin-left: 20px;
+  position: absolute;
+  right: 10px;
+  padding-right: 10px;
+}
+
 .userdetails {
   padding: 8px;
   min-height: 43px;
