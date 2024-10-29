@@ -78,7 +78,13 @@ const Pages = () => {
             updload ? (
               <Update data={token} settoken={setToken} />
             ) : (
-              <video src="src/Front_end/loading video/6824-196344457_medium.mp4" autoPlay loop muted style={{width:"100vw" ,height:"100vh",objectFit:"cover"}}></video>
+              <video
+                src="src/Front_end/loading video/6824-196344457_medium.mp4"
+                autoPlay
+                loop
+                muted
+                style={{ width: "100vw", height: "100vh", objectFit: "cover" }}
+              ></video>
             )
           }
         />

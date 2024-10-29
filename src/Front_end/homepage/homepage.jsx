@@ -87,6 +87,8 @@ function Home(data) {
   const [fetchdmupdate, setFetchdmupdate] = useState(false);
   const [currentuserchannels, setCurrentuserchannels] = useState({});
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [userStatus, setUserStatus] = useState({});
+
   useEffect(() => {
     const fetchData = async () => {
       const specific_user = await Getuserdetails(data.data.user.id);
@@ -135,6 +137,35 @@ function Home(data) {
     };
     fetchdmdata();
   }, [fetchdmupdate]);
+
+  // Fetch online status for all dmcontacts once on component mount
+  useEffect(() => {
+    const fetchStatuses = async () => {
+      const statuses = {};
+
+      const fetchAllStatuses = Object.values(dmcontacts).map(
+        async (contact) => {
+          const { data, error } = await supabase
+            .from("user_data")
+            .select("online_status")
+            .eq("id", contact.userinfo.uid)
+            .single();
+
+          if (!error && data) {
+            statuses[contact.userinfo.uid] = data.online_status;
+          }
+        }
+      );
+
+      await Promise.all(fetchAllStatuses);
+      setUserStatus(statuses);
+    };
+
+    if (dmcontacts && Object.keys(dmcontacts).length > 0) {
+      fetchStatuses();
+    }
+  }, [dmcontacts]);
+
   useEffect(() => {
     const fetchchannel = async () => {
       const user = await fetchUserchannels(currentUser[0]);
@@ -166,10 +197,23 @@ function Home(data) {
   async function signout() {
     try {
       setloader(true);
-      let { error } = await supabase.auth.signOut();
+      const userId = supabase.auth.user()?.id; // Get the current user ID
 
-      if (error) {
-        console.log(error);
+      // Update online_status to false in the database
+      const { error: statusError } = await supabase
+        .from("user_data")
+        .update({ online_status: false })
+        .eq("id", userId);
+
+      if (statusError) {
+        console.log("Error updating status:", statusError);
+      }
+
+      // Proceed to sign out after updating online status
+      const { error: signOutError } = await supabase.auth.signOut();
+
+      if (signOutError) {
+        console.log(signOutError);
       } else {
         setloader(false);
         // localStorage.removeItem("token");
@@ -180,6 +224,29 @@ function Home(data) {
       console.log(error);
     }
   }
+
+  // try this useeffect in your local setup
+  // useEffect(() => {
+  //   const { data: authListener } = supabase.auth.onAuthStateChange(
+  //     async (event, session) => {
+  //       if (event === "SIGNED_OUT" || !session) {
+  //         const userId = supabase.auth.user()?.id;
+
+  //         // Update online_status to false on session expiration
+  //         if (userId) {
+  //           await supabase
+  //             .from("user_data")
+  //             .update({ online_status: false })
+  //             .eq("id", userId);
+  //         }
+  //       }
+  //     }
+  //   );
+
+  //   return () => {
+  //     authListener?.unsubscribe();
+  //   };
+  // }, []);
 
   useEffect(() => {
     const dmchats = () => {
@@ -322,6 +389,11 @@ function Home(data) {
       sidebarRef.current.classList.remove(homepaseCSS.opened);
     }
   };
+
+  const OnlineIndicator = () => {
+    return <div className={homepaseCSS.indicatorDot}></div>;
+  };
+
   return (
     <>
       {viewchanneltasks ? <Viewchanneltask /> : <></>}
@@ -384,7 +456,6 @@ function Home(data) {
                             size={37}
                           />
                           <h3 className={homepaseCSS.droph31}>Channels</h3>
-                          
                         </div>
                         <FaPlus
                           onClick={() => {
@@ -471,10 +542,10 @@ function Home(data) {
                                 <span className={homepaseCSS.sdmcontactname}>
                                   {contact[1]?.userinfo?.uusername}
                                 </span>
-                                <span className={homepaseCSS.sdmcontactmail}>
-                                  {contact[1]?.userinfo?.uemail}
-                                </span>
                               </div>
+                              {userStatus[contact[1].userinfo.uid] && (
+                                <OnlineIndicator />
+                              )}
                             </div>
                           ))}
                         </div>
@@ -488,7 +559,7 @@ function Home(data) {
                       className={homepaseCSS.sidebaricons}
                       onClick={() => signout()}
                       size={30}
-                      style = {{transform: 'rotate(180deg)' }}
+                      style={{ transform: "rotate(180deg)" }}
                     />
                     <FaTasks
                       className={homepaseCSS.sidebaricons}
@@ -515,7 +586,7 @@ function Home(data) {
                     onClick={() => setprofile(true)}
                     size={35}
                     color="white"
-                    style={{margin: "0 0 30px 16% ", cursor: "pointer" }}
+                    style={{ margin: "0 0 30px 16% ", cursor: "pointer" }}
                   />
                 </div>
               </div>
